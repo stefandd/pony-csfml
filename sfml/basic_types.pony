@@ -133,5 +133,3 @@ primitive SFPrimitiveType
     fun sfLinesStrip() : I32 =>     2
     fun sfTrianglesStrip() : I32 => 4
     fun sfTrianglesFan() : I32 =>   5
-
-type SFVertexArray is Array[SFVertex]
