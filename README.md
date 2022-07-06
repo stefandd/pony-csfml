@@ -1,13 +1,12 @@
 ## What is this?
 
-A small wrapper for CSFML in `Pony`. I just wrapped enough of the vast functionality to be able to write small games with sound.
+A small wrapper of CSFML in `Pony`. I just wrapped enough of the vast functionality to be able to write small games with sound.
 
 There is a small test app, `test.pony`, that shows random pixel noise. While SFML can be multithreaded, its own threading system and that of Pony are likely not compatible. Thus, the Pony actor that renders to SFML must then be proofed against its rendering context being accessed from multiple (Pony) threads. The simplest way would be to prevent Pony from using more than 1 core/1 scheduler thread by adding
 
 ```pony
 actor Main
-	..
-
+    ..
     fun @runtime_override_defaults(rto: RuntimeOptions) =>
         rto.ponymaxthreads = 1
 ```
