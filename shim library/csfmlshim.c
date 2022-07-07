@@ -40,3 +40,26 @@ void sfText_getGlobalBoundsA(const sfText* text, sfFloatRect* rect)
 {
     *rect = sfText_getGlobalBounds(text);
 }
+
+void sfVertexArray_appendA(sfVertexArray* vertexArray, float x, float y, sfInt32 color, float tex_x, float tex_y)
+{
+    sfVertex v = {x, y, color, tex_x, tex_y};
+    sfVertexArray_append(vertexArray, v);
+}
+
+void sfVertexArray_getBoundsA(sfVertexArray* vertexArray, sfFloatRect* rect)
+{
+    *rect = sfVertexArray_getBounds(vertexArray);
+}
+
+void sfCircleShape_setPositionA(sfCircleShape* circle, float x, float y)
+{
+    sfVector2f pos = {x, y};
+    sfCircleShape_setPosition(circle, pos);
+}
+
+void sfRectangleShape_setPositionA(sfRectangleShape* rect, float x, float y)
+{
+    sfVector2f pos = {x, y};
+    sfRectangleShape_setPosition(rect, pos);
+}

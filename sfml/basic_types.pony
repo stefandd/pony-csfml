@@ -112,7 +112,7 @@ struct SFVertex
     var tex_x : F32 ///< Coordinates of the texture's pixel to map to the vertex
     var tex_y : F32
 
-    new create(x' : F32, y' : F32, color' : U32, tex_x' : F32, tex_y' : F32) =>
+    new create(x' : F32, y' : F32, color' : U32 = 0x000000ff, tex_x' : F32 = 0, tex_y' : F32 = 0) =>
         x = x'
         y = y'
         color = color'
