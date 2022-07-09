@@ -1,0 +1,3 @@
+shim library/libcsfmlshim.a
+shim library/csfmlshim.o
+pony-csfml
