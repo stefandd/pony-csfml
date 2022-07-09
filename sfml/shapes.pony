@@ -1,7 +1,6 @@
 use @sfCircleShape_destroy[None](circle : SFShapeRaw box)
 use @sfCircleShape_create[SFShapeRaw]()
-use @sfCircleShape_setPosition[None](circle : SFShapeRaw box, position : U64)
-use @sfCircleShape_setPositionA[None](circle : SFShapeRaw box, x: F32, y: F32)
+use @sfCircleShape_setPositionA[None](circle : SFShapeRaw box, position : U64)
 use @sfCircleShape_setOrigin[None](circle : SFShapeRaw box, origin : U64)
 use @sfCircleShape_setScale[None](circle : SFShapeRaw box, factors : U64)
 use @sfCircleShape_setRadius[None](circle : SFShapeRaw box, radius : F32)
@@ -15,8 +14,7 @@ use @sfCircleShape_setOutlineThickness[None](circle : SFShapeRaw box, thickness 
 
 use @sfRectangleShape_destroy[None](Rectangle : SFShapeRaw box)
 use @sfRectangleShape_create[SFShapeRaw]()
-use @sfRectangleShape_setPosition[None](Rectangle : SFShapeRaw box, position : U64)
-use @sfRectangleShape_setPositionA[None](Rectangle : SFShapeRaw box, x: F32, y: F32)
+use @sfRectangleShape_setPositionA[None](Rectangle : SFShapeRaw box, position : U64)
 use @sfRectangleShape_setOrigin[None](Rectangle : SFShapeRaw box, origin : U64)
 use @sfRectangleShape_setScale[None](Rectangle : SFShapeRaw box, factors : U64)
 use @sfRectangleShape_setSize[None](Rectangle : SFShapeRaw box, size : U64)
@@ -73,10 +71,7 @@ class SFCircleShape
         @sfCircleShape_setPointCount(_raw, count)
 
     fun ref setPosition(position : SFVector2f) =>
-        @sfCircleShape_setPosition(_raw, position.u64())
-
-    fun ref setPositionA(position : SFVector2f) =>
-        @sfCircleShape_setPositionA(_raw, position.x, position.y)
+        @sfCircleShape_setPositionA(_raw, position.u64())
 
     fun ref setScale(factors : SFVector2f) =>
         @sfCircleShape_setScale(_raw, factors.u64())
@@ -138,10 +133,7 @@ class SFRectangleShape
         None //@sfRectangleShape_setPointCount(_raw, count)
 
     fun ref setPosition(position : SFVector2f) =>
-        @sfRectangleShape_setPosition(_raw, position.u64())
-
-    fun ref setPositionA(position : SFVector2f) =>
-        @sfRectangleShape_setPositionA(_raw, position.x, position.y)
+        @sfRectangleShape_setPositionA(_raw, position.u64())
 
     fun ref setScale(factors : SFVector2f) =>
         @sfRectangleShape_setScale(_raw, factors.u64())

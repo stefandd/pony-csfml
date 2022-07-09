@@ -7,13 +7,15 @@ use "lib:csfmlshim"
 use "buffered"
 use "collections"
 
+// Context
 use @sfContext_create[SFContextRaw]()
 use @sfContext_destroy[None](context: SFContextRaw box)
 use @sfContext_setActive[I32](context: SFContextRaw, active: I32)
 use @sfContext_getSettingsA[None](context: SFContextRaw, settings: SFContextSettingsRaw)
-
+// Window
 use @sfWindow_setActive[None](window: SFWindowRaw box, active: I32)
 use @sfWindow_getSettingsA[None](window: SFWindowRaw box, sfContextsettings: SFContextSettingsRaw)
+// RenderWindow
 use @sfRenderWindow_createA[SFRenderWindowRaw](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U8 val] tag, style: I32, sfContextsettings: SFContextSettingsRaw)
 use @sfRenderWindow_createUnicodeA[SFRenderWindowRaw](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U32 val] tag, style: I32, sfContextsettings: SFContextSettingsRaw)
 use @sfRenderWindow_setFramerateLimit[None](window: SFRenderWindowRaw box, limit: U32)
@@ -26,9 +28,11 @@ use @sfRenderWindow_display[None](window: SFRenderWindowRaw box)
 use @sfRenderWindow_drawSprite[None](window: SFRenderWindowRaw box, sprite: SFSpriteRaw, states: SFRenderStatesRaw)
 use @sfRenderWindow_drawShape[None](window: SFRenderWindowRaw box, shape: SFShapeRaw, states: SFRenderStatesRaw)
 use @sfRenderWindow_drawText[None](window: SFRenderWindowRaw box, text: SFTextRaw, states: SFRenderStatesRaw)
+use @sfRenderWindow_drawVertexArray[None](window: SFRenderWindowRaw box, vertexArray: SFVertexArrayRaw, states: SFRenderStatesRaw)
 use @sfRenderWindow_pollEvent[I32](window: SFRenderWindowRaw box, event: Pointer[U8] tag)
 use @sfRenderWindow_getSize[U64](window: SFRenderWindowRaw box)
 use @sfRenderWindow_destroy[None](window: SFRenderWindowRaw box)
+// RenderTexture
 use @sfRenderTexture_create[SFRenderTextureRaw](width: U32, height: U32, depthBuffer: I32)
 use @sfRenderTexture_clear[None](rendtex: SFRenderTextureRaw box, color: U32)
 use @sfRenderTexture_display[None](rendtex: SFRenderTextureRaw box)
@@ -37,23 +41,29 @@ use @sfRenderTexture_getTexture[SFTextureRaw](rendtex: SFRenderTextureRaw box)
 use @sfRenderTexture_drawShape[None](rendtex: SFRenderTextureRaw box, shape: SFShapeRaw, states: SFRenderStatesRaw)
 use @sfRenderTexture_drawText[None](rendtex: SFRenderTextureRaw box, text: SFTextRaw, states: SFRenderStatesRaw)
 use @sfRenderTexture_destroy[None](rendtex: SFRenderTextureRaw box)
+// Image
 use @sfImage_create[SFImageRaw](width: U32, height: U32)
 use @sfImage_createFromColor[SFImageRaw](width: U32, height: U32, color: U32)
 use @sfImage_destroy[None](image: SFImageRaw box)
+// Texture
 use @sfTexture_createFromFile[SFTextureRaw](filename: Pointer[U8 val] tag, area: SFIntRectRaw)
 use @sfTexture_createFromImage[SFTextureRaw](image: SFImageRaw box, area: SFIntRectRaw)
 use @sfTexture_updateFromPixels[None](texture: SFTextureRaw, pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32)
 use @sfTexture_destroy[None](texture: SFTextureRaw box)
+// Sprite
 use @sfSprite_create[SFSpriteRaw]()
 use @sfSprite_setTexture[None](sprite: SFSpriteRaw, texture: SFTextureRaw, resetRect: I32)
 use @sfSprite_destroy[None](sprite: SFSpriteRaw box)
+// Shader
 use @sfShader_createFromMemory[SFShaderRaw](vertexShader: Pointer[U8 val] tag, geometryShader: Pointer[U8 val] tag, fragmentShader: Pointer[U8 val] tag)
 use @sfShader_setTextureParameter[None](shader: SFShaderRaw box, name: Pointer[U8 val] tag, texture: SFTextureRaw)
 use @sfShader_setFloatUniform[None](shader: SFShaderRaw box, name: Pointer[U8 val] tag, x: F32)
 use @sfShader_destroy[None](shader: SFShaderRaw box)
+// Keyboard
 use @sfKeyboard_isKeyPressed[I32](key: I32)
+// Sleep
 use @sfSleep[None](duration: I64)
-
+// Other
 use @memcpy[Pointer[None]](dest: Pointer[None], src: Pointer[None] box, n: USize)
 
 primitive SFSystem
@@ -570,6 +580,9 @@ class SFRenderWindow
 
     fun ref drawText(text: SFText, renderstate: SFRenderStatesRaw = SFRenderStatesRaw.none()) =>
         @sfRenderWindow_drawText(_raw, text.getRaw(), renderstate)
+
+    fun ref drawVertexArray(vertexArray: SFVertexArray, states: SFRenderStatesRaw = SFRenderStatesRaw.none()) =>
+        @sfRenderWindow_drawVertexArray(_raw, vertexArray.getRaw(), states)
 
     fun ref display() =>
         @sfRenderWindow_display(_raw)

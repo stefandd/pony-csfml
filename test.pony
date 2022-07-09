@@ -16,9 +16,7 @@ actor Main
     var event : SFEventStruct
     var texture : SFTexture
     var sprite : SFSprite
-    //var image : SFImage    not actually used
-    //var shader : SFShader  not actually used
-    //let vtx_arr : SFVertexArray  temp disabled
+    let vtx_arr : SFVertexArray
     let circle : SFShape
     let width : USize = 320
     let height : USize = 240
@@ -27,8 +25,6 @@ actor Main
     var frames : U32 = 0
     var t_lastframe : U64
     var running: Bool
-    let pos_x: F32  // temp, for bug demo
-    let pos_y: F32  // temp, for bug demo
 
     fun @runtime_override_defaults(rto: RuntimeOptions) =>
         rto.ponymaxthreads = 1
@@ -38,9 +34,6 @@ actor Main
         window = SFRenderWindow(SFVideoMode(width.u32(), height.u32(), 32), "SFML Game", SFWindowStyle.sfDefaultStyle())
         let s : SFContextSettings = window.getSettings()
         event = window.getEventStruct()
-        //let frag = "void main() {gl_FragColor = vec4(1,0,0,1);}"        
-        //shader = SFShader.createFromMemory("", "", frag)
-        //image = SFImage.createFromColor(400, 300, SFColor(0, 255, 0))
         texture = SFTexture.createFromImage(SFImage(width.u32(), height.u32()))
         sprite = SFSprite
 
@@ -52,24 +45,26 @@ actor Main
         let thickness: F32 = 3
         let r = half_w.min(half_h) - thickness
         let thick_r = r + thickness
-        pos_x = half_w - thick_r
-        pos_y = thickness
+        let pos_x = half_w - thick_r
+        let pos_y = thickness
         circle = SFCircleShape
+        circle.setPosition(SFVector2f(pos_x, pos_y))
         circle.setRadius(r)
-        circle.setFillColor(SFColor(127,127,127))
+        circle.setFillColor(SFColor(127,200,127))
         circle.setOutlineColor(SFColor(0,0,0))
         circle.setOutlineThickness(thickness)
 
-        // let center_vtx = SFVertex(half_w, half_h, 0x000000ff)
-        // let vertices = [
-        //   center_vtx ; SFVertex(0, 0)
-        //   center_vtx ; SFVertex(0, h)
-        //   center_vtx ; SFVertex(w, 0)
-        //   center_vtx ; SFVertex(w, h)
-        // ]
-        // vtx_arr = SFVertexArray
-        // vtx_arr.setPrimitiveType(SFPrimitiveType.sfLines())
-        // for v in vertices.values() do vtx_arr.append(v) end
+        let line_color = SFColor.from_u32(0xff0000ff)
+        let center_vtx = SFVertex(SFVector2f(half_w, half_h), line_color, SFVector2f(0,0))
+        let vertices = [
+          center_vtx ; SFVertex(SFVector2f(0, 0), line_color)
+          center_vtx ; SFVertex(SFVector2f(0, h), line_color)
+          center_vtx ; SFVertex(SFVector2f(w, 0), line_color)
+          center_vtx ; SFVertex(SFVector2f(w, h), line_color)
+        ]
+        vtx_arr = SFVertexArray
+        vtx_arr.setPrimitiveType(SFPrimitiveType.sfLines())
+        for v in vertices.values() do vtx_arr.append(v) end
 
         t_lastframe = Time.millis()
         running = true
@@ -102,19 +97,13 @@ actor Main
                 end
             end
             update_pixels() // write random pixels into the texture
+            sprite.setTexture(texture) // map the texture to a sprite
 
             window.clear(SFColor(127, 127, 127, 127))
-            sprite.setTexture(texture) // map the texture to a sprite
             window.drawSprite(sprite) // draw the sprite
-
-            circle.setPosition(SFVector2f(pos_x, pos_y+50))
             window.drawShape(circle)
-            circle.setPositionA(SFVector2f(pos_x, pos_y+50))
-            window.drawShape(circle)
-            
-            //window.drawVertexArray(vtx_arr)
+            window.drawVertexArray(vtx_arr)
             window.display()
-
 
             // FPS info
             if (t_now- t_lastframe) > 1000 then
@@ -125,10 +114,8 @@ actor Main
             running = running and window.isOpen()
             run()
         else
-            //image.destroy()  image is not used
             sprite.destroy()
             texture.destroy()
-            //vtx_arr.destroy()  temp disabled
-            //shader.destroy()  shader is not used
+            vtx_arr.destroy()
             window.destroy()
         end

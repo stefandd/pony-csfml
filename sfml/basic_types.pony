@@ -7,6 +7,7 @@ struct SFColor
     new create(r' : U8, g' : U8, b' : U8, a' : U8 = 255) =>
         r = r'; g = g'; b = b'; a = a'
 
+    // REVIEW: from_u32() is not the inverse of u32(). Maybe u32() shouldn't be named that.
     new from_u32(col : U32) =>
         r = (col >> 24).u8()
         g = ((col >> 16) and 0xFF).u8()
@@ -19,7 +20,8 @@ struct SFColor
 
     // Pony structs are passed by reference so for functions that need the struct itself we have to map to a value, in this case a U32
     fun u32() : U32 =>
-        (a.u32() * 256 * 256 * 256) + (b.u32() * 256 * 256) + (g.u32() * 256) + (r.u32())
+        (a.u32() << 24) + (b.u32() << 16) + (g.u32() << 8) + (r.u32() << 0)
+
 
 struct SFIntRect
     let left : I32
@@ -106,18 +108,14 @@ struct SFVector2u
 type SFVector2uRaw is NullablePointer[SFVector2u]
 
 struct SFVertex
-    var x : F32 // sfVector2f position;  ///< Position of the vertex
-    var y : F32
-    var color : U32 ///< Color of the vertex
-    var tex_x : F32 ///< Coordinates of the texture's pixel to map to the vertex
-    var tex_y : F32
-
-    new create(x' : F32, y' : F32, color' : U32 = 0x000000ff, tex_x' : F32 = 0, tex_y' : F32 = 0) =>
-        x = x'
-        y = y'
+    var pos: SFVector2f ///< Position of the vertex
+    var color : SFColor ///< Color of the vertex
+    var tex: SFVector2f ///< Coordinates of the texture's pixel to map to the vertex
+ 
+    new create(pos': SFVector2f, color': SFColor, tex': SFVector2f = SFVector2f(0,0)) =>
+        pos = pos'
         color = color'
-        tex_x = tex_x'
-        tex_y = tex_y'
+        tex = tex'
 
 type SFVertexRaw is NullablePointer[SFVertex]
 

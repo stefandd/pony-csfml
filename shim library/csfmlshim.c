@@ -4,6 +4,9 @@
 #include <SFML/Window.h>
 #include <SFML/Graphics.h>
 
+#define VEC2F(__x) (*(sfVector2f*)&__x)
+#define COLOR(__x) (*(sfColor*)&__x)
+
 void sfContext_getSettingsA(const sfContext* context, sfContextSettings* settings)
 {
     *settings = sfContext_getSettings(context);
@@ -41,9 +44,9 @@ void sfText_getGlobalBoundsA(const sfText* text, sfFloatRect* rect)
     *rect = sfText_getGlobalBounds(text);
 }
 
-void sfVertexArray_appendA(sfVertexArray* vertexArray, float x, float y, sfInt32 color, float tex_x, float tex_y)
+void sfVertexArray_appendA(sfVertexArray* vertexArray, sfUint64 pos, sfUint32 color, sfUint64 tex)
 {
-    sfVertex v = {x, y, color, tex_x, tex_y};
+    sfVertex v = { VEC2F(pos), COLOR(color), VEC2F(tex) };
     sfVertexArray_append(vertexArray, v);
 }
 
@@ -52,14 +55,12 @@ void sfVertexArray_getBoundsA(sfVertexArray* vertexArray, sfFloatRect* rect)
     *rect = sfVertexArray_getBounds(vertexArray);
 }
 
-void sfCircleShape_setPositionA(sfCircleShape* circle, float x, float y)
+void sfCircleShape_setPositionA(sfCircleShape* circle, sfUint64 pos)
 {
-    sfVector2f pos = {x, y};
-    sfCircleShape_setPosition(circle, pos);
+    sfCircleShape_setPosition(circle, VEC2F(pos));
 }
 
-void sfRectangleShape_setPositionA(sfRectangleShape* rect, float x, float y)
+void sfRectangleShape_setPositionA(sfRectangleShape* rect, sfUint64 pos)
 {
-    sfVector2f pos = {x, y};
-    sfRectangleShape_setPosition(rect, pos);
+    sfRectangleShape_setPosition(rect, VEC2F(pos));
 }
