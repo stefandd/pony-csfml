@@ -12,9 +12,9 @@ use @sfText_setColor[None](text : SFTextRaw box, color : U32)
 use @sfText_setFillColor[None](text : SFTextRaw box, color : U32)
 use @sfText_setOutlineColor[None](text : SFTextRaw box, color : U32)
 use @sfText_setOutlineThickness[None](text : SFTextRaw box, thickness : F32)
-use @sfText_setPosition[None](text : SFTextRaw box, position : U64)
-use @sfText_setScale[None](text : SFTextRaw box, factors : U64)
-use @sfText_setOrigin[None](text : SFTextRaw box, origin : U64)
+use @sfText_setPositionA[None](text : SFTextRaw box, position : U64)
+use @sfText_setScaleA[None](text : SFTextRaw box, factors : U64)
+use @sfText_setOriginA[None](text : SFTextRaw box, origin : U64)
 use @sfText_setRotation[None](text : SFTextRaw box, angle : F32)
 use @sfText_getLocalBoundsA[None](text : SFTextRaw box, bounds : SFFloatRectRaw)
 use @sfText_getGlobalBoundsA[None](text : SFTextRaw box, bounds : SFFloatRectRaw)
@@ -91,13 +91,13 @@ class SFText
         @sfText_setOutlineThickness(_raw, thickness)
 
     fun ref setPosition(position : SFVector2f) =>
-        @sfText_setPosition(_raw, position.u64())
+        @sfText_setPositionA(_raw, position.u64())
 
     fun ref setScale(factors : SFVector2f) =>
-        @sfText_setScale(_raw, factors.u64())
+        @sfText_setScaleA(_raw, factors.u64())
 
     fun ref setOrigin(origin : SFVector2f) =>
-        @sfText_setOrigin(_raw, origin.u64())
+        @sfText_setOriginA(_raw, origin.u64())
     
     fun ref setRotation(angle : F32) =>
         @sfText_setRotation(_raw, angle)

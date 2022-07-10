@@ -7,10 +7,14 @@
 #define VEC2F(__x) (*(sfVector2f*)&__x)
 #define COLOR(__x) (*(sfColor*)&__x)
 
+// CONTEXT 
+
 void sfContext_getSettingsA(const sfContext* context, sfContextSettings* settings)
 {
     *settings = sfContext_getSettings(context);
 }
+
+// RENDER WINDOW
 
 sfRenderWindow* sfRenderWindow_createA(unsigned int width, unsigned int height, unsigned int bitsPerPixel, const char* title, sfUint32  style, const sfContextSettings* settings)
 {
@@ -29,10 +33,14 @@ void sfRenderWindow_getSettingsA(const sfRenderWindow* window, sfContextSettings
     *settings = sfRenderWindow_getSettings(window);
 }
 
+// WINDOW 
+
 void sfWindow_getSettingsA(const sfWindow* window, sfContextSettings* settings)
 {
     *settings = sfWindow_getSettings(window);
 }
+
+// TEXT
 
 void sfText_getLocalBoundsA(const sfText* text, sfFloatRect* rect)
 {
@@ -43,6 +51,23 @@ void sfText_getGlobalBoundsA(const sfText* text, sfFloatRect* rect)
 {
     *rect = sfText_getGlobalBounds(text);
 }
+
+void sfText_setPositionA(sfText* text, sfUint64 pos)
+{
+    sfText_setPosition(text, VEC2F(pos));
+}
+
+void sfText_setScaleA(sfText* text, sfUint64 scales)
+{
+    sfText_setScale(text, VEC2F(scales));
+}
+
+void sfText_setOriginA(sfText* text, sfUint64 origin)
+{
+    sfText_setOrigin(text, VEC2F(origin));
+}
+
+// VERTEX ARRAY
 
 void sfVertexArray_appendA(sfVertexArray* vertexArray, sfUint64 pos, sfUint32 color, sfUint64 tex)
 {
@@ -55,12 +80,26 @@ void sfVertexArray_getBoundsA(sfVertexArray* vertexArray, sfFloatRect* rect)
     *rect = sfVertexArray_getBounds(vertexArray);
 }
 
+// CIRCLE SHAPE
+
 void sfCircleShape_setPositionA(sfCircleShape* circle, sfUint64 pos)
 {
     sfCircleShape_setPosition(circle, VEC2F(pos));
 }
 
+void sfCircleShape_setOriginA(sfCircleShape* circle, sfUint64 origin)
+{
+    sfCircleShape_setOrigin(circle, VEC2F(origin));
+}
+
+// RECTANGLE SHAPE
+
 void sfRectangleShape_setPositionA(sfRectangleShape* rect, sfUint64 pos)
 {
     sfRectangleShape_setPosition(rect, VEC2F(pos));
+}
+
+void sfRectangleShape_setOriginA(sfRectangleShape* rect, sfUint64 origin)
+{
+    sfRectangleShape_setOrigin(rect, VEC2F(origin));
 }

@@ -1,10 +1,11 @@
 use @sfCircleShape_destroy[None](circle : SFShapeRaw box)
 use @sfCircleShape_create[SFShapeRaw]()
 use @sfCircleShape_setPositionA[None](circle : SFShapeRaw box, position : U64)
-use @sfCircleShape_setOrigin[None](circle : SFShapeRaw box, origin : U64)
+use @sfCircleShape_setOriginA[None](circle : SFShapeRaw box, origin : U64)
 use @sfCircleShape_setScale[None](circle : SFShapeRaw box, factors : U64)
 use @sfCircleShape_setRadius[None](circle : SFShapeRaw box, radius : F32)
 use @sfCircleShape_setRotation[None](circle : SFShapeRaw box, angle : F32)
+use @sfCircleShape_rotate[None](circle : SFShapeRaw box, angle : F32)
 use @sfCircleShape_setFillColor[None](circle : SFShapeRaw box, color : U32)
 use @sfCircleShape_setOutlineColor[None](circle : SFShapeRaw box, color : U32)
 use @sfCircleShape_setPointCount[None](circle : SFShapeRaw box, count : USize)
@@ -15,10 +16,11 @@ use @sfCircleShape_setOutlineThickness[None](circle : SFShapeRaw box, thickness 
 use @sfRectangleShape_destroy[None](Rectangle : SFShapeRaw box)
 use @sfRectangleShape_create[SFShapeRaw]()
 use @sfRectangleShape_setPositionA[None](Rectangle : SFShapeRaw box, position : U64)
-use @sfRectangleShape_setOrigin[None](Rectangle : SFShapeRaw box, origin : U64)
+use @sfRectangleShape_setOriginA[None](Rectangle : SFShapeRaw box, origin : U64)
 use @sfRectangleShape_setScale[None](Rectangle : SFShapeRaw box, factors : U64)
 use @sfRectangleShape_setSize[None](Rectangle : SFShapeRaw box, size : U64)
 use @sfRectangleShape_setRotation[None](Rectangle : SFShapeRaw box, angle : F32)
+use @sfRectangleShape_rotate[None](Rectangle : SFShapeRaw box, angle : F32)
 use @sfRectangleShape_setFillColor[None](Rectangle : SFShapeRaw box, color : U32)
 use @sfRectangleShape_setOutlineColor[None](Rectangle : SFShapeRaw box, color : U32)
 use @sfRectangleShape_setPointCount[None](Rectangle : SFShapeRaw box, count : USize)
@@ -77,10 +79,13 @@ class SFCircleShape
         @sfCircleShape_setScale(_raw, factors.u64())
 
     fun ref setOrigin(origin : SFVector2f) =>
-        @sfCircleShape_setOrigin(_raw, origin.u64())
+        @sfCircleShape_setOriginA(_raw, origin.u64())
     
     fun ref setRotation(angle : F32) =>
         @sfCircleShape_setRotation(_raw, angle)
+
+    fun ref rotate(angle : F32) =>
+        @sfCircleShape_rotate(_raw, angle)
 
     fun ref setTexture(texture : SFTexture, resetRect : Bool) =>
         if resetRect then
@@ -139,10 +144,13 @@ class SFRectangleShape
         @sfRectangleShape_setScale(_raw, factors.u64())
 
     fun ref setOrigin(origin : SFVector2f) =>
-        @sfRectangleShape_setOrigin(_raw, origin.u64())
+        @sfRectangleShape_setOriginA(_raw, origin.u64())
     
     fun ref setRotation(angle : F32) =>
         @sfRectangleShape_setRotation(_raw, angle)
+
+    fun ref rotate(angle: F32) =>
+        @sfRectangleShape_rotate(_raw, angle)
 
     fun ref setTexture(texture : SFTexture, resetRect : Bool) =>
         if resetRect then
