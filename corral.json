@@ -11,6 +11,11 @@
       "documentation_url": "",
       "version": "0.0",
       "name": "pony-sfml"
-    }
+    },
+    "scripts": {
+      "posix": {
+        "post_fetch_or_update": "sh corral.sh"
+      }
+    }    
   }
   

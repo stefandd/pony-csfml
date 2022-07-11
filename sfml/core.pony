@@ -1,3 +1,4 @@
+use "path:../shim library/"
 use "lib:csfml-main" if windows
 use "lib:csfml-system"
 use "lib:csfml-window"
