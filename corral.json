@@ -1,0 +1,16 @@
+{
+    "packages": [
+      "sfml"
+    ],
+    "deps": [
+    ],
+    "info": {
+      "description": "Ponylang bindings for SFML.",
+      "homepage": "https://github.com/stefandd/pony-csfml",
+      "license": "",
+      "documentation_url": "",
+      "version": "0.0",
+      "name": "pony-sfml"
+    }
+  }
+  
