@@ -69,7 +69,7 @@ actor Main
       for v in vertices.values() do vtx_arr.append(v) end
 
       let font_size: U32 = 24
-      fps_font = SFFont.create("Square.ttf") // 100% free font, https://www.dafont.com/squarefont.font
+      fps_font = SFFont.create("Square.ttf") // https://www.dafont.com/squarefont.font
       fps_text = SFText.create()
         .> setFont(fps_font)
         .> setCharacterSize(font_size)
