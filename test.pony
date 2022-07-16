@@ -45,18 +45,18 @@ actor Main
       let half_w = w / 2
       let half_h = h / 2
 
-      let thickness: F32 = 0
+      let thickness: F32 = 1
       let wobble: F32 = 10
       let r = half_w.min(half_h) - thickness - wobble
       circle = SFCircleShape
         .> setRadius(r)
         .> setFillColor(SFColor(127,200,127))
-        .> setOutlineColor(SFColor(0,0,0))
+        .> setOutlineColor(SFColor.black())
         .> setOutlineThickness(thickness)
         .> setPosition(SFVector2f(half_w, half_h))
         .> setOrigin(SFVector2f(r, r-wobble))
 
-      let line_color = SFColor.from_u32(0xff0000ff)
+      let line_color = SFColor.fromInteger(0x00ff00ff)
       let center_vtx = SFVertex(SFVector2f(half_w, half_h), line_color, SFVector2f(0,0))
       let vertices = [
         center_vtx ; SFVertex(SFVector2f(0, 0), line_color)

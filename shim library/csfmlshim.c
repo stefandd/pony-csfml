@@ -103,3 +103,21 @@ void sfRectangleShape_setOriginA(sfRectangleShape* rect, sfUint64 origin)
 {
     sfRectangleShape_setOrigin(rect, VEC2F(origin));
 }
+
+// VIEW
+
+// There's no portable way for this function to take a U128 argument,
+// so the parts of the rectangle will be individual args.
+sfView* sfView_createFromRectA(float left, float top, float width, float height)
+{
+    sfFloatRect rect = {left, top, width, height};
+    return sfView_createFromRect(rect);
+}
+
+// There's no portable way for this function to take a U128 argument,
+// so the parts of the rectangle will be individual args.
+void sfView_resetA(sfView* view, float left, float top, float width, float height)
+{
+    sfFloatRect rect = {left, top, width, height};
+    sfView_reset(view, rect);
+}

@@ -26,6 +26,7 @@ use @sfRenderWindow_hasFocus[I32](window: SFRenderWindowRaw box)
 use @sfRenderWindow_setActive[I32](window: SFRenderWindowRaw box, active: I32)
 use @sfRenderWindow_clear[None](window: SFRenderWindowRaw box, color: U32)
 use @sfRenderWindow_display[None](window: SFRenderWindowRaw box)
+use @sfRenderWindow_setView[None](window: SFRenderWindowRaw box, view: SFViewRaw)
 use @sfRenderWindow_drawSprite[None](window: SFRenderWindowRaw box, sprite: SFSpriteRaw, states: SFRenderStatesRaw)
 use @sfRenderWindow_drawShape[None](window: SFRenderWindowRaw box, shape: SFShapeRaw, states: SFRenderStatesRaw)
 use @sfRenderWindow_drawText[None](window: SFRenderWindowRaw box, text: SFTextRaw, states: SFRenderStatesRaw)
@@ -587,6 +588,9 @@ class SFRenderWindow
 
     fun ref display() =>
         @sfRenderWindow_display(_raw)
+
+    fun ref setView(view: SFView) =>
+        @sfRenderWindow_setView(_raw, view.getRaw())
 
     fun ref destroy() =>
         if not _raw.is_null() then

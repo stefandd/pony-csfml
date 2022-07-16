@@ -3,31 +3,52 @@ struct SFColor
     var g : U8
     var b : U8
     var a : U8
-
+    
     new create(r' : U8, g' : U8, b' : U8, a' : U8 = 255) =>
-        r = r'; g = g'; b = b'; a = a'
+        r = r' ; g = g' ; b = b' ; a = a'
 
+    // These are SFML's predefined colors:
+    new black() => r = 0 ; g = 0 ; b = 0 ; a = 255
+    new white() => r = 255 ; g = 255 ; b = 255 ; a = 255
+    new red() => r = 255 ; g = 0 ; b = 0 ; a = 255
+    new green() => r = 0 ; g = 255 ; b = 0 ; a = 255
+    new blue() => r = 0 ; g = 0 ; b = 255 ; a = 255
+    new yellow() => r = 255 ; g = 255 ; b = 0 ; a = 255
+    new magenta() => r = 255 ; g = 0 ; b = 255 ; a = 255
+    new cyan() => r = 0 ; g = 255 ; b = 255 ; a = 255
+    new transparent() => r = 0 ; g = 0 ; b = 0 ; a = 0
+
+    // We need a copy constructor to initialize colors embedded into larger structs.
     new copy(that': SFColor) =>
-        r = that'.r
-        g = that'.g
-        b = that'.b
-        a = that'.a
+        "Creates a new color by copying an existing color."
+        r = that'.r ; g = that'.g ; b = that'.b ; a = that'.a
 
-    new from_u32(col : U32) =>
+    new fromInteger(col : U32) =>
         r = (col >> 24).u8()
         g = ((col >> 16) and 0xFF).u8()
         b = ((col >> 8) and 0xFF).u8()
-        a = (col and 0xFF).u8()
+        a = ((col >> 0) and 0xFF).u8()
 
-    // REVIEW: Are these accessors required, given that the fields are not private?
-    fun red() : U8 => r    
-    fun green() : U8 => g
-    fun blue() : U8 => b
+    fun box toInteger() : U32 =>
+        (r.u32() << 24) + (g.u32() << 16) + (b.u32() << 8) + (a.u32() << 0)
+
+    fun ref setFromRGBA(r' : U8, g' : U8, b' : U8, a' : U8 = 255) =>
+        "Mutates the color to the specified values"
+        r = r' ; g = g' ; b = b' ; a = a'
+
+    fun ref setFromColor(that': SFColor) =>
+        "Mutates the color to match the provided color"
+        r = that'.r ; g = that'.g ; b = that'.b ; a = that'.a
 
     // Pony structs are passed by reference so for functions that need the struct itself we have to map to a value, in this case a U32
-    fun u32() : U32 =>
+    // TODO: These will be made private in a future commit
+    fun box u32() : U32 =>
         (a.u32() * 256 * 256 * 256) + (b.u32() * 256 * 256) + (g.u32() * 256) + (r.u32())
-
+    new from_u32(col: U32) =>
+        a = (col >> 24).u8()
+        b = ((col >> 16) and 0xFF).u8()
+        g = ((col >> 8) and 0xFF).u8()
+        r = ((col >> 0) and 0xFF).u8()
 
 struct SFIntRect
     let left : I32
