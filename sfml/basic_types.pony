@@ -29,7 +29,7 @@ struct SFColor
         b = ((col >> 8) and 0xFF).u8()
         a = ((col >> 0) and 0xFF).u8()
 
-    fun box toInteger() : U32 =>
+    fun toInteger() : U32 =>
         (r.u32() << 24) + (g.u32() << 16) + (b.u32() << 8) + (a.u32() << 0)
 
     fun ref setFromRGBA(r' : U8, g' : U8, b' : U8, a' : U8 = 255) =>
@@ -40,15 +40,21 @@ struct SFColor
         "Mutates the color to match the provided color"
         r = that'.r ; g = that'.g ; b = that'.b ; a = that'.a
 
-    // Pony structs are passed by reference so for functions that need the struct itself we have to map to a value, in this case a U32
-    // TODO: These will be made private in a future commit
-    fun box u32() : U32 =>
-        (a.u32() * 256 * 256 * 256) + (b.u32() * 256 * 256) + (g.u32() * 256) + (r.u32())
-    new from_u32(col: U32) =>
-        a = (col >> 24).u8()
-        b = ((col >> 16) and 0xFF).u8()
-        g = ((col >> 8) and 0xFF).u8()
-        r = ((col >> 0) and 0xFF).u8()
+    // Pony structs can't be passed by value through Pony's FFI.
+    // So for C funcs that expect structs by value we define a map to/from some unsigned int type.
+
+    new _from_u32(coded': U32) =>
+        r = 0 ; g = 0 ; b = 0 ; a = 0
+        var coded: U32 = coded'
+        @memcpy(SFColorRaw(this), addressof coded, coded.bytewidth())
+
+    fun ref _u32(): U32 =>
+        var coded: U32 = 0
+        @memcpy(addressof coded, SFColorRaw(this), coded.bytewidth())
+        coded
+
+type SFColorRaw is NullablePointer[SFColor]
+
 
 struct SFIntRect
     let left : I32

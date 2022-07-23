@@ -79,13 +79,13 @@ class SFText
         @sfText_setStyle(_raw, style)
 
     fun setColor(color : SFColor) =>
-        @sfText_setColor(_raw, color.u32())
+        @sfText_setColor(_raw, color._u32())
 
     fun setFillColor(color : SFColor) =>
-        @sfText_setFillColor(_raw, color.u32())
+        @sfText_setFillColor(_raw, color._u32())
 
     fun setOutlineColor(color : SFColor) =>
-        @sfText_setOutlineColor(_raw, color.u32())
+        @sfText_setOutlineColor(_raw, color._u32())
 
     fun setOutlineThickness(thickness : F32) =>
         @sfText_setOutlineThickness(_raw, thickness)

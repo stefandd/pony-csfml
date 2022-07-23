@@ -61,10 +61,10 @@ class SFCircleShape
         @sfCircleShape_setScale(_raw, SFVector2f(1.0, size.y/size.x).u64())
 
     fun ref setFillColor(color : SFColor) =>
-        @sfCircleShape_setFillColor(_raw, color.u32())
+        @sfCircleShape_setFillColor(_raw, color._u32())
 
     fun ref setOutlineColor(color : SFColor) =>
-        @sfCircleShape_setOutlineColor(_raw, color.u32())
+        @sfCircleShape_setOutlineColor(_raw, color._u32())
 
     fun ref setOutlineThickness(thickness : F32) =>
         @sfCircleShape_setOutlineThickness(_raw, thickness)
@@ -126,10 +126,10 @@ class SFRectangleShape
         @sfRectangleShape_setSize(_raw, size.u64())
 
     fun ref setFillColor(color : SFColor) =>
-        @sfRectangleShape_setFillColor(_raw, color.u32())
+        @sfRectangleShape_setFillColor(_raw, color._u32())
 
     fun ref setOutlineColor(color : SFColor) =>
-        @sfRectangleShape_setOutlineColor(_raw, color.u32())
+        @sfRectangleShape_setOutlineColor(_raw, color._u32())
 
     fun ref setOutlineThickness(thickness : F32) =>
         @sfRectangleShape_setOutlineThickness(_raw, thickness)

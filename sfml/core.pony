@@ -567,7 +567,7 @@ class SFRenderWindow
         @sfRenderWindow_hasFocus(_raw) > 0
 
     fun ref clear(color: SFColor = SFColor(0, 0, 0, 255)) =>
-        @sfRenderWindow_clear(_raw, color.u32())
+        @sfRenderWindow_clear(_raw, color._u32())
 
     fun ref drawSprite(sprite: SFSprite, renderstate: SFRenderStatesRaw = SFRenderStatesRaw.none()) =>
         @sfRenderWindow_drawSprite(_raw, sprite.getRaw(), renderstate)
@@ -612,7 +612,7 @@ class SFRenderTexture
         end
 
     fun ref clear(color: SFColor) =>
-        @sfRenderTexture_clear(_raw, color.u32())
+        @sfRenderTexture_clear(_raw, color._u32())
 
     fun ref drawSprite(sprite: SFSprite, renderstate: SFRenderStatesRaw = SFRenderStatesRaw.none()) =>
         @sfRenderTexture_drawSprite(_raw, sprite.getRaw(), renderstate)
@@ -718,7 +718,7 @@ class SFImage
         _raw = @sfImage_create(width, height)
     
     new createFromColor(width: U32, height: U32, color: SFColor) =>
-        _raw = @sfImage_createFromColor(width, height, color.u32())
+        _raw = @sfImage_createFromColor(width, height, color._u32())
 
     fun ref getRaw(): SFImageRaw =>
         _raw
