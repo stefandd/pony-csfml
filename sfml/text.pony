@@ -91,19 +91,19 @@ class SFText
         @sfText_setOutlineThickness(_raw, thickness)
 
     fun ref setPosition(position : SFVector2f) =>
-        @sfText_setPositionA(_raw, position.u64())
+        @sfText_setPositionA(_raw, position._u64())
 
     fun ref setScale(factors : SFVector2f) =>
-        @sfText_setScaleA(_raw, factors.u64())
+        @sfText_setScaleA(_raw, factors._u64())
 
     fun ref setOrigin(origin : SFVector2f) =>
-        @sfText_setOriginA(_raw, origin.u64())
+        @sfText_setOriginA(_raw, origin._u64())
     
     fun ref setRotation(angle : F32) =>
         @sfText_setRotation(_raw, angle)
 
     fun ref getGlobalBounds() : SFFloatRect =>
-        let rect = SFFloatRect.from_u128(0)
+        let rect = SFFloatRect._from_u128(0)
         if not _raw.is_none() then
             @sfText_getGlobalBoundsA(_raw, SFFloatRectRaw(rect))
             rect
@@ -112,7 +112,7 @@ class SFText
         end
 
     fun ref getLocalBounds() : SFFloatRect =>
-        let rect = SFFloatRect.from_u128(0)
+        let rect = SFFloatRect._from_u128(0)
         if not _raw.is_none() then
             @sfText_getLocalBoundsA(_raw, SFFloatRectRaw(rect))
             rect

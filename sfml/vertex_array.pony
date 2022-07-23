@@ -42,7 +42,7 @@ class SFVertexArray
     @sfVertexArray_resize(_raw, vertexCount)
 
   fun ref append(v: SFVertex) =>
-    @sfVertexArray_appendA(_raw, v.position.u64(), v.color._u32(), v.texCoords.u64())
+    @sfVertexArray_appendA(_raw, v.position._u64(), v.color._u32(), v.texCoords._u64())
 
   fun ref setPrimitiveType(primitiveType: I32) =>
     @sfVertexArray_setPrimitiveType(_raw, primitiveType)
@@ -51,7 +51,7 @@ class SFVertexArray
     @sfVertexArray_getPrimitiveType(_raw)
 
   fun ref getBounds(): SFFloatRect =>
-    let rect = SFFloatRect.from_u128(0)
+    let rect = SFFloatRect._from_u128(0)
     if not _raw.is_none() then
       @sfVertexArray_getBoundsA(_raw, SFFloatRectRaw(rect))
       rect

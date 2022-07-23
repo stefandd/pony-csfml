@@ -58,7 +58,7 @@ class SFCircleShape
 
     fun ref setSize(size : SFVector2f) =>        
         @sfCircleShape_setRadius(_raw, size.x / 2.0)
-        @sfCircleShape_setScale(_raw, SFVector2f(1.0, size.y/size.x).u64())
+        @sfCircleShape_setScale(_raw, SFVector2f(1.0, size.y/size.x)._u64())
 
     fun ref setFillColor(color : SFColor) =>
         @sfCircleShape_setFillColor(_raw, color._u32())
@@ -73,13 +73,13 @@ class SFCircleShape
         @sfCircleShape_setPointCount(_raw, count)
 
     fun ref setPosition(position : SFVector2f) =>
-        @sfCircleShape_setPositionA(_raw, position.u64())
+        @sfCircleShape_setPositionA(_raw, position._u64())
 
     fun ref setScale(factors : SFVector2f) =>
-        @sfCircleShape_setScale(_raw, factors.u64())
+        @sfCircleShape_setScale(_raw, factors._u64())
 
     fun ref setOrigin(origin : SFVector2f) =>
-        @sfCircleShape_setOriginA(_raw, origin.u64())
+        @sfCircleShape_setOriginA(_raw, origin._u64())
     
     fun ref setRotation(angle : F32) =>
         @sfCircleShape_setRotation(_raw, angle)
@@ -95,7 +95,7 @@ class SFCircleShape
         end
 
     fun ref setTextureRect(rect : SFIntRect) =>
-        @sfCircleShape_setTextureRect(_raw, rect.u128())
+        @sfCircleShape_setTextureRect(_raw, rect._u128())
 
     fun _final() =>
         if not _raw.is_none() then @sfCircleShape_destroy(_raw) end
@@ -120,10 +120,10 @@ class SFRectangleShape
         end
 
     fun ref setRadius(radius : F32) =>
-        @sfRectangleShape_setSize(_raw, (SFVector2f(2.0 * radius, 2.0 * radius)).u64())
+        @sfRectangleShape_setSize(_raw, (SFVector2f(2.0 * radius, 2.0 * radius))._u64())
 
     fun ref setSize(size : SFVector2f) =>
-        @sfRectangleShape_setSize(_raw, size.u64())
+        @sfRectangleShape_setSize(_raw, size._u64())
 
     fun ref setFillColor(color : SFColor) =>
         @sfRectangleShape_setFillColor(_raw, color._u32())
@@ -138,13 +138,13 @@ class SFRectangleShape
         None //@sfRectangleShape_setPointCount(_raw, count)
 
     fun ref setPosition(position : SFVector2f) =>
-        @sfRectangleShape_setPositionA(_raw, position.u64())
+        @sfRectangleShape_setPositionA(_raw, position._u64())
 
     fun ref setScale(factors : SFVector2f) =>
-        @sfRectangleShape_setScale(_raw, factors.u64())
+        @sfRectangleShape_setScale(_raw, factors._u64())
 
     fun ref setOrigin(origin : SFVector2f) =>
-        @sfRectangleShape_setOriginA(_raw, origin.u64())
+        @sfRectangleShape_setOriginA(_raw, origin._u64())
     
     fun ref setRotation(angle : F32) =>
         @sfRectangleShape_setRotation(_raw, angle)
@@ -160,7 +160,7 @@ class SFRectangleShape
         end
 
     fun ref setTextureRect(rect : SFIntRect) =>
-        @sfRectangleShape_setTextureRect(_raw, rect.u128())
+        @sfRectangleShape_setTextureRect(_raw, rect._u128())
 
     fun _final() =>
         if not _raw.is_none() then @sfRectangleShape_destroy(_raw) end

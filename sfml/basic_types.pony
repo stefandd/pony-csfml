@@ -68,8 +68,10 @@ struct SFIntRect
         width = width'
         height = height'
 
-    // Pony structs are passed by reference so for functions that need the struct itself we have to map to a value
-    fun ref u128() : U128 =>
+    // Pony structs can't be passed by value through Pony's FFI.
+    // So for C funcs that expect structs by value we define a map to/from some unsigned int type.
+
+    fun ref _u128() : U128 =>
         var tmp : U128 = 0
         @memcpy(addressof tmp, SFIntRectRaw(this), USize(16))
         tmp
@@ -88,16 +90,18 @@ struct SFFloatRect
         width = width'
         height = height'
 
-    new from_u128(chunk : U128) =>
-        left = 0; top = 0; width = 0; height = 0
-        var tmp : U128 = chunk
-        @memcpy(SFFloatRectRaw(this), addressof tmp, USize(16))
+    // Pony structs can't be passed by value through Pony's FFI.
+    // So for C funcs that expect structs by value we define a map to/from some unsigned int type.
 
-    // Pony structs are passed by reference so for functions that need the struct itself we have to map to a value
-    fun ref u128() : U128 =>
+    fun ref _u128() : U128 =>
         var tmp : U128 = 0
         @memcpy(addressof tmp, SFFloatRectRaw(this), USize(16))
         tmp
+
+    new _from_u128(chunk : U128) =>
+        left = 0; top = 0; width = 0; height = 0
+        var tmp : U128 = chunk
+        @memcpy(SFFloatRectRaw(this), addressof tmp, USize(16))
 
 type SFFloatRectRaw is NullablePointer[SFFloatRect]
 
@@ -113,8 +117,10 @@ struct SFVector2f
         x = that.x
         y = that.y
 
-    // Pony structs are passed by reference so for functions that need the struct itself we have to map to a value
-    fun ref u64() : U64 =>
+    // Pony structs can't be passed by value through Pony's FFI.
+    // So for C funcs that expect structs by value we define a map to/from some unsigned int type.
+
+    fun ref _u64() : U64 =>
         var tmp : U64 = 0
         @memcpy(addressof tmp, SFVector2fRaw(this), USize(8))
         tmp
@@ -129,13 +135,15 @@ struct SFVector2u
         x = x'
         y = y'
 
-    // Pony structs are passed by reference so for functions that need the struct itself we have to map to a value
-    fun ref u64() : U64 =>
+    // Pony structs can't be passed by value through Pony's FFI.
+    // So for C funcs that expect structs by value we define a map to/from some unsigned int type.
+
+    fun ref _u64() : U64 =>
         var tmp : U64 = 0
         @memcpy(addressof tmp, SFVector2uRaw(this), USize(8))
         tmp
 
-    new from_u64(chunk : U64) =>
+    new _from_u64(chunk : U64) =>
         var tmp = SFVector2u(0, 0)
         var tmp2 = chunk
         @memcpy(SFVector2uRaw(tmp), addressof tmp2, USize(8))
