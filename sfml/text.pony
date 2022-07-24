@@ -1,45 +1,45 @@
-use @sfFont_createFromFile[SFFontRaw](filename : Pointer[U8 val] tag)
-use @sfFont_destroy[None](font : SFFontRaw box)
+use @sfFont_createFromFile[FontRaw](filename : Pointer[U8 val] tag)
+use @sfFont_destroy[None](font : FontRaw box)
 
-use @sfText_create[SFTextRaw]()
-use @sfText_setString[None](text : SFTextRaw box, str : Pointer[U8 val] tag)
-use @sfText_setFont[None](text : SFTextRaw box, font : SFFontRaw)
-use @sfText_setCharacterSize[None](text : SFTextRaw box, size : U32)
-use @sfText_setLineSpacing[None](text : SFTextRaw box, spacingFactor : F32)
-use @sfText_setLetterSpacing[None](text : SFTextRaw box, spacingFactor : F32)
-use @sfText_setStyle[None](text : SFTextRaw box, style : U32)
-use @sfText_setColor[None](text : SFTextRaw box, color : U32)
-use @sfText_setFillColor[None](text : SFTextRaw box, color : U32)
-use @sfText_setOutlineColor[None](text : SFTextRaw box, color : U32)
-use @sfText_setOutlineThickness[None](text : SFTextRaw box, thickness : F32)
-use @sfText_setPositionA[None](text : SFTextRaw box, position : U64)
-use @sfText_setScaleA[None](text : SFTextRaw box, factors : U64)
-use @sfText_setOriginA[None](text : SFTextRaw box, origin : U64)
-use @sfText_setRotation[None](text : SFTextRaw box, angle : F32)
-use @sfText_getLocalBoundsA[None](text : SFTextRaw box, bounds : SFFloatRectRaw)
-use @sfText_getGlobalBoundsA[None](text : SFTextRaw box, bounds : SFFloatRectRaw)
-use @sfText_destroy[None](text : SFTextRaw box)
+use @sfText_create[TextRaw]()
+use @sfText_setString[None](text : TextRaw box, str : Pointer[U8 val] tag)
+use @sfText_setFont[None](text : TextRaw box, font : FontRaw)
+use @sfText_setCharacterSize[None](text : TextRaw box, size : U32)
+use @sfText_setLineSpacing[None](text : TextRaw box, spacingFactor : F32)
+use @sfText_setLetterSpacing[None](text : TextRaw box, spacingFactor : F32)
+use @sfText_setStyle[None](text : TextRaw box, style : U32)
+use @sfText_setColor[None](text : TextRaw box, color : U32)
+use @sfText_setFillColor[None](text : TextRaw box, color : U32)
+use @sfText_setOutlineColor[None](text : TextRaw box, color : U32)
+use @sfText_setOutlineThickness[None](text : TextRaw box, thickness : F32)
+use @sfText_setPositionA[None](text : TextRaw box, position : U64)
+use @sfText_setScaleA[None](text : TextRaw box, factors : U64)
+use @sfText_setOriginA[None](text : TextRaw box, origin : U64)
+use @sfText_setRotation[None](text : TextRaw box, angle : F32)
+use @sfText_getLocalBoundsA[None](text : TextRaw box, bounds : FloatRectRaw)
+use @sfText_getGlobalBoundsA[None](text : TextRaw box, bounds : FloatRectRaw)
+use @sfText_destroy[None](text : TextRaw box)
 
-struct _SFText
-type SFTextRaw is NullablePointer[_SFText]
+struct _Text
+type TextRaw is NullablePointer[_Text]
 
-struct _SFFont
-type SFFontRaw is NullablePointer[_SFFont]
+struct _Font
+type FontRaw is NullablePointer[_Font]
 
-primitive SFTextStyle
+primitive TextStyle
     fun sfTextRegular() : U32       => 0      ///< Regular characters, no style
     fun sfTextBold() : U32          => 1 << 0 ///< Bold characters
     fun sfTextItalic() : U32        => 1 << 1 ///< Italic characters
     fun sfTextUnderlined() : U32    => 1 << 2 ///< Underlined characters
     fun sfTextStrikeThrough() : U32 => 1 << 3 ///< Strike through characters
 
-class SFFont
-    var _raw : SFFontRaw
+class Font
+    var _raw : FontRaw
 
     new create(file : String) =>
         _raw = @sfFont_createFromFile(file.cstring())
 
-    fun ref getRaw() : SFFontRaw =>
+    fun ref getRaw() : FontRaw =>
         _raw
 
     fun ref isNULL() : Bool =>
@@ -48,14 +48,14 @@ class SFFont
     fun ref destroy() =>
         if not _raw.is_none() then
              @sfFont_destroy(_raw)
-            _raw = SFFontRaw.none()
+            _raw = FontRaw.none()
         end
 
     fun _final() =>
         if not _raw.is_none() then @sfFont_destroy(_raw) end
 
-class SFText
-    var _raw : SFTextRaw
+class Text
+    var _raw : TextRaw
 
     new create() =>
         _raw = @sfText_create()
@@ -63,7 +63,7 @@ class SFText
     fun setString(txt : String) =>
         @sfText_setString(_raw, txt.cstring())
     
-    fun setFont(font : SFFont) =>
+    fun setFont(font : Font) =>
         @sfText_setFont(_raw, font.getRaw())
         
     fun setCharacterSize(size : U32) =>
@@ -78,49 +78,49 @@ class SFText
     fun setStyle(style : U32) =>
         @sfText_setStyle(_raw, style)
 
-    fun setColor(color : SFColor) =>
+    fun setColor(color : Color) =>
         @sfText_setColor(_raw, color._u32())
 
-    fun setFillColor(color : SFColor) =>
+    fun setFillColor(color : Color) =>
         @sfText_setFillColor(_raw, color._u32())
 
-    fun setOutlineColor(color : SFColor) =>
+    fun setOutlineColor(color : Color) =>
         @sfText_setOutlineColor(_raw, color._u32())
 
     fun setOutlineThickness(thickness : F32) =>
         @sfText_setOutlineThickness(_raw, thickness)
 
-    fun ref setPosition(position : SFVector2f) =>
+    fun ref setPosition(position : Vector2f) =>
         @sfText_setPositionA(_raw, position._u64())
 
-    fun ref setScale(factors : SFVector2f) =>
+    fun ref setScale(factors : Vector2f) =>
         @sfText_setScaleA(_raw, factors._u64())
 
-    fun ref setOrigin(origin : SFVector2f) =>
+    fun ref setOrigin(origin : Vector2f) =>
         @sfText_setOriginA(_raw, origin._u64())
     
     fun ref setRotation(angle : F32) =>
         @sfText_setRotation(_raw, angle)
 
-    fun ref getGlobalBounds() : SFFloatRect =>
-        let rect = SFFloatRect._from_u128(0)
+    fun ref getGlobalBounds() : FloatRect =>
+        let rect = FloatRect._from_u128(0)
         if not _raw.is_none() then
-            @sfText_getGlobalBoundsA(_raw, SFFloatRectRaw(rect))
+            @sfText_getGlobalBoundsA(_raw, FloatRectRaw(rect))
             rect
         else
             rect
         end
 
-    fun ref getLocalBounds() : SFFloatRect =>
-        let rect = SFFloatRect._from_u128(0)
+    fun ref getLocalBounds() : FloatRect =>
+        let rect = FloatRect._from_u128(0)
         if not _raw.is_none() then
-            @sfText_getLocalBoundsA(_raw, SFFloatRectRaw(rect))
+            @sfText_getLocalBoundsA(_raw, FloatRectRaw(rect))
             rect
         else
             rect
         end
 
-    fun ref getRaw() : SFTextRaw =>
+    fun ref getRaw() : TextRaw =>
         _raw
 
     fun ref isNULL() : Bool =>
@@ -129,7 +129,7 @@ class SFText
     fun ref destroy() =>
         if not _raw.is_none() then
              @sfText_destroy(_raw)
-            _raw = SFTextRaw.none()
+            _raw = TextRaw.none()
         end
 
     fun _final() =>

@@ -9,58 +9,58 @@ use "buffered"
 use "collections"
 
 // Context
-use @sfContext_create[SFContextRaw]()
-use @sfContext_destroy[None](context: SFContextRaw box)
-use @sfContext_setActive[I32](context: SFContextRaw, active: I32)
-use @sfContext_getSettingsA[None](context: SFContextRaw, settings: SFContextSettingsRaw)
+use @sfContext_create[ContextRaw]()
+use @sfContext_destroy[None](context: ContextRaw box)
+use @sfContext_setActive[I32](context: ContextRaw, active: I32)
+use @sfContext_getSettingsA[None](context: ContextRaw, settings: ContextSettingsRaw)
 // Window
-use @sfWindow_setActive[None](window: SFWindowRaw box, active: I32)
-use @sfWindow_getSettingsA[None](window: SFWindowRaw box, sfContextsettings: SFContextSettingsRaw)
+use @sfWindow_setActive[None](window: WindowRaw box, active: I32)
+use @sfWindow_getSettingsA[None](window: WindowRaw box, sfContextsettings: ContextSettingsRaw)
 // RenderWindow
-use @sfRenderWindow_createA[SFRenderWindowRaw](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U8 val] tag, style: I32, sfContextsettings: SFContextSettingsRaw)
-use @sfRenderWindow_createUnicodeA[SFRenderWindowRaw](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U32 val] tag, style: I32, sfContextsettings: SFContextSettingsRaw)
-use @sfRenderWindow_setFramerateLimit[None](window: SFRenderWindowRaw box, limit: U32)
-use @sfRenderWindow_getSettingsA[None](window: SFRenderWindowRaw box, sfContextsettings: SFContextSettingsRaw)
-use @sfRenderWindow_isOpen[I32](window: SFRenderWindowRaw box)
-use @sfRenderWindow_hasFocus[I32](window: SFRenderWindowRaw box)
-use @sfRenderWindow_setActive[I32](window: SFRenderWindowRaw box, active: I32)
-use @sfRenderWindow_clear[None](window: SFRenderWindowRaw box, color: U32)
-use @sfRenderWindow_display[None](window: SFRenderWindowRaw box)
-use @sfRenderWindow_setView[None](window: SFRenderWindowRaw box, view: SFViewRaw)
-use @sfRenderWindow_drawSprite[None](window: SFRenderWindowRaw box, sprite: SFSpriteRaw, states: SFRenderStatesRaw)
-use @sfRenderWindow_drawShape[None](window: SFRenderWindowRaw box, shape: SFShapeRaw, states: SFRenderStatesRaw)
-use @sfRenderWindow_drawText[None](window: SFRenderWindowRaw box, text: SFTextRaw, states: SFRenderStatesRaw)
-use @sfRenderWindow_drawVertexArray[None](window: SFRenderWindowRaw box, vertexArray: SFVertexArrayRaw, states: SFRenderStatesRaw)
-use @sfRenderWindow_pollEvent[I32](window: SFRenderWindowRaw box, event: Pointer[U8] tag)
-use @sfRenderWindow_getSize[U64](window: SFRenderWindowRaw box)
-use @sfRenderWindow_destroy[None](window: SFRenderWindowRaw box)
+use @sfRenderWindow_createA[RenderWindowRaw](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U8 val] tag, style: I32, sfContextsettings: ContextSettingsRaw)
+use @sfRenderWindow_createUnicodeA[RenderWindowRaw](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U32 val] tag, style: I32, sfContextsettings: ContextSettingsRaw)
+use @sfRenderWindow_setFramerateLimit[None](window: RenderWindowRaw box, limit: U32)
+use @sfRenderWindow_getSettingsA[None](window: RenderWindowRaw box, sfContextsettings: ContextSettingsRaw)
+use @sfRenderWindow_isOpen[I32](window: RenderWindowRaw box)
+use @sfRenderWindow_hasFocus[I32](window: RenderWindowRaw box)
+use @sfRenderWindow_setActive[I32](window: RenderWindowRaw box, active: I32)
+use @sfRenderWindow_clear[None](window: RenderWindowRaw box, color: U32)
+use @sfRenderWindow_display[None](window: RenderWindowRaw box)
+use @sfRenderWindow_setView[None](window: RenderWindowRaw box, view: ViewRaw)
+use @sfRenderWindow_drawSprite[None](window: RenderWindowRaw box, sprite: SpriteRaw, states: RenderStatesRaw)
+use @sfRenderWindow_drawShape[None](window: RenderWindowRaw box, shape: ShapeRaw, states: RenderStatesRaw)
+use @sfRenderWindow_drawText[None](window: RenderWindowRaw box, text: TextRaw, states: RenderStatesRaw)
+use @sfRenderWindow_drawVertexArray[None](window: RenderWindowRaw box, vertexArray: VertexArrayRaw, states: RenderStatesRaw)
+use @sfRenderWindow_pollEvent[I32](window: RenderWindowRaw box, event: Pointer[U8] tag)
+use @sfRenderWindow_getSize[U64](window: RenderWindowRaw box)
+use @sfRenderWindow_destroy[None](window: RenderWindowRaw box)
 // RenderTexture
-use @sfRenderTexture_create[SFRenderTextureRaw](width: U32, height: U32, depthBuffer: I32)
-use @sfRenderTexture_clear[None](rendtex: SFRenderTextureRaw box, color: U32)
-use @sfRenderTexture_display[None](rendtex: SFRenderTextureRaw box)
-use @sfRenderTexture_drawSprite[None](rendtex: SFRenderTextureRaw box, sprite: SFSpriteRaw, states: SFRenderStatesRaw)
-use @sfRenderTexture_getTexture[SFTextureRaw](rendtex: SFRenderTextureRaw box)
-use @sfRenderTexture_drawShape[None](rendtex: SFRenderTextureRaw box, shape: SFShapeRaw, states: SFRenderStatesRaw)
-use @sfRenderTexture_drawText[None](rendtex: SFRenderTextureRaw box, text: SFTextRaw, states: SFRenderStatesRaw)
-use @sfRenderTexture_destroy[None](rendtex: SFRenderTextureRaw box)
+use @sfRenderTexture_create[RenderTextureRaw](width: U32, height: U32, depthBuffer: I32)
+use @sfRenderTexture_clear[None](rendtex: RenderTextureRaw box, color: U32)
+use @sfRenderTexture_display[None](rendtex: RenderTextureRaw box)
+use @sfRenderTexture_drawSprite[None](rendtex: RenderTextureRaw box, sprite: SpriteRaw, states: RenderStatesRaw)
+use @sfRenderTexture_getTexture[TextureRaw](rendtex: RenderTextureRaw box)
+use @sfRenderTexture_drawShape[None](rendtex: RenderTextureRaw box, shape: ShapeRaw, states: RenderStatesRaw)
+use @sfRenderTexture_drawText[None](rendtex: RenderTextureRaw box, text: TextRaw, states: RenderStatesRaw)
+use @sfRenderTexture_destroy[None](rendtex: RenderTextureRaw box)
 // Image
-use @sfImage_create[SFImageRaw](width: U32, height: U32)
-use @sfImage_createFromColor[SFImageRaw](width: U32, height: U32, color: U32)
-use @sfImage_destroy[None](image: SFImageRaw box)
+use @sfImage_create[ImageRaw](width: U32, height: U32)
+use @sfImage_createFromColor[ImageRaw](width: U32, height: U32, color: U32)
+use @sfImage_destroy[None](image: ImageRaw box)
 // Texture
-use @sfTexture_createFromFile[SFTextureRaw](filename: Pointer[U8 val] tag, area: SFIntRectRaw)
-use @sfTexture_createFromImage[SFTextureRaw](image: SFImageRaw box, area: SFIntRectRaw)
-use @sfTexture_updateFromPixels[None](texture: SFTextureRaw, pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32)
-use @sfTexture_destroy[None](texture: SFTextureRaw box)
+use @sfTexture_createFromFile[TextureRaw](filename: Pointer[U8 val] tag, area: IntRectRaw)
+use @sfTexture_createFromImage[TextureRaw](image: ImageRaw box, area: IntRectRaw)
+use @sfTexture_updateFromPixels[None](texture: TextureRaw, pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32)
+use @sfTexture_destroy[None](texture: TextureRaw box)
 // Sprite
-use @sfSprite_create[SFSpriteRaw]()
-use @sfSprite_setTexture[None](sprite: SFSpriteRaw, texture: SFTextureRaw, resetRect: I32)
-use @sfSprite_destroy[None](sprite: SFSpriteRaw box)
+use @sfSprite_create[SpriteRaw]()
+use @sfSprite_setTexture[None](sprite: SpriteRaw, texture: TextureRaw, resetRect: I32)
+use @sfSprite_destroy[None](sprite: SpriteRaw box)
 // Shader
-use @sfShader_createFromMemory[SFShaderRaw](vertexShader: Pointer[U8 val] tag, geometryShader: Pointer[U8 val] tag, fragmentShader: Pointer[U8 val] tag)
-use @sfShader_setTextureParameter[None](shader: SFShaderRaw box, name: Pointer[U8 val] tag, texture: SFTextureRaw)
-use @sfShader_setFloatUniform[None](shader: SFShaderRaw box, name: Pointer[U8 val] tag, x: F32)
-use @sfShader_destroy[None](shader: SFShaderRaw box)
+use @sfShader_createFromMemory[ShaderRaw](vertexShader: Pointer[U8 val] tag, geometryShader: Pointer[U8 val] tag, fragmentShader: Pointer[U8 val] tag)
+use @sfShader_setTextureParameter[None](shader: ShaderRaw box, name: Pointer[U8 val] tag, texture: TextureRaw)
+use @sfShader_setFloatUniform[None](shader: ShaderRaw box, name: Pointer[U8 val] tag, x: F32)
+use @sfShader_destroy[None](shader: ShaderRaw box)
 // Keyboard
 use @sfKeyboard_isKeyPressed[I32](key: I32)
 // Sleep
@@ -68,10 +68,10 @@ use @sfSleep[None](duration: I64)
 // Other
 use @memcpy[Pointer[None]](dest: Pointer[None], src: Pointer[None] box, n: USize)
 
-primitive SFSystem
+primitive System
     fun sleep(duration: I64) => @sfSleep(duration)
 
-struct SFVideoMode
+struct VideoMode
     let width: U32  ///< Video mode width, in pixels
     let height: U32 ///< Video mode height, in pixels
     let bitsPerPixel: U32 ///< Video mode pixel depth, in bits per pixels
@@ -81,9 +81,9 @@ struct SFVideoMode
         height = h
         bitsPerPixel = depth
 
-type SFVideoModeRaw is NullablePointer[SFVideoMode]
+type VideoModeRaw is NullablePointer[VideoMode]
 
-struct SFContextSettings
+struct ContextSettings
     let depthBits: U32         ///< Bits of the depth buffer
     let stencilBits: U32       ///< Bits of the stencil buffer
     let antialiasingLevel: U32 ///< Level of antialiasing
@@ -92,6 +92,7 @@ struct SFContextSettings
     let attributeFlags: U32    ///< The attribute flags to create the context with
     let sRgbCapable: I32      ///< Whether the context framebuffer is sRGB capable
 
+    // TODO: Default args per https://www.sfml-dev.org/documentation/2.5.1/structsf_1_1ContextSettings.php
     new create(depth: U32, sbits: U32, aalev: U32, majver: U32, minver: U32, attr: U32, isRGB: I32) =>
         depthBits = depth
         stencilBits = sbits
@@ -101,21 +102,21 @@ struct SFContextSettings
         attributeFlags = attr
         sRgbCapable = isRGB
 
-type SFContextSettingsRaw is NullablePointer[SFContextSettings]
+type ContextSettingsRaw is NullablePointer[ContextSettings]
 
-primitive _SFWindow
-type SFWindowRaw is Pointer[_SFWindow]
+primitive _Window
+type WindowRaw is Pointer[_Window]
 
-primitive _SFRenderWindow
-type SFRenderWindowRaw is Pointer[_SFRenderWindow]
+primitive _RenderWindow
+type RenderWindowRaw is Pointer[_RenderWindow]
 
-primitive _SFContext
-type SFContextRaw is Pointer[_SFContext]
+primitive _Context
+type ContextRaw is Pointer[_Context]
 
-struct _SFRenderTexture
-type SFRenderTextureRaw is NullablePointer[_SFRenderTexture]
+struct _RenderTexture
+type RenderTextureRaw is NullablePointer[_RenderTexture]
 
-primitive SFWindowStyle
+primitive WindowStyle
     fun sfNone(): I32         => 0      ///< No border / title bar (this flag and all others are mutually exclusive)
     fun sfTitlebar(): I32     => 1 << 0 ///< Title bar + fixed border
     fun sfResize(): I32       => 1 << 1 ///< Titlebar + resizable border + maximize button
@@ -123,7 +124,7 @@ primitive SFWindowStyle
     fun sfFullscreen(): I32   => 1 << 3 ///< Fullscreen mode (this flag and all others are mutually exclusive)
     fun sfDefaultStyle(): I32 => sfTitlebar() or sfResize() or sfClose() ///< Default window style
 
-primitive SFEventType
+primitive EventType
     fun sfEvtClosed(): I32 =>                 0 ///< The window requested to be closed (no data)
     fun sfEvtResized(): I32 =>                1 ///< The window was resized (data in event.size)
     fun sfEvtLostFocus(): I32 =>              2 ///< The window lost the focus (no data)
@@ -149,9 +150,9 @@ primitive SFEventType
     fun sfEvtSensorChanged(): I32 =>         22 ///< A sensor value changed (data in event.sensor)
     fun sfEvtCount(): I32 =>                 23 ///< Keep last -- the total number of event types
 
-primitive SFQuitEvent
+primitive QuitEvent
 
-class SFWindowEvent
+class WindowEvent
     let resized: Bool
     let gainedfocus: Bool
     let lostfocus: Bool
@@ -165,7 +166,7 @@ class SFWindowEvent
         newsizex = newx
         newsizey = newy
 
-class SFKeyEvent
+class KeyEvent
     let eventtype: I32
     let code: I32  
     let alt: I32
@@ -181,11 +182,11 @@ class SFKeyEvent
         shift = shift'
         system = system'
 
-primitive SFKeyBoard
+primitive KeyBoard
     fun isKeyPressed(key: I32): Bool =>
         @sfKeyboard_isKeyPressed(key) > 0
 
-primitive SFKeyCode
+primitive KeyCode
     fun sfKeyUnknown(): I32 => -1 ///< Unhandled key
     fun sfKeyA(): I32 =>  0         ///< The A key
     fun sfKeyB(): I32 =>  1         ///< The B key
@@ -291,14 +292,14 @@ primitive SFKeyCode
     fun sfKeyCount(): I32 => 101  ///< Keep last -- the total number of keyboard keys
 
 
-type SFEvent is (SFKeyEvent | SFWindowEvent | SFQuitEvent | None)
+type Event is (KeyEvent | WindowEvent | QuitEvent | None)
 
-class SFEventStruct
+class EventStruct
     var array: Array[U8] val
     let reader: Reader
-    let window: SFRenderWindowRaw
+    let window: RenderWindowRaw
 
-    new create(w: SFRenderWindowRaw) =>
+    new create(w: RenderWindowRaw) =>
         let array': Array[U8] iso = recover Array[U8]() end
         for i in Range(0, 32) do
             array'.push(0)
@@ -311,12 +312,12 @@ class SFEventStruct
     fun ref poll(): Bool =>
         @sfRenderWindow_pollEvent(window, array.cpointer()) != 0
 
-    fun ref translate(): SFEvent =>
+    fun ref translate(): Event =>
         try
             let event_type: I32 = reader.peek_i32_le(0)?
             //@fprintf[I32](@pony_os_stdout[Pointer[U8]](), "Event Type: %s\n".cstring(), event_type.string().cstring())            
-            if (event_type == SFEventType.sfEvtKeyPressed()) or (event_type == SFEventType.sfEvtKeyReleased()) then
-                SFKeyEvent( where
+            if (event_type == EventType.sfEvtKeyPressed()) or (event_type == EventType.sfEvtKeyReleased()) then
+                KeyEvent( where
                     type'    = event_type,
                     code'    = reader.peek_i32_le(4)?,
                     alt'     = reader.peek_i32_le(8)?,
@@ -324,16 +325,16 @@ class SFEventStruct
                     shift'   = reader.peek_i32_le(16)?,
                     system'  = reader.peek_i32_le(20)?
                 )
-            elseif event_type == SFEventType.sfEvtClosed() then
-                SFQuitEvent
-            elseif event_type == SFEventType.sfEvtResized() then
+            elseif event_type == EventType.sfEvtClosed() then
+                QuitEvent
+            elseif event_type == EventType.sfEvtResized() then
                 let newx: I32 = reader.peek_i32_le(4)?
                 let newy: I32 = reader.peek_i32_le(8)?
-                SFWindowEvent(true, false, false, newx, newy)
-            elseif event_type == SFEventType.sfEvtLostFocus() then
-                SFWindowEvent(false, false, true)
-            elseif event_type == SFEventType.sfEvtGainedFocus() then
-                SFWindowEvent(false, true, false)
+                WindowEvent(true, false, false, newx, newy)
+            elseif event_type == EventType.sfEvtLostFocus() then
+                WindowEvent(false, false, true)
+            elseif event_type == EventType.sfEvtGainedFocus() then
+                WindowEvent(false, true, false)
             end
         else
             //@fprintf[I32](@pony_os_stdout[Pointer[U8]](), "Event handling error\n".cstring(), "".cstring())
@@ -342,19 +343,19 @@ class SFEventStruct
 
 // graphics object
 
-struct _SFSprite
-type SFSpriteRaw is NullablePointer[_SFSprite]
+struct _Sprite
+type SpriteRaw is NullablePointer[_Sprite]
 
-struct _SFTexture
-type SFTextureRaw is NullablePointer[_SFTexture]
+struct _Texture
+type TextureRaw is NullablePointer[_Texture]
 
-struct _SFImage
-type SFImageRaw is NullablePointer[_SFImage]
+struct _Image
+type ImageRaw is NullablePointer[_Image]
 
-struct _SFShader
-type SFShaderRaw is NullablePointer[_SFShader]
+struct _Shader
+type ShaderRaw is NullablePointer[_Shader]
 
-struct SFTransform
+struct Transform
     var matrix: Array[F32] = [1.0; 0; 0; 0; 1.0; 0; 0; 0; 1.0]
 
     new create(m: Array[F32] = [1.0; 0; 0; 0; 1.0; 0; 0; 0; 1.0]) =>
@@ -363,17 +364,17 @@ struct SFTransform
             matrix.push(try m(i)? else 0.0 end)
         end
 
-    fun ref getRaw(): SFTransformRaw =>
+    fun ref getRaw(): TransformRaw =>
         matrix.cpointer()
 
-type SFTransformRaw is Pointer[F32 val] tag
+type TransformRaw is Pointer[F32 val] tag
 
-primitive SFBlendEquation
+primitive BlendEquation
     fun sfBlendEquationAdd(): I32 => 0  ///< Pixel = Src * SrcFactor + Dst * DstFactor
     fun sfBlendEquationSubtract(): I32 => 1 ///< Pixel = Src * SrcFactor - Dst * DstFactor
     fun sfBlendEquationReverseSubtract(): I32 => 2  ///< Pixel = Dst * DstFactor - Src * SrcFactor
 
-primitive SFBlendFactor
+primitive BlendFactor
     fun sfBlendFactorZero(): I32 => 0              ///< (0, 0, 0, 0)
     fun sfBlendFactorOne(): I32 => 1               ///< (1, 1, 1, 1)
     fun sfBlendFactorSrcColor(): I32 => 2          
@@ -385,7 +386,7 @@ primitive SFBlendFactor
     fun sfBlendFactorDstAlpha(): I32 => 8          
     fun sfBlendFactorOneMinusDstAlpha (): I32 => 9
 
-struct SFBlendMode
+struct BlendMode
     let colorSrcFactor: I32  ///< Source blending factor for the color channels
     let colorDstFactor: I32  ///< Destination blending factor for the color channels
     let colorEquation: I32   ///< Blending equation for the color channels
@@ -401,47 +402,47 @@ struct SFBlendMode
         alphaDstFactor = aDf
         alphaEquation = aE
 
-primitive SFStandardBlendModes
-    fun sfBlendNone(): SFBlendMode =>
-        SFBlendMode(
-                    SFBlendFactor.sfBlendFactorOne(),
-                    SFBlendFactor.sfBlendFactorZero(),
-                    SFBlendEquation.sfBlendEquationAdd(),
-                    SFBlendFactor.sfBlendFactorOne(),
-                    SFBlendFactor.sfBlendFactorZero(),
-                    SFBlendEquation.sfBlendEquationAdd()
+primitive StandardBlendModes
+    fun sfBlendNone(): BlendMode =>
+        BlendMode(
+                    BlendFactor.sfBlendFactorOne(),
+                    BlendFactor.sfBlendFactorZero(),
+                    BlendEquation.sfBlendEquationAdd(),
+                    BlendFactor.sfBlendFactorOne(),
+                    BlendFactor.sfBlendFactorZero(),
+                    BlendEquation.sfBlendEquationAdd()
                     )
-    fun sfBlendAlpha(): SFBlendMode =>
-        SFBlendMode(
-                    SFBlendFactor.sfBlendFactorSrcAlpha(),
-                    SFBlendFactor.sfBlendFactorOneMinusSrcAlpha(),
-                    SFBlendEquation.sfBlendEquationAdd(),
-                    SFBlendFactor.sfBlendFactorOne(),
-                    SFBlendFactor.sfBlendFactorOneMinusSrcAlpha(),
-                    SFBlendEquation.sfBlendEquationAdd()
+    fun sfBlendAlpha(): BlendMode =>
+        BlendMode(
+                    BlendFactor.sfBlendFactorSrcAlpha(),
+                    BlendFactor.sfBlendFactorOneMinusSrcAlpha(),
+                    BlendEquation.sfBlendEquationAdd(),
+                    BlendFactor.sfBlendFactorOne(),
+                    BlendFactor.sfBlendFactorOneMinusSrcAlpha(),
+                    BlendEquation.sfBlendEquationAdd()
                     )
-    fun sfBlendAdd(): SFBlendMode =>
-        SFBlendMode(
-                    SFBlendFactor.sfBlendFactorSrcAlpha(),
-                    SFBlendFactor.sfBlendFactorOne(),
-                    SFBlendEquation.sfBlendEquationAdd(),
-                    SFBlendFactor.sfBlendFactorOne(),
-                    SFBlendFactor.sfBlendFactorOne(),
-                    SFBlendEquation.sfBlendEquationAdd()
+    fun sfBlendAdd(): BlendMode =>
+        BlendMode(
+                    BlendFactor.sfBlendFactorSrcAlpha(),
+                    BlendFactor.sfBlendFactorOne(),
+                    BlendEquation.sfBlendEquationAdd(),
+                    BlendFactor.sfBlendFactorOne(),
+                    BlendFactor.sfBlendFactorOne(),
+                    BlendEquation.sfBlendEquationAdd()
                     )
-    fun sfBlendMultiply(): SFBlendMode =>
-        SFBlendMode(
-                    SFBlendFactor.sfBlendFactorDstColor(),
-                    SFBlendFactor.sfBlendFactorZero(),
-                    SFBlendEquation.sfBlendEquationAdd(),
-                    SFBlendFactor.sfBlendFactorDstColor(),
-                    SFBlendFactor.sfBlendFactorZero(),
-                    SFBlendEquation.sfBlendEquationAdd()
+    fun sfBlendMultiply(): BlendMode =>
+        BlendMode(
+                    BlendFactor.sfBlendFactorDstColor(),
+                    BlendFactor.sfBlendFactorZero(),
+                    BlendEquation.sfBlendEquationAdd(),
+                    BlendFactor.sfBlendFactorDstColor(),
+                    BlendFactor.sfBlendFactorZero(),
+                    BlendEquation.sfBlendEquationAdd()
                     )
 
-type SFBlendModeRaw is NullablePointer[SFBlendMode]
+type BlendModeRaw is NullablePointer[BlendMode]
 
-struct SFRenderStates // this is originally a nested struct that cannot be passed out to C properly (the inner structs are not passed by value)
+struct RenderStates // this is originally a nested struct that cannot be passed out to C properly (the inner structs are not passed by value)
     var cSrc: I32    // therefore, this simply maps into a single monolithic struct that contains these structs in a single one.
     var cDst: I32
     var cEq: I32
@@ -457,10 +458,10 @@ struct SFRenderStates // this is originally a nested struct that cannot be passe
     var a31: F32
     var a32: F32
     var a33: F32
-    var texture: SFTextureRaw
-    var shader: SFShaderRaw
+    var texture: TextureRaw
+    var shader: ShaderRaw
 
-    new create(bm: SFBlendMode, tf: SFTransform, texptr: SFTextureRaw, sh: SFShader) =>
+    new create(bm: BlendMode, tf: Transform, tex: Texture, sh: Shader) =>
         cSrc = bm.colorSrcFactor
         cDst = bm.colorDstFactor
         cEq = bm.colorEquation
@@ -476,19 +477,19 @@ struct SFRenderStates // this is originally a nested struct that cannot be passe
         a31 = try tf.matrix(6)? else 0.0 end
         a32 = try tf.matrix(7)? else 0.0 end
         a33 = try tf.matrix(8)? else 1.0 end
-        texture = texptr
+        texture = tex.getRaw()
         shader = sh.getRaw()
 
-    fun ref getRaw(): SFRenderStatesRaw =>
-        SFRenderStatesRaw(this)
+    fun ref getRaw(): RenderStatesRaw =>
+        RenderStatesRaw(this)
 
     new default() =>
-        cSrc = SFBlendFactor.sfBlendFactorSrcAlpha()
-        cDst = SFBlendFactor.sfBlendFactorOneMinusSrcAlpha()
-        cEq = SFBlendEquation.sfBlendEquationAdd()
-        aSrc = SFBlendFactor.sfBlendFactorOne()
-        aDst = SFBlendFactor.sfBlendFactorOneMinusSrcAlpha()
-        aEq = SFBlendEquation.sfBlendEquationAdd()
+        cSrc = BlendFactor.sfBlendFactorSrcAlpha()
+        cDst = BlendFactor.sfBlendFactorOneMinusSrcAlpha()
+        cEq = BlendEquation.sfBlendEquationAdd()
+        aSrc = BlendFactor.sfBlendFactorOne()
+        aDst = BlendFactor.sfBlendFactorOneMinusSrcAlpha()
+        aEq = BlendEquation.sfBlendEquationAdd()
         a11 = 1.0
         a12 = 0.0
         a13 = 0.0
@@ -498,22 +499,31 @@ struct SFRenderStates // this is originally a nested struct that cannot be passe
         a31 = 0.0
         a32 = 0.0
         a33 = 1.0
-        texture = SFTextureRaw.none()
-        shader = SFShaderRaw.none()
+        texture = TextureRaw.none()
+        shader = ShaderRaw.none()
 
-type SFRenderStatesRaw is NullablePointer[SFRenderStates]
+type RenderStatesRaw is NullablePointer[RenderStates]
 
 // abstraction layer
 
-class SFContext
-    var _raw: SFContextRaw ref
+// class RenderStates
+//     var _raw: RenderStatesRaw ref
+//
+//     new create() =>
+//         _raw = RenderStatesRaw(_RenderStates.default())
+//
+//     fun ref getRaw(): RenderStatesRaw =>
+//         _raw
+
+class Context
+    var _raw: ContextRaw ref
 
     new create() =>
         _raw = @sfContext_create()
 
-    fun ref getSettings(): SFContextSettings =>
-        var s: SFContextSettings = SFContextSettings.create(0, 0, 0, 0, 0, 0, 0)
-        @sfContext_getSettingsA(_raw, SFContextSettingsRaw(s))
+    fun ref getSettings(): ContextSettings =>
+        var s: ContextSettings = ContextSettings.create(0, 0, 0, 0, 0, 0, 0)
+        @sfContext_getSettingsA(_raw, ContextSettingsRaw(s))
         s
 
     fun ref setActive(active: Bool): Bool =>
@@ -526,28 +536,28 @@ class SFContext
     fun ref destroy() =>
         if not _raw.is_null() then
             @sfContext_destroy(_raw)
-            _raw = SFContextRaw.create()
+            _raw = ContextRaw.create()
         end
 
     fun _final() =>
         if not _raw.is_null() then @sfContext_destroy(_raw) end
 
-class SFRenderWindow
-    var _raw: SFRenderWindowRaw ref
-    let _evt: SFEventStruct
+class RenderWindow
+    var _raw: RenderWindowRaw ref
+    let _evt: EventStruct
 
-    new create(mode: SFVideoMode, title: String, style: I32, ctxsettings: SFContextSettingsRaw = SFContextSettingsRaw.none()) =>
+    new create(mode: VideoMode, title: String, style: I32, ctxsettings: ContextSettingsRaw = ContextSettingsRaw.none()) =>
         //let mode_arr: Array[U32] = [mode.width; mode.height; mode.bitsPerPixel] // trick to send this instead of the value struct
         //_raw = @sfRenderWindow_create(mode_arr.cpointer(), title.cstring(), style, ctxsettings)
         _raw = @sfRenderWindow_createA(mode.width, mode.height, mode.bitsPerPixel, title.cstring(), style, ctxsettings)
-        _evt = SFEventStruct(_raw)
+        _evt = EventStruct(_raw)
 
-    fun ref getEventStruct(): SFEventStruct =>
+    fun ref getEventStruct(): EventStruct =>
         _evt
     
-    fun ref getSettings(): SFContextSettings =>
-        var s: SFContextSettings = SFContextSettings.create(0, 0, 0, 0, 0, 0, 0)
-        @sfRenderWindow_getSettingsA(_raw, SFContextSettingsRaw(s))
+    fun ref getSettings(): ContextSettings =>
+        var s: ContextSettings = ContextSettings.create(0, 0, 0, 0, 0, 0, 0)
+        @sfRenderWindow_getSettingsA(_raw, ContextSettingsRaw(s))
         s
 
     fun ref setFramerateLimit(limit: U32) =>
@@ -566,43 +576,51 @@ class SFRenderWindow
     fun ref hasFocus(): Bool =>
         @sfRenderWindow_hasFocus(_raw) > 0
 
-    fun ref clear(color: SFColor = SFColor(0, 0, 0, 255)) =>
+    fun ref clear(color: Color = Color(0, 0, 0, 255)) =>
         @sfRenderWindow_clear(_raw, color._u32())
 
-    fun ref drawSprite(sprite: SFSprite, renderstate: SFRenderStatesRaw = SFRenderStatesRaw.none()) =>
+    fun ref drawSprite(sprite: Sprite, renderstate: RenderStatesRaw = RenderStatesRaw.none()) =>
         @sfRenderWindow_drawSprite(_raw, sprite.getRaw(), renderstate)
 
-    fun ref drawShape(shape: SFShape, renderstate: SFRenderStatesRaw = SFRenderStatesRaw.none()) =>
+    // fun ref drawSprite(sprite: Sprite, renderstate: (RenderStates | None) = None) =>
+    //     let renderStatesRaw: RenderStatesRaw = 
+    //         match renderstate
+    //             | None => RenderStatesRaw.none() 
+    //             | let rs: RenderStates => rs.getRaw() 
+    //         end
+    //     @sfRenderWindow_drawSprite(_raw, sprite.getRaw(), renderStatesRaw)
+
+    fun ref drawShape(shape: Shape, renderstate: RenderStatesRaw = RenderStatesRaw.none()) =>
         match shape
-        | let s: SFCircleShape =>
+        | let s: CircleShape =>
             @sfRenderWindow_drawShape(_raw, s.getRaw(), renderstate)
-        | let s: SFRectangleShape =>
+        | let s: RectangleShape =>
             @sfRenderWindow_drawShape(_raw, s.getRaw(), renderstate)
         end
 
-    fun ref drawText(text: SFText, renderstate: SFRenderStatesRaw = SFRenderStatesRaw.none()) =>
+    fun ref drawText(text: Text, renderstate: RenderStatesRaw = RenderStatesRaw.none()) =>
         @sfRenderWindow_drawText(_raw, text.getRaw(), renderstate)
 
-    fun ref drawVertexArray(vertexArray: SFVertexArray, states: SFRenderStatesRaw = SFRenderStatesRaw.none()) =>
+    fun ref drawVertexArray(vertexArray: VertexArray, states: RenderStatesRaw = RenderStatesRaw.none()) =>
         @sfRenderWindow_drawVertexArray(_raw, vertexArray.getRaw(), states)
 
     fun ref display() =>
         @sfRenderWindow_display(_raw)
 
-    fun ref setView(view: SFView) =>
+    fun ref setView(view: View) =>
         @sfRenderWindow_setView(_raw, view.getRaw())
 
     fun ref destroy() =>
         if not _raw.is_null() then
             @sfRenderWindow_destroy(_raw)
-            _raw = SFRenderWindowRaw.create()
+            _raw = RenderWindowRaw.create()
         end
 
     fun _final() =>
         if not _raw.is_null() then @sfRenderWindow_destroy(_raw) end
 
-class SFRenderTexture
-    var _raw: SFRenderTextureRaw ref
+class RenderTexture
+    var _raw: RenderTextureRaw ref
 
     new create(width: U32, height: U32, depthBuffer: Bool) =>
         if depthBuffer then
@@ -611,24 +629,24 @@ class SFRenderTexture
             _raw = @sfRenderTexture_create(width, height, 0)
         end
 
-    fun ref clear(color: SFColor) =>
+    fun ref clear(color: Color) =>
         @sfRenderTexture_clear(_raw, color._u32())
 
-    fun ref drawSprite(sprite: SFSprite, renderstate: SFRenderStatesRaw = SFRenderStatesRaw.none()) =>
+    fun ref drawSprite(sprite: Sprite, renderstate: RenderStatesRaw = RenderStatesRaw.none()) =>
         @sfRenderTexture_drawSprite(_raw, sprite.getRaw(), renderstate)
 
-    fun ref drawShape(shape: SFShape, renderstate: SFRenderStatesRaw = SFRenderStatesRaw.none()) =>
+    fun ref drawShape(shape: Shape, renderstate: RenderStatesRaw = RenderStatesRaw.none()) =>
         match shape
-        | let s: SFCircleShape =>
+        | let s: CircleShape =>
             @sfRenderTexture_drawShape(_raw, s.getRaw(), renderstate)
-        | let s: SFRectangleShape =>
+        | let s: RectangleShape =>
             @sfRenderTexture_drawShape(_raw, s.getRaw(), renderstate)
         end
 
-    fun ref drawText(text: SFText, renderstate: SFRenderStatesRaw = SFRenderStatesRaw.none()) =>
+    fun ref drawText(text: Text, renderstate: RenderStatesRaw = RenderStatesRaw.none()) =>
         @sfRenderTexture_drawText(_raw, text.getRaw(), renderstate)
 
-    fun ref getTextureRaw(): SFTextureRaw =>
+    fun ref getTextureRaw(): TextureRaw =>
         @sfRenderTexture_getTexture(_raw)
 
     fun ref display() =>
@@ -640,33 +658,33 @@ class SFRenderTexture
     fun ref destroy() =>
         if not _raw.is_none() then
             @sfRenderTexture_destroy(_raw)
-            _raw = SFRenderTextureRaw.none()
+            _raw = RenderTextureRaw.none()
         end
 
     fun _final() =>
         if not _raw.is_none() then @sfRenderTexture_destroy(_raw) end
 
-class SFSprite
-    var _raw: SFSpriteRaw ref
+class Sprite
+    var _raw: SpriteRaw ref
 
     new create() =>
         _raw = @sfSprite_create()
 
-    fun ref setTexture(texture: SFTexture, resetRect: Bool = false) =>
+    fun ref setTexture(texture: Texture, resetRect: Bool = false) =>
         if resetRect then
             @sfSprite_setTexture(_raw, texture.getRaw(), 1)
         else
             @sfSprite_setTexture(_raw, texture.getRaw(), 0)
         end
     
-    fun ref setTextureFromRaw(texptr: SFTextureRaw, resetRect: Bool = false) =>
+    fun ref setTextureFromRaw(texptr: TextureRaw, resetRect: Bool = false) =>
         if resetRect then
             @sfSprite_setTexture(_raw, texptr, 1)
         else
             @sfSprite_setTexture(_raw, texptr, 0)
         end
 
-    fun ref getRaw(): SFSpriteRaw =>
+    fun ref getRaw(): SpriteRaw =>
         _raw
 
     fun ref isNULL(): Bool =>
@@ -675,28 +693,28 @@ class SFSprite
     fun ref destroy() =>
         if not _raw.is_none() then
              @sfSprite_destroy(_raw)
-            _raw = SFSpriteRaw.none()
+            _raw = SpriteRaw.none()
         end
 
     fun _final() =>
         if not _raw.is_none() then @sfSprite_destroy(_raw) end
 
-class SFTexture
-    var _raw: SFTextureRaw ref = SFTextureRaw.none()
+class Texture
+    var _raw: TextureRaw ref = TextureRaw.none()
 
-    new create(tex_ptr: SFTextureRaw = SFTextureRaw.none()) =>
+    new create(tex_ptr: TextureRaw = TextureRaw.none()) =>
         _raw = tex_ptr
 
-    new createFromFile(filename: String val, area: SFIntRectRaw = SFIntRectRaw.none()) =>
+    new createFromFile(filename: String val, area: IntRectRaw = IntRectRaw.none()) =>
         _raw = @sfTexture_createFromFile(filename.cstring(), area)
 
-    new ref createFromImage(image: SFImage, area: SFIntRectRaw = SFIntRectRaw.none()) =>
+    new ref createFromImage(image: Image, area: IntRectRaw = IntRectRaw.none()) =>
         _raw = @sfTexture_createFromImage(image.getRaw(), area)
 
     fun ref updateFromPixels(pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32) =>
         @sfTexture_updateFromPixels(_raw, pixels, width, height, x, y)
 
-    fun ref getRaw(): SFTextureRaw =>
+    fun ref getRaw(): TextureRaw =>
         _raw
 
     fun ref isNULL(): Bool =>
@@ -705,22 +723,22 @@ class SFTexture
     fun ref destroy() =>
         if not _raw.is_none() then
              @sfTexture_destroy(_raw)
-            _raw = SFTextureRaw.none()
+            _raw = TextureRaw.none()
         end
 
     fun _final() =>
         if not _raw.is_none() then @sfTexture_destroy(_raw) end
 
-class SFImage
-    var _raw: SFImageRaw ref
+class Image
+    var _raw: ImageRaw ref
 
     new create(width: U32, height: U32) => 
         _raw = @sfImage_create(width, height)
     
-    new createFromColor(width: U32, height: U32, color: SFColor) =>
+    new createFromColor(width: U32, height: U32, color: Color) =>
         _raw = @sfImage_createFromColor(width, height, color._u32())
 
-    fun ref getRaw(): SFImageRaw =>
+    fun ref getRaw(): ImageRaw =>
         _raw
 
     fun ref isNULL(): Bool =>
@@ -729,14 +747,14 @@ class SFImage
     fun ref destroy() =>
         if not _raw.is_none() then
              @sfImage_destroy(_raw)
-            _raw = SFImageRaw.none()
+            _raw = ImageRaw.none()
         end
 
     fun _final() =>
         if not _raw.is_none() then @sfImage_destroy(_raw) end
 
-class SFShader
-    var _raw: SFShaderRaw ref
+class Shader
+    var _raw: ShaderRaw ref
 
     new createFromMemory(vertexShader: String val, geometryShader: String val, fragmentShader: String val) =>
         // create NULL pointers if the String argument is "" and cstrings otherwise
@@ -745,13 +763,13 @@ class SFShader
         let fsarg = if fragmentShader.size() == 0 then Pointer[U8 val].create() else fragmentShader.cstring() end
         _raw = @sfShader_createFromMemory(vsarg, gsarg, fsarg)
 
-    fun ref setTextureParameter(name: String val, texture: SFTextureRaw) =>
+    fun ref setTextureParameter(name: String val, texture: TextureRaw) =>
         @sfShader_setTextureParameter(_raw, name.cstring(), texture)
 
     fun ref setFloatUniform(name: String val, floatval: F32) =>
         @sfShader_setFloatUniform(_raw, name.cstring(), floatval)
 
-    fun ref getRaw(): SFShaderRaw =>
+    fun ref getRaw(): ShaderRaw =>
         _raw
 
     fun ref isNULL(): Bool =>
@@ -760,7 +778,7 @@ class SFShader
     fun ref destroy() =>
         if not _raw.is_none() then
              @sfShader_destroy(_raw)
-            _raw = SFShaderRaw.none()
+            _raw = ShaderRaw.none()
         end
 
     fun _final() =>

@@ -12,14 +12,14 @@ use @pony_os_stderr[Pointer[U8]]()
 
 actor Main
     let _env : Env
-    var window : SFRenderWindow
-    var event : SFEventStruct
-    var texture : SFTexture
-    var sprite : SFSprite
-    let vtx_arr : SFVertexArray
-    let circle : SFShape
-    let fps_font : SFFont
-    let fps_text : SFText
+    var window : RenderWindow
+    var event : EventStruct
+    var texture : Texture
+    var sprite : Sprite
+    let vtx_arr : VertexArray
+    let circle : Shape
+    let fps_font : Font
+    let fps_text : Text
     let width : USize = 320
     let height : USize = 240
     var pixeldata : Array[U32] = Array[U32].init(0, width * height)
@@ -34,11 +34,11 @@ actor Main
 
     new create(env : Env) =>
       _env = env
-      window = SFRenderWindow(SFVideoMode(width.u32(), height.u32(), 32), "SFML Demo", SFWindowStyle.sfDefaultStyle())
-      let s : SFContextSettings = window.getSettings()
+      window = RenderWindow(VideoMode(width.u32(), height.u32(), 32), "SFML Demo", WindowStyle.sfDefaultStyle())
+      let s : ContextSettings = window.getSettings()
       event = window.getEventStruct()
-      texture = SFTexture.createFromImage(SFImage(width.u32(), height.u32()))
-      sprite = SFSprite
+      texture = Texture.createFromImage(Image(width.u32(), height.u32()))
+      sprite = Sprite
 
       let w = width.f32()
       let h = height.f32()
@@ -48,34 +48,34 @@ actor Main
       let thickness: F32 = 1
       let wobble: F32 = 10
       let r = half_w.min(half_h) - thickness - wobble
-      circle = SFCircleShape
+      circle = CircleShape
         .> setRadius(r)
-        .> setFillColor(SFColor(127,200,127))
-        .> setOutlineColor(SFColor.black())
+        .> setFillColor(Color(127,200,127))
+        .> setOutlineColor(Color.black())
         .> setOutlineThickness(thickness)
-        .> setPosition(SFVector2f(half_w, half_h))
-        .> setOrigin(SFVector2f(r, r-wobble))
+        .> setPosition(Vector2f(half_w, half_h))
+        .> setOrigin(Vector2f(r, r-wobble))
 
-      let line_color = SFColor.fromInteger(0x00ff00ff)
-      let center_vtx = SFVertex(SFVector2f(half_w, half_h), line_color, SFVector2f(0,0))
+      let line_color = Color.fromInteger(0x00ff00ff)
+      let center_vtx = Vertex(Vector2f(half_w, half_h), line_color, Vector2f(0,0))
       let vertices = [
-        center_vtx ; SFVertex(SFVector2f(0, 0), line_color)
-        center_vtx ; SFVertex(SFVector2f(0, h), line_color)
-        center_vtx ; SFVertex(SFVector2f(w, 0), line_color)
-        center_vtx ; SFVertex(SFVector2f(w, h), line_color)
+        center_vtx ; Vertex(Vector2f(0, 0), line_color)
+        center_vtx ; Vertex(Vector2f(0, h), line_color)
+        center_vtx ; Vertex(Vector2f(w, 0), line_color)
+        center_vtx ; Vertex(Vector2f(w, h), line_color)
       ]
-      vtx_arr = SFVertexArray
-      vtx_arr.setPrimitiveType(SFPrimitiveType.sfLines())
+      vtx_arr = VertexArray
+      vtx_arr.setPrimitiveType(PrimitiveType.sfLines())
       for v in vertices.values() do vtx_arr.append(v) end
 
       let font_size: U32 = 24
-      fps_font = SFFont.create("Square.ttf") // https://www.dafont.com/squarefont.font
-      fps_text = SFText.create()
+      fps_font = Font.create("Square.ttf") // https://www.dafont.com/squarefont.font
+      fps_text = Text.create()
         .> setFont(fps_font)
         .> setCharacterSize(font_size)
-        .> setOrigin(SFVector2f(0, font_size.f32()))
-        .> setPosition(SFVector2f(5, h-5))
-        .> setColor(SFColor(0,0,255))
+        .> setOrigin(Vector2f(0, font_size.f32()))
+        .> setPosition(Vector2f(5, h-5))
+        .> setColor(Color(0,0,255))
 
       t_last_fps_frame = Time.millis()
       t_last_circle_frame = Time.millis()
@@ -115,15 +115,15 @@ actor Main
     fun ref poll_events() =>
       if event.poll() then
         match event.translate()
-        | let kevt : SFKeyEvent =>
-          if kevt.code == SFKeyCode.sfKeyEscape() then
+        | let kevt : KeyEvent =>
+          if kevt.code == KeyCode.sfKeyEscape() then
               running = false
           end
-        | let wevt : SFWindowEvent =>
+        | let wevt : WindowEvent =>
           if wevt.resized then
               _env.out.print(wevt.newsizex.string() + ", " + wevt.newsizey.string())
           end
-        | SFQuitEvent => running = false
+        | QuitEvent => running = false
         end
       end
 
@@ -134,7 +134,7 @@ actor Main
         poll_events()
 
         // Redraw
-        window.clear(SFColor(127, 127, 127, 127))
+        window.clear(Color(127, 127, 127, 127))
         update_pixels() // draws random pixels
         update_circle(t_now) // draws a wobbly circle
         update_vertex_array()  // draws crossed lines

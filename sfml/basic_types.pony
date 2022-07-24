@@ -1,4 +1,4 @@
-struct SFColor
+struct Color
     var r : U8
     var g : U8
     var b : U8
@@ -19,7 +19,7 @@ struct SFColor
     new transparent() => r = 0 ; g = 0 ; b = 0 ; a = 0
 
     // We need a copy constructor to initialize colors embedded into larger structs.
-    new copy(that': SFColor) =>
+    new copy(that': Color) =>
         "Creates a new color by copying an existing color."
         r = that'.r ; g = that'.g ; b = that'.b ; a = that'.a
 
@@ -36,7 +36,7 @@ struct SFColor
         "Mutates the color to the specified values"
         r = r' ; g = g' ; b = b' ; a = a'
 
-    fun ref setFromColor(that': SFColor) =>
+    fun ref setFromColor(that': Color) =>
         "Mutates the color to match the provided color"
         r = that'.r ; g = that'.g ; b = that'.b ; a = that'.a
 
@@ -46,17 +46,17 @@ struct SFColor
     new _from_u32(coded': U32) =>
         r = 0 ; g = 0 ; b = 0 ; a = 0
         var coded: U32 = coded'
-        @memcpy(SFColorRaw(this), addressof coded, coded.bytewidth())
+        @memcpy(ColorRaw(this), addressof coded, coded.bytewidth())
 
     fun ref _u32(): U32 =>
         var coded: U32 = 0
-        @memcpy(addressof coded, SFColorRaw(this), coded.bytewidth())
+        @memcpy(addressof coded, ColorRaw(this), coded.bytewidth())
         coded
 
-type SFColorRaw is NullablePointer[SFColor]
+type ColorRaw is NullablePointer[Color]
 
 
-struct SFIntRect
+struct IntRect
     let left : I32
     let top : I32
     let width : I32
@@ -73,12 +73,12 @@ struct SFIntRect
 
     fun ref _u128() : U128 =>
         var tmp : U128 = 0
-        @memcpy(addressof tmp, SFIntRectRaw(this), USize(16))
+        @memcpy(addressof tmp, IntRectRaw(this), USize(16))
         tmp
 
-type SFIntRectRaw is NullablePointer[SFIntRect]
+type IntRectRaw is NullablePointer[IntRect]
 
-struct SFFloatRect
+struct FloatRect
     let left : F32
     let top : F32
     let width : F32
@@ -95,17 +95,17 @@ struct SFFloatRect
 
     fun ref _u128() : U128 =>
         var tmp : U128 = 0
-        @memcpy(addressof tmp, SFFloatRectRaw(this), USize(16))
+        @memcpy(addressof tmp, FloatRectRaw(this), USize(16))
         tmp
 
     new _from_u128(chunk : U128) =>
         left = 0; top = 0; width = 0; height = 0
         var tmp : U128 = chunk
-        @memcpy(SFFloatRectRaw(this), addressof tmp, USize(16))
+        @memcpy(FloatRectRaw(this), addressof tmp, USize(16))
 
-type SFFloatRectRaw is NullablePointer[SFFloatRect]
+type FloatRectRaw is NullablePointer[FloatRect]
 
-struct SFVector2f
+struct Vector2f
     var x : F32
     var y : F32
 
@@ -113,7 +113,7 @@ struct SFVector2f
         x = x'
         y = y'
 
-    new copy(that: SFVector2f) =>
+    new copy(that: Vector2f) =>
         x = that.x
         y = that.y
 
@@ -122,12 +122,12 @@ struct SFVector2f
 
     fun ref _u64() : U64 =>
         var tmp : U64 = 0
-        @memcpy(addressof tmp, SFVector2fRaw(this), USize(8))
+        @memcpy(addressof tmp, Vector2fRaw(this), USize(8))
         tmp
 
-type SFVector2fRaw is NullablePointer[SFVector2f]
+type Vector2fRaw is NullablePointer[Vector2f]
 
-struct SFVector2u
+struct Vector2u
     var x : U32
     var y : U32
 
@@ -140,31 +140,31 @@ struct SFVector2u
 
     fun ref _u64() : U64 =>
         var tmp : U64 = 0
-        @memcpy(addressof tmp, SFVector2uRaw(this), USize(8))
+        @memcpy(addressof tmp, Vector2uRaw(this), USize(8))
         tmp
 
     new _from_u64(chunk : U64) =>
-        var tmp = SFVector2u(0, 0)
+        var tmp = Vector2u(0, 0)
         var tmp2 = chunk
-        @memcpy(SFVector2uRaw(tmp), addressof tmp2, USize(8))
+        @memcpy(Vector2uRaw(tmp), addressof tmp2, USize(8))
         x = tmp.x
         y = tmp.y
 
-type SFVector2uRaw is NullablePointer[SFVector2u]
+type Vector2uRaw is NullablePointer[Vector2u]
 
-struct SFVertex
-    embed position: SFVector2f ///< Position of the vertex
-    embed color : SFColor ///< Color of the vertex
-    embed texCoords: SFVector2f ///< Coordinates of the texture's pixel to map to the vertex
+struct Vertex
+    embed position: Vector2f ///< Position of the vertex
+    embed color : Color ///< Color of the vertex
+    embed texCoords: Vector2f ///< Coordinates of the texture's pixel to map to the vertex
  
-    new create(position': SFVector2f, color': SFColor, texCoords': SFVector2f = SFVector2f(0,0)) =>
-      position = SFVector2f.copy(position')
-      color = SFColor.copy(color')
-      texCoords = SFVector2f.copy(texCoords')
+    new create(position': Vector2f, color': Color, texCoords': Vector2f = Vector2f(0,0)) =>
+      position = Vector2f.copy(position')
+      color = Color.copy(color')
+      texCoords = Vector2f.copy(texCoords')
 
-type SFVertexRaw is NullablePointer[SFVertex]
+type VertexRaw is NullablePointer[Vertex]
 
-primitive SFPrimitiveType
+primitive PrimitiveType
     fun sfPoints() : I32 =>         0
     fun sfLines() : I32 =>          1
     fun sfLineStrip() : I32 =>      2

@@ -1,21 +1,21 @@
-use @sfVertexArray_create[SFVertexArrayRaw]()
-use @sfVertexArray_copy[SFVertexArrayRaw](vtxArr: SFVertexArrayRaw box)
-use @sfVertexArray_destroy[None](vtxArr: SFVertexArrayRaw box)
-use @sfVertexArray_getVertexCount[USize](vtxArr: SFVertexArrayRaw box)
-use @sfVertexArray_getVertex[SFVertex](vtxArr: SFVertexArrayRaw box, index: USize)
-use @sfVertexArray_clear[None](vtxArr: SFVertexArrayRaw box)
-use @sfVertexArray_resize[None](vtxArr: SFVertexArrayRaw box, vertexCount: USize)
-use @sfVertexArray_appendA[None](vtxArr: SFVertexArrayRaw box, pos: U64, color: U32, tex: U64)
-use @sfVertexArray_setPrimitiveType[None](vtxArr: SFVertexArrayRaw box, primitiveType: I32)
-use @sfVertexArray_getPrimitiveType[I32](vtxArr: SFVertexArrayRaw box)
-use @sfVertexArray_getBoundsA[None](vtxArr: SFVertexArrayRaw box, bounds: SFFloatRectRaw)
+use @sfVertexArray_create[VertexArrayRaw]()
+use @sfVertexArray_copy[VertexArrayRaw](vtxArr: VertexArrayRaw box)
+use @sfVertexArray_destroy[None](vtxArr: VertexArrayRaw box)
+use @sfVertexArray_getVertexCount[USize](vtxArr: VertexArrayRaw box)
+use @sfVertexArray_getVertex[Vertex](vtxArr: VertexArrayRaw box, index: USize)
+use @sfVertexArray_clear[None](vtxArr: VertexArrayRaw box)
+use @sfVertexArray_resize[None](vtxArr: VertexArrayRaw box, vertexCount: USize)
+use @sfVertexArray_appendA[None](vtxArr: VertexArrayRaw box, pos: U64, color: U32, tex: U64)
+use @sfVertexArray_setPrimitiveType[None](vtxArr: VertexArrayRaw box, primitiveType: I32)
+use @sfVertexArray_getPrimitiveType[I32](vtxArr: VertexArrayRaw box)
+use @sfVertexArray_getBoundsA[None](vtxArr: VertexArrayRaw box, bounds: FloatRectRaw)
 
-struct _SFVertexArray
-type SFVertexArrayRaw is NullablePointer[_SFVertexArray]
+struct _VertexArray
+type VertexArrayRaw is NullablePointer[_VertexArray]
 
-class SFVertexArray
+class VertexArray
 
-  var _raw: SFVertexArrayRaw
+  var _raw: VertexArrayRaw
 
   new create() =>
     _raw = @sfVertexArray_create()
@@ -26,13 +26,13 @@ class SFVertexArray
   fun ref destroy() =>
     if not _raw.is_none() then
        @sfVertexArray_destroy(_raw)
-      _raw = SFVertexArrayRaw.none()
+      _raw = VertexArrayRaw.none()
     end
 
   fun getVertexCount(): USize =>
     @sfVertexArray_getVertexCount(_raw)
 
-  fun ref getVertex(index: USize): SFVertex =>
+  fun ref getVertex(index: USize): Vertex =>
     @sfVertexArray_getVertex(_raw, index)
 
   fun ref clear() =>
@@ -41,7 +41,7 @@ class SFVertexArray
   fun ref resize(vertexCount: USize) =>
     @sfVertexArray_resize(_raw, vertexCount)
 
-  fun ref append(v: SFVertex) =>
+  fun ref append(v: Vertex) =>
     @sfVertexArray_appendA(_raw, v.position._u64(), v.color._u32(), v.texCoords._u64())
 
   fun ref setPrimitiveType(primitiveType: I32) =>
@@ -50,16 +50,16 @@ class SFVertexArray
   fun ref getPrimitiveType(): I32 =>
     @sfVertexArray_getPrimitiveType(_raw)
 
-  fun ref getBounds(): SFFloatRect =>
-    let rect = SFFloatRect._from_u128(0)
+  fun ref getBounds(): FloatRect =>
+    let rect = FloatRect._from_u128(0)
     if not _raw.is_none() then
-      @sfVertexArray_getBoundsA(_raw, SFFloatRectRaw(rect))
+      @sfVertexArray_getBoundsA(_raw, FloatRectRaw(rect))
       rect
     else
       rect
     end
 
-  fun ref getRaw(): SFVertexArrayRaw =>
+  fun ref getRaw(): VertexArrayRaw =>
     _raw
 
   fun ref isNULL(): Bool =>

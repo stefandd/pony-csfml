@@ -1,33 +1,33 @@
 
-use @sfSoundBuffer_createFromFile[SFSoundBufferRaw](filename: Pointer[U8 val] tag)
-use @sfSoundBuffer_destroy[None](soundBuffer : SFSoundBufferRaw box)
+use @sfSoundBuffer_createFromFile[SoundBufferRaw](filename: Pointer[U8 val] tag)
+use @sfSoundBuffer_destroy[None](soundBuffer : SoundBufferRaw box)
 
-use @sfSound_create[SFSoundRaw]()
-use @sfSound_setBuffer[None](sound : SFSoundRaw box, buffer : SFSoundBufferRaw box)
-use @sfSound_play[None](sound : SFSoundRaw box)
-use @sfSound_stop[None](sound : SFSoundRaw box)
-use @sfSound_pause[None](sound : SFSoundRaw box)
-use @sfSound_setPitch[None](sound : SFSoundRaw box, pitch : F32)
-use @sfSound_setVolume[None](sound : SFSoundRaw box, volume : F32)
-use @sfSound_setLoop[None](sound : SFSoundRaw box, loop : I32)
-use @sfSound_getStatus[I32](sound : SFSoundRaw box)
-use @sfSound_destroy[None](sound : SFSoundRaw box)
+use @sfSound_create[SoundRaw]()
+use @sfSound_setBuffer[None](sound : SoundRaw box, buffer : SoundBufferRaw box)
+use @sfSound_play[None](sound : SoundRaw box)
+use @sfSound_stop[None](sound : SoundRaw box)
+use @sfSound_pause[None](sound : SoundRaw box)
+use @sfSound_setPitch[None](sound : SoundRaw box, pitch : F32)
+use @sfSound_setVolume[None](sound : SoundRaw box, volume : F32)
+use @sfSound_setLoop[None](sound : SoundRaw box, loop : I32)
+use @sfSound_getStatus[I32](sound : SoundRaw box)
+use @sfSound_destroy[None](sound : SoundRaw box)
 
-primitive SFSoundStatus
+primitive SoundStatus
     fun sfStopped() : I32 => 0 ///< Sound / music is not playing
     fun sfPaused() : I32 =>  1 ///< Sound / music is paused
     fun sfPlaying() : I32 => 2 ///< Sound / music is playing
 
-struct _SFSoundBuffer
-type SFSoundBufferRaw is NullablePointer[_SFSoundBuffer]
+struct _SoundBuffer
+type SoundBufferRaw is NullablePointer[_SoundBuffer]
 
-class SFSoundBuffer
-    var _raw : SFSoundBufferRaw
+class SoundBuffer
+    var _raw : SoundBufferRaw
 
     new create(file : String) =>
         _raw = @sfSoundBuffer_createFromFile(file.cstring())
 
-    fun ref getRaw() : SFSoundBufferRaw =>
+    fun ref getRaw() : SoundBufferRaw =>
         _raw
 
     fun ref isNULL() : Bool =>
@@ -36,26 +36,26 @@ class SFSoundBuffer
     fun ref destroy() =>
         if not _raw.is_none() then
              @sfSoundBuffer_destroy(_raw)
-            _raw = SFSoundBufferRaw.none()
+            _raw = SoundBufferRaw.none()
         end
 
     fun _final() =>
         if not _raw.is_none() then @sfSoundBuffer_destroy(_raw) end
 
-struct _SFSound
-type SFSoundRaw is NullablePointer[_SFSound]
+struct _Sound
+type SoundRaw is NullablePointer[_Sound]
 
-class SFSound
-    var _raw : SFSoundRaw
+class Sound
+    var _raw : SoundRaw
 
     new create() =>
         _raw = @sfSound_create()
 
-    new fromBuffer(buffer : SFSoundBuffer) =>
+    new fromBuffer(buffer : SoundBuffer) =>
         _raw = @sfSound_create()
         @sfSound_setBuffer(_raw, buffer.getRaw())
 
-    fun ref setBuffer(buffer : SFSoundBuffer) =>
+    fun ref setBuffer(buffer : SoundBuffer) =>
         @sfSound_setBuffer(_raw, buffer.getRaw())
 
     fun ref play() =>
@@ -83,7 +83,7 @@ class SFSound
     fun ref setVolume(volume : F32) =>
         @sfSound_setVolume(_raw, volume)
 
-    fun ref getRaw() : SFSoundRaw =>
+    fun ref getRaw() : SoundRaw =>
         _raw
 
     fun ref isNULL() : Bool =>
@@ -92,7 +92,7 @@ class SFSound
     fun ref destroy() =>
         if not _raw.is_none() then
              @sfSound_destroy(_raw)
-            _raw = SFSoundRaw.none()
+            _raw = SoundRaw.none()
         end
 
     fun _final() =>
