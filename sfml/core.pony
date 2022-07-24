@@ -27,10 +27,10 @@ use @sfRenderWindow_setActive[I32](window: RenderWindowRaw box, active: I32)
 use @sfRenderWindow_clear[None](window: RenderWindowRaw box, color: U32)
 use @sfRenderWindow_display[None](window: RenderWindowRaw box)
 use @sfRenderWindow_setView[None](window: RenderWindowRaw box, view: ViewRaw)
-use @sfRenderWindow_drawSprite[None](window: RenderWindowRaw box, sprite: SpriteRaw, states: RenderStatesRaw)
-use @sfRenderWindow_drawShape[None](window: RenderWindowRaw box, shape: ShapeRaw, states: RenderStatesRaw)
-use @sfRenderWindow_drawText[None](window: RenderWindowRaw box, text: TextRaw, states: RenderStatesRaw)
-use @sfRenderWindow_drawVertexArray[None](window: RenderWindowRaw box, vertexArray: VertexArrayRaw, states: RenderStatesRaw)
+use @sfRenderWindow_drawSprite[None](window: RenderWindowRaw box, sprite: SpriteRaw, states: _RenderStatesRaw)
+use @sfRenderWindow_drawShape[None](window: RenderWindowRaw box, shape: ShapeRaw, states: _RenderStatesRaw)
+use @sfRenderWindow_drawText[None](window: RenderWindowRaw box, text: TextRaw, states: _RenderStatesRaw)
+use @sfRenderWindow_drawVertexArray[None](window: RenderWindowRaw box, vertexArray: VertexArrayRaw, states: _RenderStatesRaw)
 use @sfRenderWindow_pollEvent[I32](window: RenderWindowRaw box, event: Pointer[U8] tag)
 use @sfRenderWindow_getSize[U64](window: RenderWindowRaw box)
 use @sfRenderWindow_destroy[None](window: RenderWindowRaw box)
@@ -38,10 +38,11 @@ use @sfRenderWindow_destroy[None](window: RenderWindowRaw box)
 use @sfRenderTexture_create[RenderTextureRaw](width: U32, height: U32, depthBuffer: I32)
 use @sfRenderTexture_clear[None](rendtex: RenderTextureRaw box, color: U32)
 use @sfRenderTexture_display[None](rendtex: RenderTextureRaw box)
-use @sfRenderTexture_drawSprite[None](rendtex: RenderTextureRaw box, sprite: SpriteRaw, states: RenderStatesRaw)
+use @sfRenderTexture_drawSprite[None](rendtex: RenderTextureRaw box, sprite: SpriteRaw, states: _RenderStatesRaw)
 use @sfRenderTexture_getTexture[TextureRaw](rendtex: RenderTextureRaw box)
-use @sfRenderTexture_drawShape[None](rendtex: RenderTextureRaw box, shape: ShapeRaw, states: RenderStatesRaw)
-use @sfRenderTexture_drawText[None](rendtex: RenderTextureRaw box, text: TextRaw, states: RenderStatesRaw)
+use @sfRenderTexture_drawShape[None](rendtex: RenderTextureRaw box, shape: ShapeRaw, states: _RenderStatesRaw)
+use @sfRenderTexture_drawText[None](rendtex: RenderTextureRaw box, text: TextRaw, states: _RenderStatesRaw)
+use @sfRenderTexture_drawVertexArray[None](rendtex: RenderTextureRaw box, vertexArray: VertexArrayRaw, states: _RenderStatesRaw)
 use @sfRenderTexture_destroy[None](rendtex: RenderTextureRaw box)
 // Image
 use @sfImage_create[ImageRaw](width: U32, height: U32)
@@ -356,35 +357,56 @@ struct _Shader
 type ShaderRaw is NullablePointer[_Shader]
 
 struct Transform
-    var matrix: Array[F32] = [1.0; 0; 0; 0; 1.0; 0; 0; 0; 1.0]
+    var _a00: F32
+    var _a01: F32
+    var _a02: F32
+    var _a10: F32
+    var _a11: F32
+    var _a12: F32
+    var _a20: F32
+    var _a21: F32
+    var _a22: F32
 
-    new create(m: Array[F32] = [1.0; 0; 0; 0; 1.0; 0; 0; 0; 1.0]) =>
-        matrix.clear()
-        for i in Range(0, 9) do
-            matrix.push(try m(i)? else 0.0 end)
-        end
+    new create() => None
+        _a00 = 1 ; _a01 = 0 ; _a02 = 0
+        _a10 = 0 ; _a11 = 1 ; _a12 = 0
+        _a20 = 0 ; _a21 = 0 ; _a22 = 1
+
+    new fromFloats(
+        a00: F32 = 0, a01: F32 = 0, a02: F32 = 0, 
+        a10: F32 = 0, a11: F32 = 0, a12: F32 = 0, 
+        a20: F32 = 0, a21: F32 = 0, a22: F32 = 0) 
+    =>
+        _a00 = a00 ; _a01 = a01 ; _a02 = a02
+        _a10 = a10 ; _a11 = a11 ; _a12 = a12
+        _a20 = a20 ; _a21 = a21 ; _a22 = a22
+
+    new copy(that: Transform) =>
+        _a00 = that._a00 ; _a01 = that._a01 ; _a02 = that._a02
+        _a10 = that._a10 ; _a11 = that._a11 ; _a12 = that._a12
+        _a20 = that._a20 ; _a21 = that._a21 ; _a22 = that._a22
 
     fun ref getRaw(): TransformRaw =>
-        matrix.cpointer()
+        TransformRaw(this)
 
-type TransformRaw is Pointer[F32 val] tag
+type TransformRaw is NullablePointer[Transform] tag
 
 primitive BlendEquation
-    fun sfBlendEquationAdd(): I32 => 0  ///< Pixel = Src * SrcFactor + Dst * DstFactor
-    fun sfBlendEquationSubtract(): I32 => 1 ///< Pixel = Src * SrcFactor - Dst * DstFactor
-    fun sfBlendEquationReverseSubtract(): I32 => 2  ///< Pixel = Dst * DstFactor - Src * SrcFactor
+    fun add(): I32 => 0  ///< Pixel = Src * SrcFactor + Dst * DstFactor
+    fun subtract(): I32 => 1 ///< Pixel = Src * SrcFactor - Dst * DstFactor
+    fun reverseSubtract(): I32 => 2  ///< Pixel = Dst * DstFactor - Src * SrcFactor
 
 primitive BlendFactor
-    fun sfBlendFactorZero(): I32 => 0              ///< (0, 0, 0, 0)
-    fun sfBlendFactorOne(): I32 => 1               ///< (1, 1, 1, 1)
-    fun sfBlendFactorSrcColor(): I32 => 2          
-    fun sfBlendFactorOneMinusSrcColor(): I32 => 3  
-    fun sfBlendFactorDstColor(): I32 => 4          
-    fun sfBlendFactorOneMinusDstColor(): I32 => 5  
-    fun sfBlendFactorSrcAlpha(): I32 => 6          
-    fun sfBlendFactorOneMinusSrcAlpha(): I32 => 7  
-    fun sfBlendFactorDstAlpha(): I32 => 8          
-    fun sfBlendFactorOneMinusDstAlpha (): I32 => 9
+    fun zero(): I32 => 0              ///< (0, 0, 0, 0)
+    fun one(): I32 => 1               ///< (1, 1, 1, 1)
+    fun srcColor(): I32 => 2          
+    fun oneMinusSrcColor(): I32 => 3  
+    fun dstColor(): I32 => 4          
+    fun oneMinusDstColor(): I32 => 5  
+    fun srcAlpha(): I32 => 6          
+    fun oneMinusSrcAlpha(): I32 => 7  
+    fun dstAlpha(): I32 => 8          
+    fun oneMinusDstAlpha (): I32 => 9
 
 struct BlendMode
     let colorSrcFactor: I32  ///< Source blending factor for the color channels
@@ -402,118 +424,129 @@ struct BlendMode
         alphaDstFactor = aDf
         alphaEquation = aE
 
-primitive StandardBlendModes
-    fun sfBlendNone(): BlendMode =>
-        BlendMode(
-                    BlendFactor.sfBlendFactorOne(),
-                    BlendFactor.sfBlendFactorZero(),
-                    BlendEquation.sfBlendEquationAdd(),
-                    BlendFactor.sfBlendFactorOne(),
-                    BlendFactor.sfBlendFactorZero(),
-                    BlendEquation.sfBlendEquationAdd()
-                    )
-    fun sfBlendAlpha(): BlendMode =>
-        BlendMode(
-                    BlendFactor.sfBlendFactorSrcAlpha(),
-                    BlendFactor.sfBlendFactorOneMinusSrcAlpha(),
-                    BlendEquation.sfBlendEquationAdd(),
-                    BlendFactor.sfBlendFactorOne(),
-                    BlendFactor.sfBlendFactorOneMinusSrcAlpha(),
-                    BlendEquation.sfBlendEquationAdd()
-                    )
-    fun sfBlendAdd(): BlendMode =>
-        BlendMode(
-                    BlendFactor.sfBlendFactorSrcAlpha(),
-                    BlendFactor.sfBlendFactorOne(),
-                    BlendEquation.sfBlendEquationAdd(),
-                    BlendFactor.sfBlendFactorOne(),
-                    BlendFactor.sfBlendFactorOne(),
-                    BlendEquation.sfBlendEquationAdd()
-                    )
-    fun sfBlendMultiply(): BlendMode =>
-        BlendMode(
-                    BlendFactor.sfBlendFactorDstColor(),
-                    BlendFactor.sfBlendFactorZero(),
-                    BlendEquation.sfBlendEquationAdd(),
-                    BlendFactor.sfBlendFactorDstColor(),
-                    BlendFactor.sfBlendFactorZero(),
-                    BlendEquation.sfBlendEquationAdd()
-                    )
+    new copy(that: BlendMode) =>
+        colorSrcFactor = that.colorSrcFactor
+        colorDstFactor = that.colorDstFactor
+        colorEquation  = that.colorEquation
+        alphaSrcFactor = that.alphaSrcFactor
+        alphaDstFactor = that.alphaDstFactor
+        alphaEquation  = that.alphaEquation
+
+    new blendNone() =>
+        colorSrcFactor = BlendFactor.one()
+        colorDstFactor = BlendFactor.zero()
+        colorEquation  = BlendEquation.add()
+        alphaSrcFactor = BlendFactor.one()
+        alphaDstFactor = BlendFactor.zero()
+        alphaEquation  = BlendEquation.add()
+
+    new blendAlpha() =>
+        colorSrcFactor = BlendFactor.srcAlpha()
+        colorDstFactor = BlendFactor.oneMinusSrcAlpha()
+        colorEquation  = BlendEquation.add()
+        alphaSrcFactor = BlendFactor.one()
+        alphaDstFactor = BlendFactor.oneMinusSrcAlpha()
+        alphaEquation  = BlendEquation.add()
+    
+    new blendAdd() =>
+        colorSrcFactor = BlendFactor.srcAlpha()
+        colorDstFactor = BlendFactor.one()
+        colorEquation  = BlendEquation.add()
+        alphaSrcFactor = BlendFactor.one()
+        alphaDstFactor = BlendFactor.one()
+        alphaEquation  = BlendEquation.add()
+    
+    new blendMultiply() =>
+        colorSrcFactor = BlendFactor.dstColor()
+        colorDstFactor = BlendFactor.zero()
+        colorEquation  = BlendEquation.add()
+        alphaSrcFactor = BlendFactor.dstColor()
+        alphaDstFactor = BlendFactor.zero()
+        alphaEquation  = BlendEquation.add()
 
 type BlendModeRaw is NullablePointer[BlendMode]
 
-struct RenderStates // this is originally a nested struct that cannot be passed out to C properly (the inner structs are not passed by value)
-    var cSrc: I32    // therefore, this simply maps into a single monolithic struct that contains these structs in a single one.
-    var cDst: I32
-    var cEq: I32
-    var aSrc: I32
-    var aDst: I32
-    var aEq: I32
-    var a11: F32
-    var a12: F32
-    var a13: F32
-    var a21: F32
-    var a22: F32
-    var a23: F32
-    var a31: F32
-    var a32: F32
-    var a33: F32
+struct _RenderStates 
+    embed blendMode: BlendMode
+    embed transform: Transform
     var texture: TextureRaw
     var shader: ShaderRaw
 
     new create(bm: BlendMode, tf: Transform, tex: Texture, sh: Shader) =>
-        cSrc = bm.colorSrcFactor
-        cDst = bm.colorDstFactor
-        cEq = bm.colorEquation
-        aSrc = bm.alphaSrcFactor
-        aDst = bm.alphaDstFactor
-        aEq = bm.alphaEquation
-        a11 = try tf.matrix(0)? else 1.0 end
-        a12 = try tf.matrix(1)? else 0.0 end
-        a13 = try tf.matrix(2)? else 0.0 end
-        a21 = try tf.matrix(3)? else 0.0 end
-        a22 = try tf.matrix(4)? else 1.0 end
-        a23 = try tf.matrix(5)? else 0.0 end
-        a31 = try tf.matrix(6)? else 0.0 end
-        a32 = try tf.matrix(7)? else 0.0 end
-        a33 = try tf.matrix(8)? else 1.0 end
+        blendMode = BlendMode.copy(bm) // Pony embed fields must be assigned using a ctor
+        transform = Transform.copy(tf) // Pony embed fields must be assigned using a ctor
         texture = tex.getRaw()
         shader = sh.getRaw()
 
-    fun ref getRaw(): RenderStatesRaw =>
-        RenderStatesRaw(this)
-
     new default() =>
-        cSrc = BlendFactor.sfBlendFactorSrcAlpha()
-        cDst = BlendFactor.sfBlendFactorOneMinusSrcAlpha()
-        cEq = BlendEquation.sfBlendEquationAdd()
-        aSrc = BlendFactor.sfBlendFactorOne()
-        aDst = BlendFactor.sfBlendFactorOneMinusSrcAlpha()
-        aEq = BlendEquation.sfBlendEquationAdd()
-        a11 = 1.0
-        a12 = 0.0
-        a13 = 0.0
-        a21 = 0.0
-        a22 = 1.0
-        a23 = 0.0
-        a31 = 0.0
-        a32 = 0.0
-        a33 = 1.0
+        blendMode = BlendMode.blendAlpha() // Pony embed fields must be assigned using a ctor
+        transform = Transform // Pony embed fields must be assigned using a ctor
         texture = TextureRaw.none()
         shader = ShaderRaw.none()
 
-type RenderStatesRaw is NullablePointer[RenderStates]
+    new fromBlendMode(bm: BlendMode) =>
+        blendMode = BlendMode.copy(bm) // Pony embed fields must be assigned using a ctor
+        transform = Transform // Pony embed fields must be assigned using a ctor
+        texture = TextureRaw.none()
+        shader = ShaderRaw.none()
+
+    new fromTransform(tf: Transform) =>
+        blendMode = BlendMode.blendAlpha() // Pony embed fields must be assigned using a ctor
+        transform = Transform.copy(tf) // Pony embed fields must be assigned using a ctor
+        texture = TextureRaw.none()
+        shader = ShaderRaw.none()
+
+    new fromTexture(tex: Texture) =>
+        blendMode = BlendMode.blendAlpha() // Pony embed fields must be assigned using a ctor
+        transform = Transform // Pony embed fields must be assigned using a ctor
+        texture = tex.getRaw()
+        shader = ShaderRaw.none()
+
+    new fromShader(sh: Shader) =>
+        blendMode = BlendMode.blendAlpha() // Pony embed fields must be assigned using a ctor
+        transform = Transform // Pony embed fields must be assigned using a ctor
+        texture = TextureRaw.none()
+        shader = sh.getRaw()
+
+    fun ref _getRaw(): _RenderStatesRaw =>
+        _RenderStatesRaw(this)
+
+
+type _RenderStatesRaw is NullablePointer[_RenderStates]
+
+primitive _RenderStatesUtils
+    fun getRaw(maybe_render_states: (RenderStates | None)): _RenderStatesRaw =>
+        match maybe_render_states
+            | None => _RenderStatesRaw.none() 
+            | let rs: RenderStates => rs._getRaw() 
+        end
+
 
 // abstraction layer
 
-// class RenderStates
-//     var _raw: RenderStatesRaw ref
-//
-//     new create() =>
-//         _raw = RenderStatesRaw(_RenderStates.default())
-//
-//     fun ref getRaw(): RenderStatesRaw =>
-//         _raw
+class RenderStates
+    var _ffi_struct: _RenderStates ref
+
+    new default() =>
+        _ffi_struct = _RenderStates.default()
+
+    new create(bm: BlendMode, tf: Transform, tex: Texture, sh: Shader) =>
+        _ffi_struct = _RenderStates(bm, tf, tex, sh)
+    
+    new fromTransform(theTransform: Transform) =>
+        _ffi_struct = _RenderStates.fromTransform(theTransform)
+
+    new fromBlendMode(theBlendMode: BlendMode) =>
+        _ffi_struct = _RenderStates.fromBlendMode(theBlendMode)
+
+    new fromTexture(theTexture: Texture) =>
+        _ffi_struct = _RenderStates.fromTexture(theTexture)
+
+    new fromShader(theShader: Shader) =>
+        _ffi_struct = _RenderStates.fromShader(theShader)
+
+    fun ref _getRaw(): _RenderStatesRaw =>
+        _RenderStatesRaw(_ffi_struct)
 
 class Context
     var _raw: ContextRaw ref
@@ -579,30 +612,26 @@ class RenderWindow
     fun ref clear(color: Color = Color(0, 0, 0, 255)) =>
         @sfRenderWindow_clear(_raw, color._u32())
 
-    fun ref drawSprite(sprite: Sprite, renderstate: RenderStatesRaw = RenderStatesRaw.none()) =>
-        @sfRenderWindow_drawSprite(_raw, sprite.getRaw(), renderstate)
+    fun ref drawSprite(sprite: Sprite, renderStates: (RenderStates | None) = None) =>
+        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
+        @sfRenderWindow_drawSprite(_raw, sprite.getRaw(), render_states_raw)
 
-    // fun ref drawSprite(sprite: Sprite, renderstate: (RenderStates | None) = None) =>
-    //     let renderStatesRaw: RenderStatesRaw = 
-    //         match renderstate
-    //             | None => RenderStatesRaw.none() 
-    //             | let rs: RenderStates => rs.getRaw() 
-    //         end
-    //     @sfRenderWindow_drawSprite(_raw, sprite.getRaw(), renderStatesRaw)
-
-    fun ref drawShape(shape: Shape, renderstate: RenderStatesRaw = RenderStatesRaw.none()) =>
+    fun ref drawShape(shape: Shape, renderStates: (RenderStates | None) = None) =>
+        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
         match shape
         | let s: CircleShape =>
-            @sfRenderWindow_drawShape(_raw, s.getRaw(), renderstate)
+            @sfRenderWindow_drawShape(_raw, s.getRaw(), render_states_raw)
         | let s: RectangleShape =>
-            @sfRenderWindow_drawShape(_raw, s.getRaw(), renderstate)
+            @sfRenderWindow_drawShape(_raw, s.getRaw(), render_states_raw)
         end
 
-    fun ref drawText(text: Text, renderstate: RenderStatesRaw = RenderStatesRaw.none()) =>
-        @sfRenderWindow_drawText(_raw, text.getRaw(), renderstate)
+    fun ref drawText(text: Text, renderStates: (RenderStates | None) = None) =>
+        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
+        @sfRenderWindow_drawText(_raw, text.getRaw(), render_states_raw)
 
-    fun ref drawVertexArray(vertexArray: VertexArray, states: RenderStatesRaw = RenderStatesRaw.none()) =>
-        @sfRenderWindow_drawVertexArray(_raw, vertexArray.getRaw(), states)
+    fun ref drawVertexArray(vertexArray: VertexArray, renderStates: (RenderStates | None) = None) =>
+        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
+        @sfRenderWindow_drawVertexArray(_raw, vertexArray.getRaw(), render_states_raw)
 
     fun ref display() =>
         @sfRenderWindow_display(_raw)
@@ -632,19 +661,26 @@ class RenderTexture
     fun ref clear(color: Color) =>
         @sfRenderTexture_clear(_raw, color._u32())
 
-    fun ref drawSprite(sprite: Sprite, renderstate: RenderStatesRaw = RenderStatesRaw.none()) =>
-        @sfRenderTexture_drawSprite(_raw, sprite.getRaw(), renderstate)
+    fun ref drawSprite(sprite: Sprite, renderStates: (RenderStates | None) = None) =>
+        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
+        @sfRenderTexture_drawSprite(_raw, sprite.getRaw(), render_states_raw)
 
-    fun ref drawShape(shape: Shape, renderstate: RenderStatesRaw = RenderStatesRaw.none()) =>
+    fun ref drawShape(shape: Shape, renderStates: (RenderStates | None) = None) =>
+        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
         match shape
         | let s: CircleShape =>
-            @sfRenderTexture_drawShape(_raw, s.getRaw(), renderstate)
+            @sfRenderTexture_drawShape(_raw, s.getRaw(), render_states_raw)
         | let s: RectangleShape =>
-            @sfRenderTexture_drawShape(_raw, s.getRaw(), renderstate)
+            @sfRenderTexture_drawShape(_raw, s.getRaw(), render_states_raw)
         end
 
-    fun ref drawText(text: Text, renderstate: RenderStatesRaw = RenderStatesRaw.none()) =>
-        @sfRenderTexture_drawText(_raw, text.getRaw(), renderstate)
+    fun ref drawText(text: Text, renderStates: (RenderStates | None) = None) =>
+        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
+        @sfRenderTexture_drawText(_raw, text.getRaw(), render_states_raw)
+
+    fun ref drawVertexArray(vertexArray: VertexArray, renderStates: (RenderStates | None) = None) =>
+        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
+        @sfRenderTexture_drawVertexArray(_raw, vertexArray.getRaw(), render_states_raw)
 
     fun ref getTextureRaw(): TextureRaw =>
         @sfRenderTexture_getTexture(_raw)
@@ -783,4 +819,3 @@ class Shader
 
     fun _final() =>
         if not _raw.is_none() then @sfShader_destroy(_raw) end
-

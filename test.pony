@@ -28,6 +28,7 @@ actor Main
     var t_last_fps_frame : U64
     var t_last_circle_frame: U64
     var running: Bool
+    let vtx_render_states: RenderStates = RenderStates.fromBlendMode(BlendMode.blendMultiply())
 
     fun @runtime_override_defaults(rto: RuntimeOptions) =>
       rto.ponymaxthreads = 1
@@ -56,7 +57,7 @@ actor Main
         .> setPosition(Vector2f(half_w, half_h))
         .> setOrigin(Vector2f(r, r-wobble))
 
-      let line_color = Color.fromInteger(0x00ff00ff)
+      let line_color = Color.fromInteger(0xff0000ff)
       let center_vtx = Vertex(Vector2f(half_w, half_h), line_color, Vector2f(0,0))
       let vertices = [
         center_vtx ; Vertex(Vector2f(0, 0), line_color)
@@ -101,7 +102,7 @@ actor Main
       end
 
     fun ref update_vertex_array() =>
-      window.drawVertexArray(vtx_arr)
+      window.drawVertexArray(vtx_arr, vtx_render_states)
 
     fun ref update_fps_text(t_now: U64) =>
         frames = frames + 1
