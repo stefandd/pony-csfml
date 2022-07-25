@@ -472,45 +472,11 @@ struct _RenderStates
     var texture: TextureRaw
     var shader: ShaderRaw
 
-    new create(bm: BlendMode, tf: Transform, tex: Texture, sh: Shader) =>
+    new create(bm: BlendMode, tf: Transform, tex: TextureRaw, sh: ShaderRaw) =>
         blendMode = BlendMode.copy(bm) // Pony embed fields must be assigned using a ctor
         transform = Transform.copy(tf) // Pony embed fields must be assigned using a ctor
-        texture = tex.getRaw()
-        shader = sh.getRaw()
-
-    new default() =>
-        blendMode = BlendMode.blendAlpha() // Pony embed fields must be assigned using a ctor
-        transform = Transform // Pony embed fields must be assigned using a ctor
-        texture = TextureRaw.none()
-        shader = ShaderRaw.none()
-
-    new fromBlendMode(bm: BlendMode) =>
-        blendMode = BlendMode.copy(bm) // Pony embed fields must be assigned using a ctor
-        transform = Transform // Pony embed fields must be assigned using a ctor
-        texture = TextureRaw.none()
-        shader = ShaderRaw.none()
-
-    new fromTransform(tf: Transform) =>
-        blendMode = BlendMode.blendAlpha() // Pony embed fields must be assigned using a ctor
-        transform = Transform.copy(tf) // Pony embed fields must be assigned using a ctor
-        texture = TextureRaw.none()
-        shader = ShaderRaw.none()
-
-    new fromTexture(tex: Texture) =>
-        blendMode = BlendMode.blendAlpha() // Pony embed fields must be assigned using a ctor
-        transform = Transform // Pony embed fields must be assigned using a ctor
-        texture = tex.getRaw()
-        shader = ShaderRaw.none()
-
-    new fromShader(sh: Shader) =>
-        blendMode = BlendMode.blendAlpha() // Pony embed fields must be assigned using a ctor
-        transform = Transform // Pony embed fields must be assigned using a ctor
-        texture = TextureRaw.none()
-        shader = sh.getRaw()
-
-    fun ref _getRaw(): _RenderStatesRaw =>
-        _RenderStatesRaw(this)
-
+        texture = tex
+        shader = sh
 
 type _RenderStatesRaw is NullablePointer[_RenderStates]
 
@@ -525,28 +491,30 @@ primitive _RenderStatesUtils
 // abstraction layer
 
 class RenderStates
-    var _ffi_struct: _RenderStates ref
+    var _raw: _RenderStatesRaw ref
 
     new default() =>
-        _ffi_struct = _RenderStates.default()
+        _raw = _RenderStatesRaw(
+            _RenderStates(BlendMode.blendAlpha(), Transform, TextureRaw.none(), ShaderRaw.none()))
 
-    new create(bm: BlendMode, tf: Transform, tex: Texture, sh: Shader) =>
-        _ffi_struct = _RenderStates(bm, tf, tex, sh)
-    
-    new fromTransform(theTransform: Transform) =>
-        _ffi_struct = _RenderStates.fromTransform(theTransform)
+    new fromBlendMode(bm: BlendMode) =>
+        _raw = _RenderStatesRaw(
+            _RenderStates(BlendMode.copy(bm), Transform, TextureRaw.none(), ShaderRaw.none()))
 
-    new fromBlendMode(theBlendMode: BlendMode) =>
-        _ffi_struct = _RenderStates.fromBlendMode(theBlendMode)
+    new fromTransform(tf: Transform) =>
+        _raw = _RenderStatesRaw(
+            _RenderStates(BlendMode.blendAlpha(), Transform.copy(tf), TextureRaw.none(), ShaderRaw.none()))
 
-    new fromTexture(theTexture: Texture) =>
-        _ffi_struct = _RenderStates.fromTexture(theTexture)
+    new fromTexture(tex: Texture) =>
+        _raw = _RenderStatesRaw(
+            _RenderStates(BlendMode.blendAlpha(), Transform, tex.getRaw(), ShaderRaw.none()))
 
-    new fromShader(theShader: Shader) =>
-        _ffi_struct = _RenderStates.fromShader(theShader)
+    new fromShader(sh: Shader) =>
+        _raw = _RenderStatesRaw(
+            _RenderStates(BlendMode.blendAlpha(), Transform, TextureRaw.none(), sh.getRaw()))
 
     fun ref _getRaw(): _RenderStatesRaw =>
-        _RenderStatesRaw(_ffi_struct)
+        _raw
 
 class Context
     var _raw: ContextRaw ref
