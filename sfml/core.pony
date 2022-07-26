@@ -549,11 +549,9 @@ class Context
             @sfContext_setActive(_raw, 0) > 0
         end
 
-    fun ref destroy() =>
-        if not _raw.is_null() then
-            @sfContext_destroy(_raw)
-            _raw = ContextRaw.create()
-        end
+    fun \deprecated\ destroy() => 
+        """ Because Pony has garbage collection, you don't need to call destroy() """
+        None
 
     fun _final() =>
         if not _raw.is_null() then @sfContext_destroy(_raw) end
@@ -622,11 +620,9 @@ class RenderWindow
     fun ref setView(view: View) =>
         @sfRenderWindow_setView(_raw, view.getRaw())
 
-    fun ref destroy() =>
-        if not _raw.is_null() then
-            @sfRenderWindow_destroy(_raw)
-            _raw = RenderWindowRaw.create()
-        end
+    fun \deprecated\ destroy() => 
+        """ Because Pony has garbage collection, you don't need to call destroy() """
+        None
 
     fun _final() =>
         if not _raw.is_null() then @sfRenderWindow_destroy(_raw) end
@@ -778,11 +774,9 @@ class Image
     fun ref isNULL(): Bool =>
         _raw.is_none()
 
-    fun ref destroy() =>
-        if not _raw.is_none() then
-             @sfImage_destroy(_raw)
-            _raw = ImageRaw.none()
-        end
+    fun \deprecated\ destroy() => 
+        """ Because Pony has garbage collection, you don't need to call destroy() """
+        None
 
     fun _final() =>
         if not _raw.is_none() then @sfImage_destroy(_raw) end

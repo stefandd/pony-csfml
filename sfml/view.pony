@@ -35,12 +35,6 @@ class View
   fun copy(view: View) =>
     @sfView_copy(view.getRaw())
   
-  fun ref destroy() =>
-    if not _raw.is_none() then
-       @sfView_destroy(_raw)
-      _raw = ViewRaw.none()
-    end
-
   //TODO: fun setCenter(center: Vector2f) =>
   //TODO: fun setSize(size: Vector2f) =>
   //TODO: fun setRotation(angle: F32) =>
@@ -66,6 +60,10 @@ class View
 
   fun ref isNULL(): Bool =>
     _raw.is_none()
+
+  fun \deprecated\ destroy() => 
+      """ Because Pony has garbage collection, you don't need to call destroy() """
+      None
 
   fun _final() =>
     if not _raw.is_none() then @sfView_destroy(_raw) end

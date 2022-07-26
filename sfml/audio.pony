@@ -33,11 +33,9 @@ class SoundBuffer
     fun ref isNULL() : Bool =>
         _raw.is_none()
 
-    fun ref destroy() =>
-        if not _raw.is_none() then
-             @sfSoundBuffer_destroy(_raw)
-            _raw = SoundBufferRaw.none()
-        end
+    fun \deprecated\ destroy() => 
+        """ Because Pony has garbage collection, you don't need to call destroy() """
+        None
 
     fun _final() =>
         if not _raw.is_none() then @sfSoundBuffer_destroy(_raw) end
@@ -89,11 +87,9 @@ class Sound
     fun ref isNULL() : Bool =>
         _raw.is_none()
 
-    fun ref destroy() =>
-        if not _raw.is_none() then
-             @sfSound_destroy(_raw)
-            _raw = SoundRaw.none()
-        end
+    fun \deprecated\ destroy() => 
+        """ Because Pony has garbage collection, you don't need to call destroy() """
+        None
 
     fun _final() =>
         if not _raw.is_none() then @sfSound_destroy(_raw) end

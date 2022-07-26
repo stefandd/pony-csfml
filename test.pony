@@ -148,11 +148,4 @@ actor Main
 
         running = running and window.isOpen()
         run()
-      else
-        sprite.destroy()
-        texture.destroy()
-        vtx_arr.destroy()
-        window.destroy()
-        fps_font.destroy()
-        fps_text.destroy()
       end

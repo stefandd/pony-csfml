@@ -23,12 +23,6 @@ class VertexArray
   fun copy() =>
     @sfVertexArray_copy(_raw)
   
-  fun ref destroy() =>
-    if not _raw.is_none() then
-       @sfVertexArray_destroy(_raw)
-      _raw = VertexArrayRaw.none()
-    end
-
   fun getVertexCount(): USize =>
     @sfVertexArray_getVertexCount(_raw)
 
@@ -64,6 +58,10 @@ class VertexArray
 
   fun ref isNULL(): Bool =>
     _raw.is_none()
+
+  fun \deprecated\ destroy() => 
+      """ Because Pony has garbage collection, you don't need to call destroy() """
+      None
 
   fun _final() =>
     if not _raw.is_none() then @sfVertexArray_destroy(_raw) end

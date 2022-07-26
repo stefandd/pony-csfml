@@ -47,12 +47,6 @@ class CircleShape
     fun ref isNULL() : Bool =>
         _raw.is_none()
 
-    fun ref destroy() =>
-        if not _raw.is_none() then
-             @sfCircleShape_destroy(_raw)
-            _raw = ShapeRaw.none()
-        end
-
     fun ref setRadius(radius : F32) =>
         @sfCircleShape_setRadius(_raw, radius)
 
@@ -94,6 +88,10 @@ class CircleShape
     fun ref setTextureRect(rect : IntRect) =>
         @sfCircleShape_setTextureRect(_raw, rect._u128())
 
+    fun \deprecated\ destroy() => 
+        """ Because Pony has garbage collection, you don't need to call destroy() """
+        None
+
     fun _final() =>
         if not _raw.is_none() then @sfCircleShape_destroy(_raw) end
 
@@ -109,12 +107,6 @@ class RectangleShape
 
     fun ref isNULL() : Bool =>
         _raw.is_none()
-
-    fun ref destroy() =>
-        if not _raw.is_none() then
-             @sfRectangleShape_destroy(_raw)
-            _raw = ShapeRaw.none()
-        end
 
     fun ref setRadius(radius : F32) =>
         @sfRectangleShape_setSize(_raw, (Vector2f(2.0 * radius, 2.0 * radius))._u64())
@@ -155,6 +147,10 @@ class RectangleShape
  
     fun ref setTextureRect(rect : IntRect) =>
         @sfRectangleShape_setTextureRect(_raw, rect._u128())
+
+    fun \deprecated\ destroy() => 
+        """ Because Pony has garbage collection, you don't need to call destroy() """
+        None
 
     fun _final() =>
         if not _raw.is_none() then @sfRectangleShape_destroy(_raw) end

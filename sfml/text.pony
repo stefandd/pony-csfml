@@ -45,11 +45,9 @@ class Font
     fun ref isNULL() : Bool =>
         _raw.is_none()
 
-    fun ref destroy() =>
-        if not _raw.is_none() then
-             @sfFont_destroy(_raw)
-            _raw = FontRaw.none()
-        end
+    fun \deprecated\ destroy() => 
+        """ Because Pony has garbage collection, you don't need to call destroy() """
+        None
 
     fun _final() =>
         if not _raw.is_none() then @sfFont_destroy(_raw) end
@@ -126,11 +124,9 @@ class Text
     fun ref isNULL() : Bool =>
         _raw.is_none()
 
-    fun ref destroy() =>
-        if not _raw.is_none() then
-             @sfText_destroy(_raw)
-            _raw = TextRaw.none()
-        end
+    fun \deprecated\ destroy() => 
+        """ Because Pony has garbage collection, you don't need to call destroy() """
+        None
 
     fun _final() =>
         if not _raw.is_none() then @sfText_destroy(_raw) end
