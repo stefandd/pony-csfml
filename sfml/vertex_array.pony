@@ -53,7 +53,7 @@ class VertexArray
       rect
     end
 
-  fun ref getRaw(): _VertexArrayRaw =>
+  fun _getRaw(): _VertexArrayRaw box =>
     _raw
 
   fun ref isNULL(): Bool =>

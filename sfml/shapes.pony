@@ -41,7 +41,7 @@ class CircleShape
     new create() => 
         _raw = @sfCircleShape_create()
     
-    fun ref getRaw() : ShapeRaw =>
+    fun _getRaw(): ShapeRaw box =>
         _raw
 
     fun ref isNULL() : Bool =>
@@ -102,7 +102,7 @@ class RectangleShape
     new create() => 
         _raw = @sfRectangleShape_create()
     
-    fun ref getRaw() : ShapeRaw =>
+    fun _getRaw(): ShapeRaw box =>
         _raw
 
     fun ref isNULL() : Bool =>

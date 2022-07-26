@@ -26,11 +26,11 @@ use @sfRenderWindow_hasFocus[I32](window: RenderWindowRaw box)
 use @sfRenderWindow_setActive[I32](window: RenderWindowRaw box, active: I32)
 use @sfRenderWindow_clear[None](window: RenderWindowRaw box, color: U32)
 use @sfRenderWindow_display[None](window: RenderWindowRaw box)
-use @sfRenderWindow_setView[None](window: RenderWindowRaw box, view: ViewRaw)
-use @sfRenderWindow_drawSprite[None](window: RenderWindowRaw box, sprite: _SpriteRaw, states: _RenderStatesRaw)
-use @sfRenderWindow_drawShape[None](window: RenderWindowRaw box, shape: ShapeRaw, states: _RenderStatesRaw)
-use @sfRenderWindow_drawText[None](window: RenderWindowRaw box, text: TextRaw, states: _RenderStatesRaw)
-use @sfRenderWindow_drawVertexArray[None](window: RenderWindowRaw box, vertexArray: _VertexArrayRaw, states: _RenderStatesRaw)
+use @sfRenderWindow_setView[None](window: RenderWindowRaw box, view: ViewRaw box)
+use @sfRenderWindow_drawSprite[None](window: RenderWindowRaw box, sprite: _SpriteRaw, states: _RenderStatesRaw box)
+use @sfRenderWindow_drawShape[None](window: RenderWindowRaw box, shape: ShapeRaw box, states: _RenderStatesRaw box)
+use @sfRenderWindow_drawText[None](window: RenderWindowRaw box, text: TextRaw box, states: _RenderStatesRaw box)
+use @sfRenderWindow_drawVertexArray[None](window: RenderWindowRaw box, vertexArray: _VertexArrayRaw box, states: _RenderStatesRaw box)
 use @sfRenderWindow_pollEvent[I32](window: RenderWindowRaw box, event: Pointer[U8] tag)
 use @sfRenderWindow_getSize[U64](window: RenderWindowRaw box)
 use @sfRenderWindow_destroy[None](window: RenderWindowRaw box)
@@ -38,11 +38,11 @@ use @sfRenderWindow_destroy[None](window: RenderWindowRaw box)
 use @sfRenderTexture_create[RenderTextureRaw](width: U32, height: U32, depthBuffer: I32)
 use @sfRenderTexture_clear[None](rendtex: RenderTextureRaw box, color: U32)
 use @sfRenderTexture_display[None](rendtex: RenderTextureRaw box)
-use @sfRenderTexture_drawSprite[None](rendtex: RenderTextureRaw box, sprite: _SpriteRaw, states: _RenderStatesRaw)
+use @sfRenderTexture_drawSprite[None](rendtex: RenderTextureRaw box, sprite: _SpriteRaw, states: _RenderStatesRaw box)
 use @sfRenderTexture_getTexture[_TextureRaw](rendtex: RenderTextureRaw box)
-use @sfRenderTexture_drawShape[None](rendtex: RenderTextureRaw box, shape: ShapeRaw, states: _RenderStatesRaw)
-use @sfRenderTexture_drawText[None](rendtex: RenderTextureRaw box, text: TextRaw, states: _RenderStatesRaw)
-use @sfRenderTexture_drawVertexArray[None](rendtex: RenderTextureRaw box, vertexArray: _VertexArrayRaw, states: _RenderStatesRaw)
+use @sfRenderTexture_drawShape[None](rendtex: RenderTextureRaw box, shape: ShapeRaw box, states: _RenderStatesRaw box)
+use @sfRenderTexture_drawText[None](rendtex: RenderTextureRaw box, text: TextRaw box, states: _RenderStatesRaw box)
+use @sfRenderTexture_drawVertexArray[None](rendtex: RenderTextureRaw box, vertexArray: _VertexArrayRaw box, states: _RenderStatesRaw box)
 use @sfRenderTexture_destroy[None](rendtex: RenderTextureRaw box)
 // Image
 use @sfImage_create[ImageRaw](width: U32, height: U32)
@@ -388,10 +388,10 @@ struct Transform
         _a10 = that._a10 ; _a11 = that._a11 ; _a12 = that._a12
         _a20 = that._a20 ; _a21 = that._a21 ; _a22 = that._a22
 
-    fun ref getRaw(): TransformRaw =>
+    fun _getRaw(): TransformRaw box =>
         TransformRaw(this)
 
-type TransformRaw is NullablePointer[Transform] tag
+type TransformRaw is NullablePointer[Transform box] tag
 
 primitive BlendEquation
     fun add(): I32 => 0  ///< Pixel = Src * SrcFactor + Dst * DstFactor
@@ -483,10 +483,10 @@ struct _RenderStates
 type _RenderStatesRaw is NullablePointer[_RenderStates]
 
 primitive _RenderStatesUtils
-    fun getRaw(maybe_render_states: (RenderStates | None)): _RenderStatesRaw =>
+    fun getRaw(maybe_render_states: (RenderStates box | None)): _RenderStatesRaw box =>
         match maybe_render_states
             | None => _RenderStatesRaw.none() 
-            | let rs: RenderStates => rs._getRaw() 
+            | let rs: RenderStates box => rs._getRaw() 
         end
 
 
@@ -528,7 +528,7 @@ class RenderStates
     fun ref setShader(sh: Shader) =>
         _struct.shader = sh._getRaw()
 
-    fun ref _getRaw(): _RenderStatesRaw =>
+    fun _getRaw(): _RenderStatesRaw box =>
         _raw
 
 class Context
@@ -594,31 +594,31 @@ class RenderWindow
         @sfRenderWindow_clear(_raw, color._u32())
 
     fun ref drawSprite(sprite: Sprite, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
+        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
         @sfRenderWindow_drawSprite(_raw, sprite._getRaw(), render_states_raw)
 
     fun ref drawShape(shape: Shape, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
+        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
         match shape
         | let s: CircleShape =>
-            @sfRenderWindow_drawShape(_raw, s.getRaw(), render_states_raw)
+            @sfRenderWindow_drawShape(_raw, s._getRaw(), render_states_raw)
         | let s: RectangleShape =>
-            @sfRenderWindow_drawShape(_raw, s.getRaw(), render_states_raw)
+            @sfRenderWindow_drawShape(_raw, s._getRaw(), render_states_raw)
         end
 
     fun ref drawText(text: Text, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
-        @sfRenderWindow_drawText(_raw, text.getRaw(), render_states_raw)
+        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
+        @sfRenderWindow_drawText(_raw, text._getRaw(), render_states_raw)
 
     fun ref drawVertexArray(vertexArray: VertexArray, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
-        @sfRenderWindow_drawVertexArray(_raw, vertexArray.getRaw(), render_states_raw)
+        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
+        @sfRenderWindow_drawVertexArray(_raw, vertexArray._getRaw(), render_states_raw)
 
     fun ref display() =>
         @sfRenderWindow_display(_raw)
 
     fun ref setView(view: View) =>
-        @sfRenderWindow_setView(_raw, view.getRaw())
+        @sfRenderWindow_setView(_raw, view._getRaw())
 
     fun \deprecated\ destroy() => 
         """ Because Pony has garbage collection, you don't need to call destroy() """
@@ -642,25 +642,25 @@ class RenderTexture
         @sfRenderTexture_clear(_raw, color._u32())
 
     fun ref drawSprite(sprite: Sprite, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
+        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
         @sfRenderTexture_drawSprite(_raw, sprite._getRaw(), render_states_raw)
 
     fun ref drawShape(shape: Shape, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
+        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
         match shape
         | let s: CircleShape =>
-            @sfRenderTexture_drawShape(_raw, s.getRaw(), render_states_raw)
+            @sfRenderTexture_drawShape(_raw, s._getRaw(), render_states_raw)
         | let s: RectangleShape =>
-            @sfRenderTexture_drawShape(_raw, s.getRaw(), render_states_raw)
+            @sfRenderTexture_drawShape(_raw, s._getRaw(), render_states_raw)
         end
 
     fun ref drawText(text: Text, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
-        @sfRenderTexture_drawText(_raw, text.getRaw(), render_states_raw)
+        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
+        @sfRenderTexture_drawText(_raw, text._getRaw(), render_states_raw)
 
     fun ref drawVertexArray(vertexArray: VertexArray, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
-        @sfRenderTexture_drawVertexArray(_raw, vertexArray.getRaw(), render_states_raw)
+        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
+        @sfRenderTexture_drawVertexArray(_raw, vertexArray._getRaw(), render_states_raw)
 
 
     // In SFML, the texture returned is read-only (const). 
@@ -738,7 +738,7 @@ class Texture
         _raw = @sfTexture_createFromFile(filename.cstring(), area)
 
     new createFromImage(image: Image, area: IntRectRaw = IntRectRaw.none()) =>
-        _raw = @sfTexture_createFromImage(image.getRaw(), area)
+        _raw = @sfTexture_createFromImage(image._getRaw(), area)
 
     new copy(from: Texture) =>
         _raw = @sfTexture_copy(from._getRaw())
@@ -768,7 +768,7 @@ class Image
     new createFromColor(width: U32, height: U32, color: Color) =>
         _raw = @sfImage_createFromColor(width, height, color._u32())
 
-    fun ref getRaw(): ImageRaw =>
+    fun _getRaw(): ImageRaw box =>
         _raw
 
     fun ref isNULL(): Bool =>

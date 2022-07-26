@@ -3,7 +3,7 @@ use @sfFont_destroy[None](font : FontRaw box)
 
 use @sfText_create[TextRaw]()
 use @sfText_setString[None](text : TextRaw box, str : Pointer[U8 val] tag)
-use @sfText_setFont[None](text : TextRaw box, font : FontRaw)
+use @sfText_setFont[None](text : TextRaw box, font : FontRaw box)
 use @sfText_setCharacterSize[None](text : TextRaw box, size : U32)
 use @sfText_setLineSpacing[None](text : TextRaw box, spacingFactor : F32)
 use @sfText_setLetterSpacing[None](text : TextRaw box, spacingFactor : F32)
@@ -39,7 +39,7 @@ class Font
     new create(file : String) =>
         _raw = @sfFont_createFromFile(file.cstring())
 
-    fun ref getRaw() : FontRaw =>
+    fun _getRaw(): FontRaw box =>
         _raw
 
     fun ref isNULL() : Bool =>
@@ -62,7 +62,7 @@ class Text
         @sfText_setString(_raw, txt.cstring())
     
     fun setFont(font : Font) =>
-        @sfText_setFont(_raw, font.getRaw())
+        @sfText_setFont(_raw, font._getRaw())
         
     fun setCharacterSize(size : U32) =>
         @sfText_setCharacterSize(_raw, size)
@@ -118,7 +118,7 @@ class Text
             rect
         end
 
-    fun ref getRaw() : TextRaw =>
+    fun _getRaw(): TextRaw box =>
         _raw
 
     fun ref isNULL() : Bool =>

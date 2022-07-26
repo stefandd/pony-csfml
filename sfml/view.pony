@@ -33,7 +33,7 @@ class View
     _raw = @sfView_createFromRectA(left, top, width, height)
 
   fun copy(view: View) =>
-    @sfView_copy(view.getRaw())
+    @sfView_copy(view._getRaw())
   
   //TODO: fun setCenter(center: Vector2f) =>
   //TODO: fun setSize(size: Vector2f) =>
@@ -55,7 +55,7 @@ class View
   //TODO: fun rotate(angle: F32) =>
   //TODO: fun zoom(factor: F32) =>
 
-  fun ref getRaw(): ViewRaw =>
+  fun _getRaw(): ViewRaw box =>
     _raw
 
   fun ref isNULL(): Bool =>

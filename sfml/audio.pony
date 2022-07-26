@@ -27,7 +27,7 @@ class SoundBuffer
     new create(file : String) =>
         _raw = @sfSoundBuffer_createFromFile(file.cstring())
 
-    fun ref getRaw() : SoundBufferRaw =>
+    fun _getRaw(): SoundBufferRaw box =>
         _raw
 
     fun ref isNULL() : Bool =>
@@ -51,10 +51,10 @@ class Sound
 
     new fromBuffer(buffer : SoundBuffer) =>
         _raw = @sfSound_create()
-        @sfSound_setBuffer(_raw, buffer.getRaw())
+        @sfSound_setBuffer(_raw, buffer._getRaw())
 
     fun ref setBuffer(buffer : SoundBuffer) =>
-        @sfSound_setBuffer(_raw, buffer.getRaw())
+        @sfSound_setBuffer(_raw, buffer._getRaw())
 
     fun ref play() =>
         @sfSound_play(_raw)
@@ -81,7 +81,7 @@ class Sound
     fun ref setVolume(volume : F32) =>
         @sfSound_setVolume(_raw, volume)
 
-    fun ref getRaw() : SoundRaw =>
+    fun _getRaw(): SoundRaw box =>
         _raw
 
     fun ref isNULL() : Bool =>
