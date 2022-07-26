@@ -38,8 +38,11 @@ actor Main
       window = RenderWindow(VideoMode(width.u32(), height.u32(), 32), "SFML Demo", WindowStyle.sfDefaultStyle())
       let s : ContextSettings = window.getSettings()
       event = window.getEventStruct()
+      
       texture = Texture.createFromImage(Image(width.u32(), height.u32()))
       sprite = Sprite
+      sprite.setTexture(texture) // map the texture to a sprite
+
 
       let w = width.f32()
       let h = height.f32()
@@ -90,7 +93,6 @@ actor Main
         end
       end
       texture.updateFromPixels(pixeldata.cpointer(), width.u32(), height.u32(), 0, 0)
-      sprite.setTexture(texture) // map the texture to a sprite
       window.drawSprite(sprite) // draw the sprite
     
 
