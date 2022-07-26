@@ -1,21 +1,21 @@
-use @sfVertexArray_create[VertexArrayRaw]()
-use @sfVertexArray_copy[VertexArrayRaw](vtxArr: VertexArrayRaw box)
-use @sfVertexArray_destroy[None](vtxArr: VertexArrayRaw box)
-use @sfVertexArray_getVertexCount[USize](vtxArr: VertexArrayRaw box)
-use @sfVertexArray_getVertex[Vertex](vtxArr: VertexArrayRaw box, index: USize)
-use @sfVertexArray_clear[None](vtxArr: VertexArrayRaw box)
-use @sfVertexArray_resize[None](vtxArr: VertexArrayRaw box, vertexCount: USize)
-use @sfVertexArray_appendA[None](vtxArr: VertexArrayRaw box, pos: U64, color: U32, tex: U64)
-use @sfVertexArray_setPrimitiveType[None](vtxArr: VertexArrayRaw box, primitiveType: I32)
-use @sfVertexArray_getPrimitiveType[I32](vtxArr: VertexArrayRaw box)
-use @sfVertexArray_getBoundsA[None](vtxArr: VertexArrayRaw box, bounds: FloatRectRaw)
+use @sfVertexArray_create[_VertexArrayRaw]()
+use @sfVertexArray_copy[_VertexArrayRaw](vtxArr: _VertexArrayRaw box)
+use @sfVertexArray_destroy[None](vtxArr: _VertexArrayRaw box)
+use @sfVertexArray_getVertexCount[USize](vtxArr: _VertexArrayRaw box)
+use @sfVertexArray_getVertex[Vertex](vtxArr: _VertexArrayRaw box, index: USize)
+use @sfVertexArray_clear[None](vtxArr: _VertexArrayRaw box)
+use @sfVertexArray_resize[None](vtxArr: _VertexArrayRaw box, vertexCount: USize)
+use @sfVertexArray_appendA[None](vtxArr: _VertexArrayRaw box, pos: U64, color: U32, tex: U64)
+use @sfVertexArray_setPrimitiveType[None](vtxArr: _VertexArrayRaw box, primitiveType: I32)
+use @sfVertexArray_getPrimitiveType[I32](vtxArr: _VertexArrayRaw box)
+use @sfVertexArray_getBoundsA[None](vtxArr: _VertexArrayRaw box, bounds: FloatRectRaw)
 
 struct _VertexArray
-type VertexArrayRaw is NullablePointer[_VertexArray]
+type _VertexArrayRaw is NullablePointer[_VertexArray]
 
 class VertexArray
 
-  var _raw: VertexArrayRaw
+  var _raw: _VertexArrayRaw
 
   new create() =>
     _raw = @sfVertexArray_create()
@@ -53,7 +53,7 @@ class VertexArray
       rect
     end
 
-  fun ref getRaw(): VertexArrayRaw =>
+  fun ref getRaw(): _VertexArrayRaw =>
     _raw
 
   fun ref isNULL(): Bool =>
