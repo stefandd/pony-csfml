@@ -37,10 +37,6 @@ use @sfTexture_createFromImage[_TextureRaw](image: ImageRaw box, area: IntRectRa
 use @sfTexture_copy[_TextureRaw](from: _TextureRaw)
 use @sfTexture_updateFromPixels[None](texture: _TextureRaw, pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32)
 use @sfTexture_destroy[None](texture: _TextureRaw box)
-// Sprite
-use @sfSprite_create[_SpriteRaw]()
-use @sfSprite_setTexture[None](sprite: _SpriteRaw, texture: _TextureRaw, resetRect: I32)
-use @sfSprite_destroy[None](sprite: _SpriteRaw box)
 // Shader
 use @sfShader_createFromMemory[_ShaderRaw](vertexShader: Pointer[U8 val] tag, geometryShader: Pointer[U8 val] tag, fragmentShader: Pointer[U8 val] tag)
 use @sfShader_setTextureParameter[None](shader: _ShaderRaw box, name: Pointer[U8 val] tag, texture: _TextureRaw)
@@ -325,9 +321,6 @@ class EventStruct
 
 // graphics object
 
-struct _Sprite
-type _SpriteRaw is NullablePointer[_Sprite]
-
 struct _Texture
 type _TextureRaw is NullablePointer[_Texture]
 
@@ -537,37 +530,6 @@ class RenderTexture
 
     fun _final() =>
         if not _raw.is_none() then @sfRenderTexture_destroy(_raw) end
-
-class Sprite
-    var _raw: _SpriteRaw ref
-    var _texture: (Texture ref | None) // Hold onto this in case getTexture is called.
-
-    new create() =>
-        _raw = @sfSprite_create()
-        _texture = None
-
-    fun ref setTexture(texture: Texture ref, resetRect: Bool = false) =>
-        let rrInt: I32 = if resetRect then 1 else 0 end
-        @sfSprite_setTexture(_raw, texture._getRaw(), rrInt)
-        _texture = texture
-    
-    // In (C)SFML, the texture returned is read-only (const).
-    // In Pony, we use the `box` refcap to achieve the same.
-    fun ref getTexture(): (Texture box | None) =>
-        match _texture
-            | let t: Texture => t
-            | None => None
-        end
-
-    fun ref _getRaw(): _SpriteRaw =>
-        _raw
-
-    fun \deprecated\ ref destroy() => 
-        """ Because Pony has garbage collection, you don't need to call destroy() """
-        None
-
-    fun _final() =>
-        if not _raw.is_none() then @sfSprite_destroy(_raw) end
 
 class Texture
     var _raw: _TextureRaw ref
