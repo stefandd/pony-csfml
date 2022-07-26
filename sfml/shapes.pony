@@ -9,7 +9,7 @@ use @sfCircleShape_rotate[None](circle : ShapeRaw box, angle : F32)
 use @sfCircleShape_setFillColor[None](circle : ShapeRaw box, color : U32)
 use @sfCircleShape_setOutlineColor[None](circle : ShapeRaw box, color : U32)
 use @sfCircleShape_setPointCount[None](circle : ShapeRaw box, count : USize)
-use @sfCircleShape_setTexture[None](circle : ShapeRaw box, texture : TextureRaw, resetRect : I32)
+use @sfCircleShape_setTexture[None](circle : ShapeRaw box, texture : _TextureRaw, resetRect : I32)
 use @sfCircleShape_setTextureRect[None](circle : ShapeRaw box, rect : U128)
 use @sfCircleShape_setOutlineThickness[None](circle : ShapeRaw box, thickness : F32)
 
@@ -24,7 +24,7 @@ use @sfRectangleShape_rotate[None](Rectangle : ShapeRaw box, angle : F32)
 use @sfRectangleShape_setFillColor[None](Rectangle : ShapeRaw box, color : U32)
 use @sfRectangleShape_setOutlineColor[None](Rectangle : ShapeRaw box, color : U32)
 use @sfRectangleShape_setPointCount[None](Rectangle : ShapeRaw box, count : USize)
-use @sfRectangleShape_setTexture[None](Rectangle : ShapeRaw box, texture : TextureRaw, resetRect : I32)
+use @sfRectangleShape_setTexture[None](Rectangle : ShapeRaw box, texture : _TextureRaw, resetRect : I32)
 use @sfRectangleShape_setTextureRect[None](Rectangle : ShapeRaw box, rect : U128)
 use @sfRectangleShape_setOutlineThickness[None](Rectangle : ShapeRaw box, thickness : F32)
 
@@ -88,11 +88,8 @@ class CircleShape
         @sfCircleShape_rotate(_raw, angle)
 
     fun ref setTexture(texture : Texture, resetRect : Bool) =>
-        if resetRect then
-            @sfCircleShape_setTexture(_raw, texture.getRaw(), 1)
-        else
-            @sfCircleShape_setTexture(_raw, texture.getRaw(), 0)
-        end
+        let rrInt: I32 = if resetRect then 1 else 0 end
+        @sfCircleShape_setTexture(_raw, texture._getRaw(), rrInt)
 
     fun ref setTextureRect(rect : IntRect) =>
         @sfCircleShape_setTextureRect(_raw, rect._u128())
@@ -153,12 +150,9 @@ class RectangleShape
         @sfRectangleShape_rotate(_raw, angle)
 
     fun ref setTexture(texture : Texture, resetRect : Bool) =>
-        if resetRect then
-            @sfRectangleShape_setTexture(_raw, texture.getRaw(), 1)
-        else
-            @sfRectangleShape_setTexture(_raw, texture.getRaw(), 0)
-        end
-
+        let rrInt: I32 = if resetRect then 1 else 0 end
+        @sfRectangleShape_setTexture(_raw, texture._getRaw(), rrInt)
+ 
     fun ref setTextureRect(rect : IntRect) =>
         @sfRectangleShape_setTextureRect(_raw, rect._u128())
 

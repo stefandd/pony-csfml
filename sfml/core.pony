@@ -27,7 +27,7 @@ use @sfRenderWindow_setActive[I32](window: RenderWindowRaw box, active: I32)
 use @sfRenderWindow_clear[None](window: RenderWindowRaw box, color: U32)
 use @sfRenderWindow_display[None](window: RenderWindowRaw box)
 use @sfRenderWindow_setView[None](window: RenderWindowRaw box, view: ViewRaw)
-use @sfRenderWindow_drawSprite[None](window: RenderWindowRaw box, sprite: SpriteRaw, states: _RenderStatesRaw)
+use @sfRenderWindow_drawSprite[None](window: RenderWindowRaw box, sprite: _SpriteRaw, states: _RenderStatesRaw)
 use @sfRenderWindow_drawShape[None](window: RenderWindowRaw box, shape: ShapeRaw, states: _RenderStatesRaw)
 use @sfRenderWindow_drawText[None](window: RenderWindowRaw box, text: TextRaw, states: _RenderStatesRaw)
 use @sfRenderWindow_drawVertexArray[None](window: RenderWindowRaw box, vertexArray: VertexArrayRaw, states: _RenderStatesRaw)
@@ -38,8 +38,8 @@ use @sfRenderWindow_destroy[None](window: RenderWindowRaw box)
 use @sfRenderTexture_create[RenderTextureRaw](width: U32, height: U32, depthBuffer: I32)
 use @sfRenderTexture_clear[None](rendtex: RenderTextureRaw box, color: U32)
 use @sfRenderTexture_display[None](rendtex: RenderTextureRaw box)
-use @sfRenderTexture_drawSprite[None](rendtex: RenderTextureRaw box, sprite: SpriteRaw, states: _RenderStatesRaw)
-use @sfRenderTexture_getTexture[TextureRaw](rendtex: RenderTextureRaw box)
+use @sfRenderTexture_drawSprite[None](rendtex: RenderTextureRaw box, sprite: _SpriteRaw, states: _RenderStatesRaw)
+use @sfRenderTexture_getTexture[_TextureRaw](rendtex: RenderTextureRaw box)
 use @sfRenderTexture_drawShape[None](rendtex: RenderTextureRaw box, shape: ShapeRaw, states: _RenderStatesRaw)
 use @sfRenderTexture_drawText[None](rendtex: RenderTextureRaw box, text: TextRaw, states: _RenderStatesRaw)
 use @sfRenderTexture_drawVertexArray[None](rendtex: RenderTextureRaw box, vertexArray: VertexArrayRaw, states: _RenderStatesRaw)
@@ -49,19 +49,21 @@ use @sfImage_create[ImageRaw](width: U32, height: U32)
 use @sfImage_createFromColor[ImageRaw](width: U32, height: U32, color: U32)
 use @sfImage_destroy[None](image: ImageRaw box)
 // Texture
-use @sfTexture_createFromFile[TextureRaw](filename: Pointer[U8 val] tag, area: IntRectRaw)
-use @sfTexture_createFromImage[TextureRaw](image: ImageRaw box, area: IntRectRaw)
-use @sfTexture_updateFromPixels[None](texture: TextureRaw, pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32)
-use @sfTexture_destroy[None](texture: TextureRaw box)
+use @sfTexture_create[_TextureRaw](width: U32, height: U32)
+use @sfTexture_createFromFile[_TextureRaw](filename: Pointer[U8 val] tag, area: IntRectRaw)
+use @sfTexture_createFromImage[_TextureRaw](image: ImageRaw box, area: IntRectRaw)
+use @sfTexture_copy[_TextureRaw](from: _TextureRaw)
+use @sfTexture_updateFromPixels[None](texture: _TextureRaw, pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32)
+use @sfTexture_destroy[None](texture: _TextureRaw box)
 // Sprite
-use @sfSprite_create[SpriteRaw]()
-use @sfSprite_setTexture[None](sprite: SpriteRaw, texture: TextureRaw, resetRect: I32)
-use @sfSprite_destroy[None](sprite: SpriteRaw box)
+use @sfSprite_create[_SpriteRaw]()
+use @sfSprite_setTexture[None](sprite: _SpriteRaw, texture: _TextureRaw, resetRect: I32)
+use @sfSprite_destroy[None](sprite: _SpriteRaw box)
 // Shader
-use @sfShader_createFromMemory[ShaderRaw](vertexShader: Pointer[U8 val] tag, geometryShader: Pointer[U8 val] tag, fragmentShader: Pointer[U8 val] tag)
-use @sfShader_setTextureParameter[None](shader: ShaderRaw box, name: Pointer[U8 val] tag, texture: TextureRaw)
-use @sfShader_setFloatUniform[None](shader: ShaderRaw box, name: Pointer[U8 val] tag, x: F32)
-use @sfShader_destroy[None](shader: ShaderRaw box)
+use @sfShader_createFromMemory[_ShaderRaw](vertexShader: Pointer[U8 val] tag, geometryShader: Pointer[U8 val] tag, fragmentShader: Pointer[U8 val] tag)
+use @sfShader_setTextureParameter[None](shader: _ShaderRaw box, name: Pointer[U8 val] tag, texture: _TextureRaw)
+use @sfShader_setFloatUniform[None](shader: _ShaderRaw box, name: Pointer[U8 val] tag, x: F32)
+use @sfShader_destroy[None](shader: _ShaderRaw box)
 // Keyboard
 use @sfKeyboard_isKeyPressed[I32](key: I32)
 // Sleep
@@ -345,16 +347,16 @@ class EventStruct
 // graphics object
 
 struct _Sprite
-type SpriteRaw is NullablePointer[_Sprite]
+type _SpriteRaw is NullablePointer[_Sprite]
 
 struct _Texture
-type TextureRaw is NullablePointer[_Texture]
+type _TextureRaw is NullablePointer[_Texture]
 
 struct _Image
 type ImageRaw is NullablePointer[_Image]
 
 struct _Shader
-type ShaderRaw is NullablePointer[_Shader]
+type _ShaderRaw is NullablePointer[_Shader]
 
 struct Transform
     var _a00: F32
@@ -469,10 +471,10 @@ type BlendModeRaw is NullablePointer[BlendMode]
 struct _RenderStates 
     embed blendMode: BlendMode
     embed transform: Transform
-    var texture: TextureRaw
-    var shader: ShaderRaw
+    var texture: _TextureRaw
+    var shader: _ShaderRaw
 
-    new create(bm: BlendMode, tf: Transform, tex: TextureRaw, sh: ShaderRaw) =>
+    new create(bm: BlendMode, tf: Transform, tex: _TextureRaw, sh: _ShaderRaw) =>
         blendMode = BlendMode.copy(bm) // Pony embed fields must be assigned using a ctor
         transform = Transform.copy(tf) // Pony embed fields must be assigned using a ctor
         texture = tex
@@ -491,27 +493,40 @@ primitive _RenderStatesUtils
 // abstraction layer
 
 class RenderStates
-    var _raw: _RenderStatesRaw ref
+    let _raw: _RenderStatesRaw ref
+    let _struct: _RenderStates
 
     new default() =>
-        _raw = _RenderStatesRaw(
-            _RenderStates(BlendMode.blendAlpha(), Transform, TextureRaw.none(), ShaderRaw.none()))
+        _struct = _RenderStates(BlendMode.blendAlpha(), Transform, _TextureRaw.none(), _ShaderRaw.none())
+        _raw = _RenderStatesRaw(_struct)
 
     new fromBlendMode(bm: BlendMode) =>
-        _raw = _RenderStatesRaw(
-            _RenderStates(BlendMode.copy(bm), Transform, TextureRaw.none(), ShaderRaw.none()))
+        _struct = _RenderStates(BlendMode.copy(bm), Transform, _TextureRaw.none(), _ShaderRaw.none())
+        _raw = _RenderStatesRaw(_struct)
 
     new fromTransform(tf: Transform) =>
-        _raw = _RenderStatesRaw(
-            _RenderStates(BlendMode.blendAlpha(), Transform.copy(tf), TextureRaw.none(), ShaderRaw.none()))
+        _struct = _RenderStates(BlendMode.blendAlpha(), Transform.copy(tf), _TextureRaw.none(), _ShaderRaw.none())
+        _raw = _RenderStatesRaw(_struct)
 
     new fromTexture(tex: Texture) =>
-        _raw = _RenderStatesRaw(
-            _RenderStates(BlendMode.blendAlpha(), Transform, tex.getRaw(), ShaderRaw.none()))
+        _struct = _RenderStates(BlendMode.blendAlpha(), Transform, tex._getRaw(), _ShaderRaw.none())
+        _raw = _RenderStatesRaw(_struct)
 
     new fromShader(sh: Shader) =>
-        _raw = _RenderStatesRaw(
-            _RenderStates(BlendMode.blendAlpha(), Transform, TextureRaw.none(), sh.getRaw()))
+        _struct = _RenderStates(BlendMode.blendAlpha(), Transform, _TextureRaw.none(), sh._getRaw())
+        _raw = _RenderStatesRaw(_struct)
+
+    fun setBlendMode(bm: BlendMode) =>
+        _struct.blendMode.copy(bm)
+
+    fun setTransform(tf: Transform) =>
+        _struct.transform.copy(tf)
+
+    fun ref setTexture(tex: Texture) =>
+        _struct.texture = tex._getRaw()
+
+    fun ref setShader(sh: Shader) =>
+        _struct.shader = sh._getRaw()
 
     fun ref _getRaw(): _RenderStatesRaw =>
         _raw
@@ -582,7 +597,7 @@ class RenderWindow
 
     fun ref drawSprite(sprite: Sprite, renderStates: (RenderStates | None) = None) =>
         let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
-        @sfRenderWindow_drawSprite(_raw, sprite.getRaw(), render_states_raw)
+        @sfRenderWindow_drawSprite(_raw, sprite._getRaw(), render_states_raw)
 
     fun ref drawShape(shape: Shape, renderStates: (RenderStates | None) = None) =>
         let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
@@ -618,6 +633,7 @@ class RenderWindow
 
 class RenderTexture
     var _raw: RenderTextureRaw ref
+    var _texture: (Texture ref | None) = None
 
     new create(width: U32, height: U32, depthBuffer: Bool) =>
         if depthBuffer then
@@ -631,7 +647,7 @@ class RenderTexture
 
     fun ref drawSprite(sprite: Sprite, renderStates: (RenderStates | None) = None) =>
         let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
-        @sfRenderTexture_drawSprite(_raw, sprite.getRaw(), render_states_raw)
+        @sfRenderTexture_drawSprite(_raw, sprite._getRaw(), render_states_raw)
 
     fun ref drawShape(shape: Shape, renderStates: (RenderStates | None) = None) =>
         let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
@@ -650,85 +666,99 @@ class RenderTexture
         let render_states_raw: _RenderStatesRaw = _RenderStatesUtils.getRaw(renderStates)
         @sfRenderTexture_drawVertexArray(_raw, vertexArray.getRaw(), render_states_raw)
 
-    fun ref getTextureRaw(): TextureRaw =>
-        @sfRenderTexture_getTexture(_raw)
+
+    // In SFML, the texture returned is read-only (const). 
+    // In Pony, we return a `box` reference to achieve the same.
+    // We want to maintain a one-to-one relationship between:
+    //   1) the SFML-Texture owned by this's SFML-RenderTexture, and
+    //   2) the Pony binding's abstracting Texture returned by by this method.
+    // Therefore, we'll only create the Texture once and save it for future getTexture calls.
+    fun ref getTexture(): Texture box =>
+        match _texture
+            | let existing_texture: Texture ref => 
+                existing_texture
+            | None => 
+                let csfml_texture = @sfRenderTexture_getTexture(_raw)
+                let abstracting_texture = Texture._wrap(csfml_texture)
+                _texture = abstracting_texture
+                abstracting_texture
+        end
 
     fun ref display() =>
         @sfRenderTexture_display(_raw)
 
-    fun ref isNULL(): Bool =>
-        _raw.is_none()
-
-    fun ref destroy() =>
-        if not _raw.is_none() then
-            @sfRenderTexture_destroy(_raw)
-            _raw = RenderTextureRaw.none()
-        end
+    fun \deprecated\ destroy() => 
+        """ Because Pony has garbage collection, you don't need to call destroy() """
+        None
 
     fun _final() =>
         if not _raw.is_none() then @sfRenderTexture_destroy(_raw) end
 
 class Sprite
-    var _raw: SpriteRaw ref
+    var _raw: _SpriteRaw ref
+    var _texture: (Texture ref | None) // Hold onto this in case getTexture is called.
 
     new create() =>
         _raw = @sfSprite_create()
+        _texture = None
 
-    fun ref setTexture(texture: Texture, resetRect: Bool = false) =>
-        if resetRect then
-            @sfSprite_setTexture(_raw, texture.getRaw(), 1)
-        else
-            @sfSprite_setTexture(_raw, texture.getRaw(), 0)
-        end
+    fun ref setTexture(texture: Texture ref, resetRect: Bool = false) =>
+        let rrInt: I32 = if resetRect then 1 else 0 end
+        @sfSprite_setTexture(_raw, texture._getRaw(), rrInt)
+        _texture = texture
     
-    fun ref setTextureFromRaw(texptr: TextureRaw, resetRect: Bool = false) =>
-        if resetRect then
-            @sfSprite_setTexture(_raw, texptr, 1)
-        else
-            @sfSprite_setTexture(_raw, texptr, 0)
+    // In (C)SFML, the texture returned is read-only (const).
+    // In Pony, we use the `box` refcap to achieve the same.
+    fun ref getTexture(): (Texture box | None) =>
+        match _texture
+            | let t: Texture => t
+            | None => None
         end
 
-    fun ref getRaw(): SpriteRaw =>
+    fun ref _getRaw(): _SpriteRaw =>
         _raw
 
     fun ref isNULL(): Bool =>
         _raw.is_none()
 
-    fun ref destroy() =>
-        if not _raw.is_none() then
-             @sfSprite_destroy(_raw)
-            _raw = SpriteRaw.none()
-        end
+    fun \deprecated\ ref destroy() => 
+        """ Because Pony has garbage collection, you don't need to call destroy() """
+        None
 
     fun _final() =>
         if not _raw.is_none() then @sfSprite_destroy(_raw) end
 
 class Texture
-    var _raw: TextureRaw ref = TextureRaw.none()
+    var _raw: _TextureRaw ref
 
-    new create(tex_ptr: TextureRaw = TextureRaw.none()) =>
-        _raw = tex_ptr
+    new _wrap(cptr: _TextureRaw ref) =>
+        "This is only used internally, to wrap a texture cptr"
+        _raw = cptr
+
+    new create(width: U32, height: U32) =>
+        _raw = @sfTexture_create(width, height)
 
     new createFromFile(filename: String val, area: IntRectRaw = IntRectRaw.none()) =>
         _raw = @sfTexture_createFromFile(filename.cstring(), area)
 
-    new ref createFromImage(image: Image, area: IntRectRaw = IntRectRaw.none()) =>
+    new createFromImage(image: Image, area: IntRectRaw = IntRectRaw.none()) =>
         _raw = @sfTexture_createFromImage(image.getRaw(), area)
+
+    new copy(from: Texture) =>
+        _raw = @sfTexture_copy(from._getRaw())
 
     fun ref updateFromPixels(pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32) =>
         @sfTexture_updateFromPixels(_raw, pixels, width, height, x, y)
 
-    fun ref getRaw(): TextureRaw =>
+    fun ref _getRaw(): _TextureRaw =>
         _raw
 
     fun ref isNULL(): Bool =>
         _raw.is_none()
 
-    fun ref destroy() =>
-        if not _raw.is_none() then
-             @sfTexture_destroy(_raw)
-            _raw = TextureRaw.none()
-        end
+    fun \deprecated\ ref destroy() => 
+        """ Because Pony has garbage collection, you don't need to call destroy() """
+        None
 
     fun _final() =>
         if not _raw.is_none() then @sfTexture_destroy(_raw) end
@@ -758,7 +788,7 @@ class Image
         if not _raw.is_none() then @sfImage_destroy(_raw) end
 
 class Shader
-    var _raw: ShaderRaw ref
+    var _raw: _ShaderRaw ref
 
     new createFromMemory(vertexShader: String val, geometryShader: String val, fragmentShader: String val) =>
         // create NULL pointers if the String argument is "" and cstrings otherwise
@@ -767,23 +797,21 @@ class Shader
         let fsarg = if fragmentShader.size() == 0 then Pointer[U8 val].create() else fragmentShader.cstring() end
         _raw = @sfShader_createFromMemory(vsarg, gsarg, fsarg)
 
-    fun ref setTextureParameter(name: String val, texture: TextureRaw) =>
-        @sfShader_setTextureParameter(_raw, name.cstring(), texture)
+    fun ref setTextureParameter(name: String val, texture: Texture) =>
+        @sfShader_setTextureParameter(_raw, name.cstring(), texture._getRaw())
 
     fun ref setFloatUniform(name: String val, floatval: F32) =>
         @sfShader_setFloatUniform(_raw, name.cstring(), floatval)
 
-    fun ref getRaw(): ShaderRaw =>
+    fun ref _getRaw(): _ShaderRaw =>
         _raw
 
     fun ref isNULL(): Bool =>
         _raw.is_none()
 
-    fun ref destroy() =>
-        if not _raw.is_none() then
-             @sfShader_destroy(_raw)
-            _raw = ShaderRaw.none()
-        end
+    fun \deprecated\ ref destroy() => 
+        """ Because Pony has garbage collection, you don't need to call destroy() """
+        None
 
     fun _final() =>
         if not _raw.is_none() then @sfShader_destroy(_raw) end
