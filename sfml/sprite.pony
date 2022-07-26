@@ -1,7 +1,7 @@
 // CSFML Functions
 
 use @sfSprite_create[_SpriteRaw]()
-use @sfSprite_setTexture[None](sprite: _SpriteRaw, texture: _TextureRaw, resetRect: I32)
+use @sfSprite_setTexture[None](sprite: _SpriteRaw box, texture: _TextureRaw box, resetRect: I32)
 use @sfSprite_destroy[None](sprite: _SpriteRaw box)
 
 // SFML Object

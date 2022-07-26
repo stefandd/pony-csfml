@@ -27,7 +27,7 @@ class SoundBuffer
     new create(file : String) =>
         _raw = @sfSoundBuffer_createFromFile(file.cstring())
 
-    fun _getRaw(): SoundBufferRaw box =>
+    fun ref _getRaw(): SoundBufferRaw =>
         _raw
 
     fun \deprecated\ destroy() => 
@@ -78,7 +78,7 @@ class Sound
     fun ref setVolume(volume : F32) =>
         @sfSound_setVolume(_raw, volume)
 
-    fun _getRaw(): SoundRaw box =>
+    fun ref _getRaw(): SoundRaw =>
         _raw
 
     fun \deprecated\ destroy() => 

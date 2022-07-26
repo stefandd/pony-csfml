@@ -39,7 +39,7 @@ class Font
     new create(file : String) =>
         _raw = @sfFont_createFromFile(file.cstring())
 
-    fun _getRaw(): FontRaw box =>
+    fun ref _getRaw(): FontRaw =>
         _raw
 
     fun \deprecated\ destroy() => 
@@ -115,7 +115,7 @@ class Text
             rect
         end
 
-    fun _getRaw(): TextRaw box =>
+    fun ref _getRaw(): TextRaw =>
         _raw
 
     fun \deprecated\ destroy() => 

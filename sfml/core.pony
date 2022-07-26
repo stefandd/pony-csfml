@@ -20,7 +20,7 @@ use @sfWindow_getSettingsA[None](window: WindowRaw box, sfContextsettings: Conte
 use @sfRenderTexture_create[RenderTextureRaw](width: U32, height: U32, depthBuffer: I32)
 use @sfRenderTexture_clear[None](rendtex: RenderTextureRaw box, color: U32)
 use @sfRenderTexture_display[None](rendtex: RenderTextureRaw box)
-use @sfRenderTexture_drawSprite[None](rendtex: RenderTextureRaw box, sprite: _SpriteRaw, states: _RenderStatesRaw box)
+use @sfRenderTexture_drawSprite[None](rendtex: RenderTextureRaw box, sprite: _SpriteRaw box, states: _RenderStatesRaw box)
 use @sfRenderTexture_getTexture[_TextureRaw](rendtex: RenderTextureRaw box)
 use @sfRenderTexture_drawShape[None](rendtex: RenderTextureRaw box, shape: ShapeRaw box, states: _RenderStatesRaw box)
 use @sfRenderTexture_drawText[None](rendtex: RenderTextureRaw box, text: TextRaw box, states: _RenderStatesRaw box)
@@ -34,12 +34,12 @@ use @sfImage_destroy[None](image: ImageRaw box)
 use @sfTexture_create[_TextureRaw](width: U32, height: U32)
 use @sfTexture_createFromFile[_TextureRaw](filename: Pointer[U8 val] tag, area: IntRectRaw)
 use @sfTexture_createFromImage[_TextureRaw](image: ImageRaw box, area: IntRectRaw)
-use @sfTexture_copy[_TextureRaw](from: _TextureRaw)
-use @sfTexture_updateFromPixels[None](texture: _TextureRaw, pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32)
+use @sfTexture_copy[_TextureRaw](from: _TextureRaw box)
+use @sfTexture_updateFromPixels[None](texture: _TextureRaw box, pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32)
 use @sfTexture_destroy[None](texture: _TextureRaw box)
 // Shader
 use @sfShader_createFromMemory[_ShaderRaw](vertexShader: Pointer[U8 val] tag, geometryShader: Pointer[U8 val] tag, fragmentShader: Pointer[U8 val] tag)
-use @sfShader_setTextureParameter[None](shader: _ShaderRaw box, name: Pointer[U8 val] tag, texture: _TextureRaw)
+use @sfShader_setTextureParameter[None](shader: _ShaderRaw box, name: Pointer[U8 val] tag, texture: _TextureRaw box)
 use @sfShader_setFloatUniform[None](shader: _ShaderRaw box, name: Pointer[U8 val] tag, x: F32)
 use @sfShader_destroy[None](shader: _ShaderRaw box)
 // Keyboard
@@ -360,7 +360,7 @@ struct Transform
         _a10 = that._a10 ; _a11 = that._a11 ; _a12 = that._a12
         _a20 = that._a20 ; _a21 = that._a21 ; _a22 = that._a22
 
-    fun _getRaw(): TransformRaw box =>
+    fun ref _getRaw(): TransformRaw =>
         TransformRaw(this)
 
 type TransformRaw is NullablePointer[Transform box] tag
@@ -572,7 +572,7 @@ class Image
     new createFromColor(width: U32, height: U32, color: Color) =>
         _raw = @sfImage_createFromColor(width, height, color._u32())
 
-    fun _getRaw(): ImageRaw box =>
+    fun ref _getRaw(): ImageRaw =>
         _raw
 
     fun \deprecated\ destroy() => 

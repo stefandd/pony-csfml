@@ -53,7 +53,7 @@ class VertexArray
       rect
     end
 
-  fun _getRaw(): _VertexArrayRaw box =>
+  fun ref _getRaw(): _VertexArrayRaw =>
     _raw
 
   fun \deprecated\ destroy() => 

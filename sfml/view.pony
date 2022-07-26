@@ -55,7 +55,7 @@ class View
   //TODO: fun rotate(angle: F32) =>
   //TODO: fun zoom(factor: F32) =>
 
-  fun _getRaw(): ViewRaw box =>
+  fun ref _getRaw(): ViewRaw =>
     _raw
 
   fun \deprecated\ destroy() => 
