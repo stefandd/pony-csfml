@@ -42,9 +42,6 @@ class Font
     fun _getRaw(): FontRaw box =>
         _raw
 
-    fun ref isNULL() : Bool =>
-        _raw.is_none()
-
     fun \deprecated\ destroy() => 
         """ Because Pony has garbage collection, you don't need to call destroy() """
         None
@@ -120,9 +117,6 @@ class Text
 
     fun _getRaw(): TextRaw box =>
         _raw
-
-    fun ref isNULL() : Bool =>
-        _raw.is_none()
 
     fun \deprecated\ destroy() => 
         """ Because Pony has garbage collection, you don't need to call destroy() """

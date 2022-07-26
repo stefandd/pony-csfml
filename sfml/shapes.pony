@@ -44,9 +44,6 @@ class CircleShape
     fun _getRaw(): ShapeRaw box =>
         _raw
 
-    fun ref isNULL() : Bool =>
-        _raw.is_none()
-
     fun ref setRadius(radius : F32) =>
         @sfCircleShape_setRadius(_raw, radius)
 
@@ -104,9 +101,6 @@ class RectangleShape
     
     fun _getRaw(): ShapeRaw box =>
         _raw
-
-    fun ref isNULL() : Bool =>
-        _raw.is_none()
 
     fun ref setRadius(radius : F32) =>
         @sfRectangleShape_setSize(_raw, (Vector2f(2.0 * radius, 2.0 * radius))._u64())

@@ -30,9 +30,6 @@ class SoundBuffer
     fun _getRaw(): SoundBufferRaw box =>
         _raw
 
-    fun ref isNULL() : Bool =>
-        _raw.is_none()
-
     fun \deprecated\ destroy() => 
         """ Because Pony has garbage collection, you don't need to call destroy() """
         None
@@ -83,9 +80,6 @@ class Sound
 
     fun _getRaw(): SoundRaw box =>
         _raw
-
-    fun ref isNULL() : Bool =>
-        _raw.is_none()
 
     fun \deprecated\ destroy() => 
         """ Because Pony has garbage collection, you don't need to call destroy() """
