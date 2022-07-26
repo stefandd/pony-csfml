@@ -16,16 +16,6 @@ use @sfContext_getSettingsA[None](context: ContextRaw, settings: ContextSettings
 // Window
 use @sfWindow_setActive[None](window: WindowRaw box, active: I32)
 use @sfWindow_getSettingsA[None](window: WindowRaw box, sfContextsettings: ContextSettingsRaw)
-// RenderTexture
-use @sfRenderTexture_create[RenderTextureRaw](width: U32, height: U32, depthBuffer: I32)
-use @sfRenderTexture_clear[None](rendtex: RenderTextureRaw box, color: U32)
-use @sfRenderTexture_display[None](rendtex: RenderTextureRaw box)
-use @sfRenderTexture_drawSprite[None](rendtex: RenderTextureRaw box, sprite: _SpriteRaw box, states: _RenderStatesRaw box)
-use @sfRenderTexture_getTexture[_TextureRaw](rendtex: RenderTextureRaw box)
-use @sfRenderTexture_drawShape[None](rendtex: RenderTextureRaw box, shape: ShapeRaw box, states: _RenderStatesRaw box)
-use @sfRenderTexture_drawText[None](rendtex: RenderTextureRaw box, text: TextRaw box, states: _RenderStatesRaw box)
-use @sfRenderTexture_drawVertexArray[None](rendtex: RenderTextureRaw box, vertexArray: _VertexArrayRaw box, states: _RenderStatesRaw box)
-use @sfRenderTexture_destroy[None](rendtex: RenderTextureRaw box)
 // Image
 use @sfImage_create[ImageRaw](width: U32, height: U32)
 use @sfImage_createFromColor[ImageRaw](width: U32, height: U32, color: U32)
@@ -90,9 +80,6 @@ type WindowRaw is Pointer[_Window]
 
 primitive _Context
 type ContextRaw is Pointer[_Context]
-
-struct _RenderTexture
-type RenderTextureRaw is NullablePointer[_RenderTexture]
 
 primitive WindowStyle
     fun sfNone(): I32         => 0      ///< No border / title bar (this flag and all others are mutually exclusive)
@@ -468,68 +455,6 @@ class Context
     fun _final() =>
         if not _raw.is_null() then @sfContext_destroy(_raw) end
 
-class RenderTexture
-    var _raw: RenderTextureRaw ref
-    var _texture: (Texture ref | None) = None
-
-    new create(width: U32, height: U32, depthBuffer: Bool) =>
-        if depthBuffer then
-            _raw = @sfRenderTexture_create(width, height, 1)
-        else
-            _raw = @sfRenderTexture_create(width, height, 0)
-        end
-
-    fun ref clear(color: Color) =>
-        @sfRenderTexture_clear(_raw, color._u32())
-
-    fun ref drawSprite(sprite: Sprite, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
-        @sfRenderTexture_drawSprite(_raw, sprite._getRaw(), render_states_raw)
-
-    fun ref drawShape(shape: Shape, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
-        match shape
-        | let s: CircleShape =>
-            @sfRenderTexture_drawShape(_raw, s._getRaw(), render_states_raw)
-        | let s: RectangleShape =>
-            @sfRenderTexture_drawShape(_raw, s._getRaw(), render_states_raw)
-        end
-
-    fun ref drawText(text: Text, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
-        @sfRenderTexture_drawText(_raw, text._getRaw(), render_states_raw)
-
-    fun ref drawVertexArray(vertexArray: VertexArray, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
-        @sfRenderTexture_drawVertexArray(_raw, vertexArray._getRaw(), render_states_raw)
-
-
-    // In SFML, the texture returned is read-only (const). 
-    // In Pony, we return a `box` reference to achieve the same.
-    // We want to maintain a one-to-one relationship between:
-    //   1) the SFML-Texture owned by this's SFML-RenderTexture, and
-    //   2) the Pony binding's abstracting Texture returned by by this method.
-    // Therefore, we'll only create the Texture once and save it for future getTexture calls.
-    fun ref getTexture(): Texture box =>
-        match _texture
-            | let existing_texture: Texture ref => 
-                existing_texture
-            | None => 
-                let csfml_texture = @sfRenderTexture_getTexture(_raw)
-                let abstracting_texture = Texture._wrap(csfml_texture)
-                _texture = abstracting_texture
-                abstracting_texture
-        end
-
-    fun ref display() =>
-        @sfRenderTexture_display(_raw)
-
-    fun \deprecated\ destroy() => 
-        """ Because Pony has garbage collection, you don't need to call destroy() """
-        None
-
-    fun _final() =>
-        if not _raw.is_none() then @sfRenderTexture_destroy(_raw) end
 
 class Texture
     var _raw: _TextureRaw ref
