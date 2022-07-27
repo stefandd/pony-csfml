@@ -39,6 +39,10 @@ use @sfSleep[None](duration: I64)
 // Other
 use @memcpy[Pointer[None]](dest: Pointer[None], src: Pointer[None] box, n: USize)
 
+
+type Optional[X] is (X | None)
+
+
 primitive System
     fun sleep(duration: I64) => @sfSleep(duration)
 
@@ -316,41 +320,6 @@ type ImageRaw is NullablePointer[_Image]
 
 struct _Shader
 type _ShaderRaw is NullablePointer[_Shader]
-
-struct Transform
-    var _a00: F32
-    var _a01: F32
-    var _a02: F32
-    var _a10: F32
-    var _a11: F32
-    var _a12: F32
-    var _a20: F32
-    var _a21: F32
-    var _a22: F32
-
-    new create() => None
-        _a00 = 1 ; _a01 = 0 ; _a02 = 0
-        _a10 = 0 ; _a11 = 1 ; _a12 = 0
-        _a20 = 0 ; _a21 = 0 ; _a22 = 1
-
-    new fromFloats(
-        a00: F32 = 0, a01: F32 = 0, a02: F32 = 0, 
-        a10: F32 = 0, a11: F32 = 0, a12: F32 = 0, 
-        a20: F32 = 0, a21: F32 = 0, a22: F32 = 0) 
-    =>
-        _a00 = a00 ; _a01 = a01 ; _a02 = a02
-        _a10 = a10 ; _a11 = a11 ; _a12 = a12
-        _a20 = a20 ; _a21 = a21 ; _a22 = a22
-
-    new copy(that: Transform) =>
-        _a00 = that._a00 ; _a01 = that._a01 ; _a02 = that._a02
-        _a10 = that._a10 ; _a11 = that._a11 ; _a12 = that._a12
-        _a20 = that._a20 ; _a21 = that._a21 ; _a22 = that._a22
-
-    fun ref _getRaw(): TransformRaw =>
-        TransformRaw(this)
-
-type TransformRaw is NullablePointer[Transform box] tag
 
 primitive BlendEquation
     fun add(): I32 => 0  ///< Pixel = Src * SrcFactor + Dst * DstFactor
