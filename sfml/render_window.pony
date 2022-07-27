@@ -57,12 +57,12 @@ class RenderWindow
     fun ref clear(color: Color = Color(0, 0, 0, 255)) =>
         @sfRenderWindow_clear(_raw, color._u32())
 
-    fun ref drawSprite(sprite: Sprite, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
+    fun ref drawSprite(sprite: Sprite, renderStates: Optional[RenderStates] = None) =>
+        let render_states_raw = _OptionalRenderStates.toRaw(renderStates)
         @sfRenderWindow_drawSprite(_raw, sprite._getRaw(), render_states_raw)
 
-    fun ref drawShape(shape: Shape, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
+    fun ref drawShape(shape: Shape, renderStates: Optional[RenderStates] = None) =>
+        let render_states_raw = _OptionalRenderStates.toRaw(renderStates)
         match shape
         | let s: CircleShape =>
             @sfRenderWindow_drawShape(_raw, s._getRaw(), render_states_raw)
@@ -70,12 +70,12 @@ class RenderWindow
             @sfRenderWindow_drawShape(_raw, s._getRaw(), render_states_raw)
         end
 
-    fun ref drawText(text: Text, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
+    fun ref drawText(text: Text, renderStates: Optional[RenderStates] = None) =>
+        let render_states_raw = _OptionalRenderStates.toRaw(renderStates)
         @sfRenderWindow_drawText(_raw, text._getRaw(), render_states_raw)
 
-    fun ref drawVertexArray(vertexArray: VertexArray, renderStates: (RenderStates | None) = None) =>
-        let render_states_raw = _RenderStatesUtils.getRaw(renderStates)
+    fun ref drawVertexArray(vertexArray: VertexArray, renderStates: Optional[RenderStates] = None) =>
+        let render_states_raw = _OptionalRenderStates.toRaw(renderStates)
         @sfRenderWindow_drawVertexArray(_raw, vertexArray._getRaw(), render_states_raw)
 
     fun ref display() =>
