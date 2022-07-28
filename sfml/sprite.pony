@@ -1,16 +1,28 @@
-// CSFML Functions
-
+// FFI declarations for CSFML functions
+//
 use @sfSprite_create[_SpriteRaw]()
 use @sfSprite_setTexture[None](sprite: _SpriteRaw box, texture: _TextureRaw box, resetRect: I32)
 use @sfSprite_destroy[None](sprite: _SpriteRaw box)
 
-// SFML Object
 
+// Because CSFML provides all the functions required to create and manipulate
+// this structure (see 'use' statements, above), we don't need to define its
+// fields. We'll only be working with it as a pointer.
+//
 struct _Sprite
 type _SpriteRaw is NullablePointer[_Sprite]
 
-// Pony Abstaction
 
+// Pony Proxy Class
+//
+// The goal for this class to be a Pony proxy for the corresponding SFML 
+// C++ class. As far as is possible, given the differences between Pony
+// and C++, this class should be identical to the corresponding C++ class.
+// This will make it easy for users of pony-sfml to understand existing
+// SFML docs and examples.
+//
+// This class must not publicly expose any FFI types.
+//
 class Sprite
     var _raw: _SpriteRaw ref
     var _texture: (Texture ref | None)

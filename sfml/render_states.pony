@@ -1,6 +1,18 @@
-// SFML Object
 
-struct _RenderStates 
+// FFI declarations for CSFML functions
+//
+// None, because CSFML does not provide any functions for working with RenderStates.
+
+
+// CSFML FFI Struct
+//
+// Because CSFML DOES NOT provide functions for creation or manipulation of
+// this structure, we define it here in Pony. The only constraint on this 
+// private struct is that it needs to match the memory layout of the 
+// corresponding sfReenderStates in CSFML. Its methods can be *anything* useful
+// to the private implementation of pony-sfml.
+//
+struct _RenderStates
     embed blendMode: BlendMode
     embed transform: _Transform
     var texture: _TextureRaw
@@ -21,8 +33,17 @@ primitive _OptionalRenderStates
             | let rs: RenderStates => rs._getRaw() 
         end
 
-// Pony Abstraction
 
+// Pony Proxy Class
+//
+// The goal for this class to be a Pony proxy for the corresponding SFML 
+// C++ class. As far as is possible, given the differences between Pony
+// and C++, this class should be identical to the corresponding C++ class.
+// This will make it easy for users of pony-sfml to understand existing
+// SFML docs and examples.
+//
+// This class must not publicly expose any FFI types.
+//
 class RenderStates
     let _raw: _RenderStatesRaw ref
     let _struct: _RenderStates

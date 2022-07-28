@@ -1,3 +1,5 @@
+// FFI declarations for CSFML functions
+//
 use @sfView_create[ViewRaw]()
 use @sfView_createFromRectA[ViewRaw](left: F32, top: F32, width: F32, height: F32)
 use @sfView_copy[ViewRaw](view: ViewRaw box)
@@ -15,9 +17,25 @@ use @sfView_move[None](view: ViewRaw box, offset: Vector2f)
 use @sfView_rotate[None](view: ViewRaw box, angle: F32)
 use @sfView_zoom[None](view: ViewRaw box, factor: F32)
 
+
+// Because CSFML provides all the functions required to create and manipulate
+// this structure (see 'use' statements, above), we don't need to define its
+// fields. We'll only be working with it as a pointer.
+//
 struct _View
 type ViewRaw is NullablePointer[_View]
 
+
+// Pony Proxy Class
+//
+// The goal for this class to be a Pony proxy for the corresponding SFML 
+// C++ class. As far as is possible, given the differences between Pony
+// and C++, this class should be identical to the corresponding C++ class.
+// This will make it easy for users of pony-sfml to understand existing
+// SFML docs and examples.
+//
+// This class must not publicly expose any FFI types.
+//
 class View
 
   var _raw: ViewRaw

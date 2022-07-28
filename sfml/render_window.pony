@@ -1,4 +1,5 @@
-// RenderWindow
+// FFI declarations for CSFML functions
+//
 use @sfRenderWindow_createA[_RenderWindowRaw](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U8 val] tag, style: I32, sfContextsettings: ContextSettingsRaw)
 use @sfRenderWindow_createUnicodeA[_RenderWindowRaw](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U32 val] tag, style: I32, sfContextsettings: ContextSettingsRaw)
 use @sfRenderWindow_setFramerateLimit[None](window: _RenderWindowRaw box, limit: U32)
@@ -17,9 +18,24 @@ use @sfRenderWindow_pollEvent[I32](window: _RenderWindowRaw box, event: Pointer[
 use @sfRenderWindow_getSize[U64](window: _RenderWindowRaw box)
 use @sfRenderWindow_destroy[None](window: _RenderWindowRaw box)
 
+
+// Because CSFML provides all the functions required to create and manipulate
+// this structure (see 'use' statements, above), we don't need to define its
+// fields. We'll only be working with it as a pointer.
+//
 primitive _RenderWindow
 type _RenderWindowRaw is Pointer[_RenderWindow]
 
+// Pony Proxy Class
+//
+// The goal for this class to be a Pony proxy for the corresponding SFML 
+// C++ class. As far as is possible, given the differences between Pony
+// and C++, this class should be identical to the corresponding C++ class.
+// This will make it easy for users of pony-sfml to understand existing
+// SFML docs and examples.
+//
+// This class must not publicly expose any FFI types.
+//
 class RenderWindow
     var _raw: _RenderWindowRaw ref
     let _evt: EventStruct

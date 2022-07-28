@@ -1,5 +1,5 @@
-// CSFML Functions
-
+// FFI declarations for CSFML functions
+//
 use @sfRenderTexture_create[RenderTextureRaw](width: U32, height: U32, depthBuffer: I32)
 use @sfRenderTexture_clear[None](rendtex: RenderTextureRaw box, color: U32)
 use @sfRenderTexture_display[None](rendtex: RenderTextureRaw box)
@@ -10,13 +10,25 @@ use @sfRenderTexture_drawText[None](rendtex: RenderTextureRaw box, text: TextRaw
 use @sfRenderTexture_drawVertexArray[None](rendtex: RenderTextureRaw box, vertexArray: _VertexArrayRaw box, states: _RenderStatesRaw box)
 use @sfRenderTexture_destroy[None](rendtex: RenderTextureRaw box)
 
-// SFML Object
 
+// Because CSFML provides all the functions required to create and manipulate
+// this structure (see 'use' statements, above), we don't need to define its
+// fields. We'll only be working with it as a pointer.
+//
 struct _RenderTexture
 type RenderTextureRaw is NullablePointer[_RenderTexture]
 
-// Pony Abstraction
 
+// Pony Proxy Class
+//
+// The goal for this class to be a Pony proxy for the corresponding SFML 
+// C++ class. As far as is possible (given the differences between Pony
+// and C++) this class should be identical to the corresponding C++ class.
+// This will make it easy for users of pony-sfml to understand existing
+// SFML docs and examples.
+//
+// This class must not publicly expose any FFI types.
+//
 class RenderTexture
     var _raw: RenderTextureRaw ref
     var _texture: (Texture ref | None) = None

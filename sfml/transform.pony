@@ -1,11 +1,29 @@
-use @sfTransform_translate[None](transform: _TransformRaw box, x: F32, y: F32)
-
-
-// CSFML FFI Object
+// FFI declarations for CSFML functions
 //
-// This only needs to match the memory layout of the corresponding CSFML concept.
-// Its creators don't need to match the creators of the corresponding CSFML concept.
+use @sfTransform_getMatrix[None](transform: _TransformRaw, matrix: Pointer[F32])
+use @sfTransform_getInverse[_Transform](transform: _TransformRaw)
+use @sfTransform_transformPoint[Vector2f](transform: _TransformRaw, point: Vector2f)
+use @sfTransform_transformRect[FloatRect](transform: _TransformRaw, rectangle: FloatRect)
+use @sfTransform_combine[None](transform: _TransformRaw, other: _TransformRaw)
+use @sfTransform_translate[None](transform: _TransformRaw box, x: F32, y: F32)
+use @sfTransform_rotate[None](transform: _TransformRaw, angle: F32)
+use @sfTransform_rotateWithCenter[None](transform: _TransformRaw, angle: F32, centerX: F32, centerY: F32)
+use @sfTransform_scale[None](transform: _TransformRaw, scaleX: F32, scaleY: F32)
+use @sfTransform_scaleWithCenter[None](transform: _TransformRaw, scaleX: F32, scaleY: F32, centerX: F32, centerY: F32)
+use @sfTransform_equal[I32](left: _TransformRaw, right: _TransformRaw)
+// use @sfTransform_fromMatrix <- We are not using this function.
 
+
+// CSFML FFI Struct
+//
+// Despite the fact that CSFML provides functions for creation and manipulation
+// of Transforms, we are declaring the fields of _Transform here because an 
+// EMBEDDED _Transform appears in _RenderStates.
+//
+// The only constraint on this private struct is that it needs to match the 
+// memory layout of the corresponding CSFML concept. Its methods can be
+// *anything* useful to the private implementation of pony-sfml.
+//
 struct _Transform
     var a00: F32
     var a01: F32 
@@ -45,12 +63,16 @@ struct _Transform
 type _TransformRaw is NullablePointer[_Transform]
 
 
-// Pony Proxy Object
+// Pony Proxy Class
 //
-// The goal is for this class to look like the corresponding SFML C++ class, 
-// as far as possible, so that existing SFML documentation will suffice.
-// It should not (publicly) expose any FFI types.
-
+// The goal for this class to be a Pony proxy for the corresponding SFML 
+// C++ class. As far as is possible, given the differences between Pony
+// and C++, this class should be identical to the corresponding C++ class.
+// This will make it easy for users of pony-sfml to understand existing
+// SFML docs and examples.
+//
+// This class must not publicly expose any FFI types.
+//
 class Transform
 
     let _struct: _Transform 
@@ -58,7 +80,7 @@ class Transform
     new create() => 
         _struct = _Transform.identity()
 
-    new fromFloats(
+    new fromMatrix(
         a00: F32 = 0, a01: F32 = 0, a02: F32 = 0, 
         a10: F32 = 0, a11: F32 = 0, a12: F32 = 0, 
         a20: F32 = 0, a21: F32 = 0, a22: F32 = 0) 
