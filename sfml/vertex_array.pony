@@ -56,8 +56,8 @@ class VertexArray
   fun ref append(v: Vertex) =>
     @sfVertexArray_appendA(_raw, v.position._u64(), v.color._u32(), v.texCoords._u64())
 
-  fun ref setPrimitiveType(primitiveType: I32) =>
-    @sfVertexArray_setPrimitiveType(_raw, primitiveType)
+  fun ref setPrimitiveType(primitiveType: PrimitiveType) =>
+    @sfVertexArray_setPrimitiveType(_raw, primitiveType._i32())
 
   fun ref getPrimitiveType(): I32 =>
     @sfVertexArray_getPrimitiveType(_raw)

@@ -69,7 +69,7 @@ actor Main
         center_vtx ; Vertex(Vector2f(w, h), line_color)
       ]
       vtx_arr = VertexArray
-      vtx_arr.setPrimitiveType(PrimitiveType.sfLines())
+      vtx_arr.setPrimitiveType(Lines)
       for v in vertices.values() do vtx_arr.append(v) end
 
       let font_size: U32 = 24

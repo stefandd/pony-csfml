@@ -1,14 +1,20 @@
 
+trait val PrimitiveType
+    fun _i32(): I32  // For CSFML FFI
 
-primitive PrimitiveType
-    fun sfPoints() : I32 =>         0
-    fun sfLines() : I32 =>          1
-    fun sfLineStrip() : I32 =>      2
-    fun sfTriangles() : I32 =>      3
-    fun sfTriangleStrip() : I32 =>  4
-    fun sfTriangleFan() : I32 =>    5
-    fun sfQuads() : I32 =>          6
-    // Deprecated names
-    fun sfLinesStrip() : I32 =>     2
-    fun sfTrianglesStrip() : I32 => 4
-    fun sfTrianglesFan() : I32 =>   5
+primitive Points is PrimitiveType         fun _i32(): I32 => 0
+primitive Lines is PrimitiveType          fun _i32(): I32 => 1
+primitive LineStrip is PrimitiveType      fun _i32(): I32 => 2
+primitive Triangles is PrimitiveType      fun _i32(): I32 => 3
+primitive TriangleStrip is PrimitiveType  fun _i32(): I32 => 4
+primitive TriangleFan is PrimitiveType    fun _i32(): I32 => 5
+primitive Quads is PrimitiveType          fun _i32(): I32 => 6
+
+primitive \deprecated\ LinesStrip is PrimitiveType     fun _i32(): I32 => 2
+primitive \deprecated\ TrianglesStrip is PrimitiveType fun _i32(): I32 => 4
+primitive \deprecated\ TrianglesFan is PrimitiveType   fun _i32(): I32 => 5
+
+// Example of correlation between C++ API and Pony API:
+// C++:  vertices.setPrimitiveType(sf::Quads);
+// Pony: vertices.setPrimitiveType(sf.Quads)
+
