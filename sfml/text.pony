@@ -1,5 +1,3 @@
-use @sfFont_createFromFile[FontRaw](filename : Pointer[U8 val] tag)
-use @sfFont_destroy[None](font : FontRaw box)
 
 use @sfText_create[TextRaw]()
 use @sfText_setString[None](text : TextRaw box, str : Pointer[U8 val] tag)
@@ -23,31 +21,12 @@ use @sfText_destroy[None](text : TextRaw box)
 struct _Text
 type TextRaw is NullablePointer[_Text]
 
-struct _Font
-type FontRaw is NullablePointer[_Font]
-
 primitive TextStyle
     fun sfTextRegular() : U32       => 0      ///< Regular characters, no style
     fun sfTextBold() : U32          => 1 << 0 ///< Bold characters
     fun sfTextItalic() : U32        => 1 << 1 ///< Italic characters
     fun sfTextUnderlined() : U32    => 1 << 2 ///< Underlined characters
     fun sfTextStrikeThrough() : U32 => 1 << 3 ///< Strike through characters
-
-class Font
-    var _raw : FontRaw
-
-    new create(file : String) =>
-        _raw = @sfFont_createFromFile(file.cstring())
-
-    fun ref _getRaw(): FontRaw =>
-        _raw
-
-    fun \deprecated\ destroy() => 
-        """ Because Pony has garbage collection, you don't need to call destroy() """
-        None
-
-    fun _final() =>
-        if not _raw.is_none() then @sfFont_destroy(_raw) end
 
 class Text
     var _raw : TextRaw
