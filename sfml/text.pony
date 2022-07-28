@@ -1,4 +1,6 @@
 
+// FFI declarations for CSFML functions
+//
 use @sfText_create[TextRaw]()
 use @sfText_setString[None](text : TextRaw box, str : Pointer[U8 val] tag)
 use @sfText_setFont[None](text : TextRaw box, font : FontRaw box)
@@ -18,16 +20,25 @@ use @sfText_getLocalBoundsA[None](text : TextRaw box, bounds : FloatRectRaw)
 use @sfText_getGlobalBoundsA[None](text : TextRaw box, bounds : FloatRectRaw)
 use @sfText_destroy[None](text : TextRaw box)
 
+
+// Because CSFML provides all the functions required to create and manipulate
+// this structure (see 'use' statements, above), we don't need to define its
+// fields. We'll only be working with it as a pointer.
+//
 struct _Text
 type TextRaw is NullablePointer[_Text]
 
-primitive TextStyle
-    fun sfTextRegular() : U32       => 0      ///< Regular characters, no style
-    fun sfTextBold() : U32          => 1 << 0 ///< Bold characters
-    fun sfTextItalic() : U32        => 1 << 1 ///< Italic characters
-    fun sfTextUnderlined() : U32    => 1 << 2 ///< Underlined characters
-    fun sfTextStrikeThrough() : U32 => 1 << 3 ///< Strike through characters
 
+// Pony Proxy Class
+//
+// The goal for this class to be a Pony proxy for the corresponding SFML 
+// C++ class. As far as is possible, given the differences between Pony
+// and C++, this class should be identical to the corresponding C++ class.
+// This will make it easy for users of pony-sfml to understand existing
+// SFML docs and examples.
+//
+// This class must not publicly expose any FFI types.
+//
 class Text
     var _raw : TextRaw
 
@@ -104,3 +115,9 @@ class Text
     fun _final() =>
         if not _raw.is_none() then @sfText_destroy(_raw) end
 
+primitive TextStyle
+    fun sfTextRegular() : U32       => 0      ///< Regular characters, no style
+    fun sfTextBold() : U32          => 1 << 0 ///< Bold characters
+    fun sfTextItalic() : U32        => 1 << 1 ///< Italic characters
+    fun sfTextUnderlined() : U32    => 1 << 2 ///< Underlined characters
+    fun sfTextStrikeThrough() : U32 => 1 << 3 ///< Strike through characters
