@@ -1,7 +1,7 @@
 // FFI declarations for CSFML functions
 //
-use @sfFont_createFromFile[FontRaw](filename : Pointer[U8 val] tag)
-use @sfFont_destroy[None](font : FontRaw box)
+use @sfFont_createFromFile[_FontRaw](filename : Pointer[U8 val] tag)
+use @sfFont_destroy[None](font : _FontRaw box)
 
 
 // Because CSFML provides all the functions required to create and manipulate
@@ -9,7 +9,7 @@ use @sfFont_destroy[None](font : FontRaw box)
 // fields. We'll only be working with it as a pointer.
 //
 struct _Font
-type FontRaw is NullablePointer[_Font]
+type _FontRaw is NullablePointer[_Font]
 
 
 // Pony Proxy Class
@@ -23,12 +23,12 @@ type FontRaw is NullablePointer[_Font]
 // This class must not publicly expose any FFI types.
 //
 class Font
-    var _raw : FontRaw
+    var _raw : _FontRaw
 
     new create(file : String) =>
         _raw = @sfFont_createFromFile(file.cstring())
 
-    fun ref _getRaw(): FontRaw =>
+    fun ref _getRaw(): _FontRaw =>
         _raw
 
     fun \deprecated\ destroy() => 

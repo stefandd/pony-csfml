@@ -3,24 +3,24 @@ use "debug"
 
 // FFI declarations for CSFML functions
 //
-use @sfText_create[TextRaw]()
-use @sfText_setString[None](text : TextRaw box, str : Pointer[U8 val] tag)
-use @sfText_setFont[None](text : TextRaw box, font : FontRaw box)
-use @sfText_setCharacterSize[None](text : TextRaw box, size : U32)
-use @sfText_setLineSpacing[None](text : TextRaw box, spacingFactor : F32)
-use @sfText_setLetterSpacing[None](text : TextRaw box, spacingFactor : F32)
-use @sfText_setStyle[None](text : TextRaw box, style : U32)
-use @sfText_setColor[None](text : TextRaw box, color : U32)
-use @sfText_setFillColor[None](text : TextRaw box, color : U32)
-use @sfText_setOutlineColor[None](text : TextRaw box, color : U32)
-use @sfText_setOutlineThickness[None](text : TextRaw box, thickness : F32)
-use @sfText_setPositionA[None](text : TextRaw box, position : U64)
-use @sfText_setScaleA[None](text : TextRaw box, factors : U64)
-use @sfText_setOriginA[None](text : TextRaw box, origin : U64)
-use @sfText_setRotation[None](text : TextRaw box, angle : F32)
-use @sfText_getLocalBoundsA[None](text : TextRaw box, bounds : FloatRectRaw)
-use @sfText_getGlobalBoundsA[None](text : TextRaw box, bounds : FloatRectRaw)
-use @sfText_destroy[None](text : TextRaw box)
+use @sfText_create[_TextRaw]()
+use @sfText_setString[None](text : _TextRaw box, str : Pointer[U8 val] tag)
+use @sfText_setFont[None](text : _TextRaw box, font : _FontRaw box)
+use @sfText_setCharacterSize[None](text : _TextRaw box, size : U32)
+use @sfText_setLineSpacing[None](text : _TextRaw box, spacingFactor : F32)
+use @sfText_setLetterSpacing[None](text : _TextRaw box, spacingFactor : F32)
+use @sfText_setStyle[None](text : _TextRaw box, style : U32)
+use @sfText_setColor[None](text : _TextRaw box, color : U32)
+use @sfText_setFillColor[None](text : _TextRaw box, color : U32)
+use @sfText_setOutlineColor[None](text : _TextRaw box, color : U32)
+use @sfText_setOutlineThickness[None](text : _TextRaw box, thickness : F32)
+use @sfText_setPositionA[None](text : _TextRaw box, position : U64)
+use @sfText_setScaleA[None](text : _TextRaw box, factors : U64)
+use @sfText_setOriginA[None](text : _TextRaw box, origin : U64)
+use @sfText_setRotation[None](text : _TextRaw box, angle : F32)
+use @sfText_getLocalBoundsA[None](text : _TextRaw box, bounds : FloatRectRaw)
+use @sfText_getGlobalBoundsA[None](text : _TextRaw box, bounds : FloatRectRaw)
+use @sfText_destroy[None](text : _TextRaw box)
 
 
 // Because CSFML provides all the functions required to create and manipulate
@@ -28,7 +28,7 @@ use @sfText_destroy[None](text : TextRaw box)
 // fields. We'll only be working with it as a pointer.
 //
 struct _Text
-type TextRaw is NullablePointer[_Text]
+type _TextRaw is NullablePointer[_Text]
 
 
 // Pony Proxy Class
@@ -42,7 +42,7 @@ type TextRaw is NullablePointer[_Text]
 // This class must not publicly expose any FFI types.
 //
 class Text
-    var _raw : TextRaw
+    var _raw : _TextRaw
 
     new create() =>
         _raw = @sfText_create()
@@ -119,7 +119,7 @@ class Text
             rect
         end
 
-    fun ref _getRaw(): TextRaw =>
+    fun ref _getRaw(): _TextRaw =>
         _raw
 
     fun \deprecated\ destroy() => 
