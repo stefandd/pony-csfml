@@ -1,3 +1,5 @@
+use "collections"
+use "debug"
 
 // FFI declarations for CSFML functions
 //
@@ -60,8 +62,20 @@ class Text
     fun setLetterSpacing(spacing : F32) =>
         @sfText_setLetterSpacing(_raw, spacing)
 
-    fun setStyle(style : U32) =>
-        @sfText_setStyle(_raw, style)
+    fun setStyle(style: (TextStyle | Array[TextStyle])) =>
+        """
+        In SFML's C++ documentation, you'll see styles combined by OR'ing them
+        together. In pony-sfml, styles are combined by grouping them in an array.
+        """
+        let styleU32 = match style
+            | let s: TextStyle => 
+                s._u32()
+            | let a: Array[TextStyle] =>
+                let styleList = List[TextStyle].from(a)
+                let folder = { (total:U32, s:TextStyle): U32 => total + s._u32() }
+                styleList.fold[U32](folder, 0)
+            end
+        @sfText_setStyle(_raw, styleU32)
 
     fun setColor(color : Color) =>
         @sfText_setColor(_raw, color._u32())
@@ -115,9 +129,17 @@ class Text
     fun _final() =>
         if not _raw.is_none() then @sfText_destroy(_raw) end
 
-primitive TextStyle
-    fun sfTextRegular() : U32       => 0      ///< Regular characters, no style
-    fun sfTextBold() : U32          => 1 << 0 ///< Bold characters
-    fun sfTextItalic() : U32        => 1 << 1 ///< Italic characters
-    fun sfTextUnderlined() : U32    => 1 << 2 ///< Underlined characters
-    fun sfTextStrikeThrough() : U32 => 1 << 3 ///< Strike through characters
+
+trait val TextStyle
+    fun _u32(): U32 // For CSFML FFI
+
+// These primitives improve type-safety vs SFML's U32 approach.
+primitive TextRegular is TextStyle       fun _u32(): U32 => 0      
+primitive TextBold is TextStyle          fun _u32(): U32 => 1 << 0 
+primitive TextItalic is TextStyle        fun _u32(): U32 => 1 << 1 
+primitive TextUnderlined is TextStyle    fun _u32(): U32 => 1 << 2 
+primitive TextStrikeThrough is TextStyle fun _u32(): U32 => 1 << 3 
+
+// Example of C++/Pony correlation for combined text styles:
+// C++:  text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+// Pony: text.setStyle([sf.TextBold ; sf.TextUnderlined])

@@ -78,8 +78,9 @@ actor Main
         .> setFont(fps_font)
         .> setCharacterSize(font_size)
         .> setOrigin(Vector2f(0, font_size.f32()))
-        .> setPosition(Vector2f(5, h-5))
+        .> setPosition(Vector2f(5, h-10))
         .> setColor(Color(0,0,255))
+        .> setStyle([TextItalic ; TextUnderlined])
 
       t_last_fps_frame = Time.millis()
       t_last_circle_frame = Time.millis()
