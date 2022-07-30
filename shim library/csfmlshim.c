@@ -94,6 +94,11 @@ void sfCircleShape_setOriginA(sfCircleShape* circle, sfUint64 origin)
 
 // RECTANGLE SHAPE
 
+void sfRectangleShape_setSizeA(sfRectangleShape* rect, sfUint64 size)
+{
+    sfRectangleShape_setSize(rect, VEC2F(size));
+}
+
 void sfRectangleShape_setPositionA(sfRectangleShape* rect, sfUint64 pos)
 {
     sfRectangleShape_setPosition(rect, VEC2F(pos));
