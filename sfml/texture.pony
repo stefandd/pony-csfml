@@ -33,6 +33,9 @@ class Texture
         "This is only used internally, to wrap a texture cptr"
         _raw = cptr
 
+    new none() =>
+        _raw = _TextureRaw.none()
+        
     new create(width: U32, height: U32) =>
         _raw = @sfTexture_create(width, height)
 

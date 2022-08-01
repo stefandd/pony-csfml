@@ -1,22 +1,19 @@
 // CSFML FFI Functions
 //
-// REVIEW: The FFI declarations below are not entirely safe 
-// because they are for rectangleshapes but allow ANY ShapeRaw 
-// (e.g. ShapeRaw from CircleShape._getRaw())
-use @sfRectangleShape_destroy[None](Rectangle : ShapeRaw box)
+use @sfRectangleShape_destroy[None](rectangle : ShapeRaw box)
 use @sfRectangleShape_create[ShapeRaw]()
-use @sfRectangleShape_setPositionA[None](Rectangle : ShapeRaw box, position : U64)
-use @sfRectangleShape_setOriginA[None](Rectangle : ShapeRaw box, origin : U64)
-use @sfRectangleShape_setScale[None](Rectangle : ShapeRaw box, factors : U64)
-use @sfRectangleShape_setSize[None](Rectangle : ShapeRaw box, size : U64)
-use @sfRectangleShape_setRotation[None](Rectangle : ShapeRaw box, angle : F32)
-use @sfRectangleShape_rotate[None](Rectangle : ShapeRaw box, angle : F32)
-use @sfRectangleShape_setFillColor[None](Rectangle : ShapeRaw box, color : U32)
-use @sfRectangleShape_setOutlineColor[None](Rectangle : ShapeRaw box, color : U32)
-use @sfRectangleShape_setPointCount[None](Rectangle : ShapeRaw box, count : USize)
-use @sfRectangleShape_setTexture[None](Rectangle : ShapeRaw box, texture : _TextureRaw box, resetRect : I32)
-use @sfRectangleShape_setTextureRect[None](Rectangle : ShapeRaw box, rect : U128)
-use @sfRectangleShape_setOutlineThickness[None](Rectangle : ShapeRaw box, thickness : F32)
+use @sfRectangleShape_setPositionA[None](rectangle : ShapeRaw box, position : U64)
+use @sfRectangleShape_setOriginA[None](rectangle : ShapeRaw box, origin : U64)
+use @sfRectangleShape_setScale[None](rectangle : ShapeRaw box, factors : U64)
+use @sfRectangleShape_setSizeA[None](rectangle : ShapeRaw box, size : U64)
+use @sfRectangleShape_setRotation[None](rectangle : ShapeRaw box, angle : F32)
+use @sfRectangleShape_rotate[None](rectangle : ShapeRaw box, angle : F32)
+use @sfRectangleShape_setFillColor[None](rectangle : ShapeRaw box, color : U32)
+use @sfRectangleShape_setOutlineColor[None](rectangle : ShapeRaw box, color : U32)
+use @sfRectangleShape_setPointCount[None](rectangle : ShapeRaw box, count : USize)
+use @sfRectangleShape_setTexture[None](rectangle : ShapeRaw box, texture : _TextureRaw box, resetRect : I32)
+use @sfRectangleShape_setTextureRect[None](rectangle : ShapeRaw box, rect : U128)
+use @sfRectangleShape_setOutlineThickness[None](rectangle : ShapeRaw box, thickness : F32)
 
 
 // Pony Proxy Class
@@ -39,10 +36,10 @@ class RectangleShape
         _raw
 
     fun ref setRadius(radius : F32) =>
-        @sfRectangleShape_setSize(_raw, (Vector2f(2.0 * radius, 2.0 * radius))._u64())
+        @sfRectangleShape_setSizeA(_raw, (Vector2f(2.0 * radius, 2.0 * radius))._u64())
 
     fun ref setSize(size : Vector2f) =>
-        @sfRectangleShape_setSize(_raw, size._u64())
+        @sfRectangleShape_setSizeA(_raw, size._u64())
 
     fun ref setFillColor(color : Color) =>
         @sfRectangleShape_setFillColor(_raw, color._u32())

@@ -80,6 +80,9 @@ class Transform
     new create() => 
         _struct = _Transform.identity()
 
+    new identity() => 
+        _struct = _Transform.identity()
+
     new fromMatrix(
         a00: F32 = 0, a01: F32 = 0, a02: F32 = 0, 
         a10: F32 = 0, a11: F32 = 0, a12: F32 = 0, 

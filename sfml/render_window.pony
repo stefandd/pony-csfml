@@ -74,11 +74,11 @@ class RenderWindow
         @sfRenderWindow_clear(_raw, color._u32())
 
     fun ref drawSprite(sprite: Sprite, renderStates: Optional[RenderStates] = None) =>
-        let render_states_raw = _OptionalRenderStates.toRaw(renderStates)
+        let render_states_raw = _ToRenderStatesRaw(renderStates)
         @sfRenderWindow_drawSprite(_raw, sprite._getRaw(), render_states_raw)
 
     fun ref drawShape(shape: Shape, renderStates: Optional[RenderStates] = None) =>
-        let render_states_raw = _OptionalRenderStates.toRaw(renderStates)
+        let render_states_raw = _ToRenderStatesRaw(renderStates)
         match shape
         | let s: CircleShape =>
             @sfRenderWindow_drawShape(_raw, s._getRaw(), render_states_raw)
@@ -87,11 +87,11 @@ class RenderWindow
         end
 
     fun ref drawText(text: Text, renderStates: Optional[RenderStates] = None) =>
-        let render_states_raw = _OptionalRenderStates.toRaw(renderStates)
+        let render_states_raw = _ToRenderStatesRaw(renderStates)
         @sfRenderWindow_drawText(_raw, text._getRaw(), render_states_raw)
 
     fun ref drawVertexArray(vertexArray: VertexArray, renderStates: Optional[RenderStates] = None) =>
-        let render_states_raw = _OptionalRenderStates.toRaw(renderStates)
+        let render_states_raw = _ToRenderStatesRaw(renderStates)
         @sfRenderWindow_drawVertexArray(_raw, vertexArray._getRaw(), render_states_raw)
 
     fun ref display() =>

@@ -44,11 +44,11 @@ class RenderTexture
         @sfRenderTexture_clear(_raw, color._u32())
 
     fun ref drawSprite(sprite: Sprite, renderStates: Optional[RenderStates] = None) =>
-        let render_states_raw = _OptionalRenderStates.toRaw(renderStates)
+        let render_states_raw = _ToRenderStatesRaw(renderStates)
         @sfRenderTexture_drawSprite(_raw, sprite._getRaw(), render_states_raw)
 
     fun ref drawShape(shape: Shape, renderStates: Optional[RenderStates] = None) =>
-        let render_states_raw = _OptionalRenderStates.toRaw(renderStates)
+        let render_states_raw = _ToRenderStatesRaw(renderStates)
         match shape
         | let s: CircleShape =>
             @sfRenderTexture_drawShape(_raw, s._getRaw(), render_states_raw)
@@ -57,11 +57,11 @@ class RenderTexture
         end
 
     fun ref drawText(text: Text, renderStates: Optional[RenderStates] = None) =>
-        let render_states_raw = _OptionalRenderStates.toRaw(renderStates)
+        let render_states_raw = _ToRenderStatesRaw(renderStates)
         @sfRenderTexture_drawText(_raw, text._getRaw(), render_states_raw)
 
     fun ref drawVertexArray(vertexArray: VertexArray, renderStates: Optional[RenderStates] = None) =>
-        let render_states_raw = _OptionalRenderStates.toRaw(renderStates)
+        let render_states_raw = _ToRenderStatesRaw(renderStates)
         @sfRenderTexture_drawVertexArray(_raw, vertexArray._getRaw(), render_states_raw)
 
     // In SFML, the texture returned is read-only (const). 

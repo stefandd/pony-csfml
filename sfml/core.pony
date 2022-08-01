@@ -362,6 +362,9 @@ class Image
 class Shader
     var _raw: _ShaderRaw ref
 
+    new none() => 
+        _raw = _ShaderRaw.none()
+        
     new createFromMemory(vertexShader: String val, geometryShader: String val, fragmentShader: String val) =>
         // create NULL pointers if the String argument is "" and cstrings otherwise
         let vsarg = if vertexShader.size() == 0 then Pointer[U8 val].create() else vertexShader.cstring() end

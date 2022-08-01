@@ -28,7 +28,7 @@ actor Main
     var t_last_fps_frame : U64
     var t_last_circle_frame: U64
     var running: Bool
-    let vtx_render_states: RenderStates = RenderStates.fromBlendMode(BlendMode.blendMultiply())
+    let vtx_render_states: RenderStates = RenderStates.fromBlendMode(BlendMode.multiply())
 
     fun @runtime_override_defaults(rto: RuntimeOptions) =>
       rto.ponymaxthreads = 1
@@ -43,7 +43,6 @@ actor Main
       sprite = Sprite
       sprite.setTexture(texture) // map the texture to a sprite
 
-
       let w = width.f32()
       let h = height.f32()
       let half_w = w / 2
@@ -52,7 +51,7 @@ actor Main
       let thickness: F32 = 1
       let wobble: F32 = 10
       let r = half_w.min(half_h) - thickness - wobble
-      circle = CircleShape
+      circle = CircleShape.create()
         .> setRadius(r)
         .> setFillColor(Color(127,200,127))
         .> setOutlineColor(Color.black())
@@ -60,16 +59,9 @@ actor Main
         .> setPosition(Vector2f(half_w, half_h))
         .> setOrigin(Vector2f(r, r-wobble))
 
-      let line_color = Color.fromInteger(0xff0000ff)
-      let center_vtx = Vertex(Vector2f(half_w, half_h), line_color, Vector2f(0,0))
-      let vertices = [
-        center_vtx ; Vertex(Vector2f(0, 0), line_color)
-        center_vtx ; Vertex(Vector2f(0, h), line_color)
-        center_vtx ; Vertex(Vector2f(w, 0), line_color)
-        center_vtx ; Vertex(Vector2f(w, h), line_color)
-      ]
-      vtx_arr = VertexArray
-      vtx_arr.setPrimitiveType(Lines)
+      let vtx = { box (x: F32, y: F32): Vertex => Vertex(Vector2f(x, y), Color.red()) }
+      let vertices = [vtx(0, 0) ; vtx(w, h) ; vtx(0, h) ; vtx(w, 0)]
+      vtx_arr = VertexArray.create() .> setPrimitiveType(Lines)
       for v in vertices.values() do vtx_arr.append(v) end
 
       let font_size: U32 = 24
