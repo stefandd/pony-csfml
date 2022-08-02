@@ -8,23 +8,9 @@ use "lib:csfmlshim"
 use "buffered"
 use "collections"
 
-// Context
-use @sfContext_create[ContextRaw]()
-use @sfContext_destroy[None](context: ContextRaw box)
-use @sfContext_setActive[I32](context: ContextRaw, active: I32)
-use @sfContext_getSettingsA[None](context: ContextRaw, settings: ContextSettingsRaw)
 // Window
 use @sfWindow_setActive[None](window: WindowRaw box, active: I32)
 use @sfWindow_getSettingsA[None](window: WindowRaw box, sfContextsettings: ContextSettingsRaw)
-// Image
-use @sfImage_create[ImageRaw](width: U32, height: U32)
-use @sfImage_createFromColor[ImageRaw](width: U32, height: U32, color: U32)
-use @sfImage_destroy[None](image: ImageRaw box)
-// Shader
-use @sfShader_createFromMemory[_ShaderRaw](vertexShader: Pointer[U8 val] tag, geometryShader: Pointer[U8 val] tag, fragmentShader: Pointer[U8 val] tag)
-use @sfShader_setTextureParameter[None](shader: _ShaderRaw box, name: Pointer[U8 val] tag, texture: _TextureRaw box)
-use @sfShader_setFloatUniform[None](shader: _ShaderRaw box, name: Pointer[U8 val] tag, x: F32)
-use @sfShader_destroy[None](shader: _ShaderRaw box)
 // Keyboard
 use @sfKeyboard_isKeyPressed[I32](key: I32)
 // Sleep
@@ -51,32 +37,9 @@ struct VideoMode
 
 type VideoModeRaw is NullablePointer[VideoMode]
 
-struct ContextSettings
-    let depthBits: U32         ///< Bits of the depth buffer
-    let stencilBits: U32       ///< Bits of the stencil buffer
-    let antialiasingLevel: U32 ///< Level of antialiasing
-    let majorVersion: U32      ///< Major number of the context version to create
-    let minorVersion: U32      ///< Minor number of the context version to create
-    let attributeFlags: U32    ///< The attribute flags to create the context with
-    let sRgbCapable: I32      ///< Whether the context framebuffer is sRGB capable
-
-    // TODO: Default args per https://www.sfml-dev.org/documentation/2.5.1/structsf_1_1ContextSettings.php
-    new create(depth: U32, sbits: U32, aalev: U32, majver: U32, minver: U32, attr: U32, isRGB: I32) =>
-        depthBits = depth
-        stencilBits = sbits
-        antialiasingLevel = aalev
-        majorVersion = majver
-        minorVersion = minver
-        attributeFlags = attr
-        sRgbCapable = isRGB
-
-type ContextSettingsRaw is NullablePointer[ContextSettings]
 
 primitive _Window
 type WindowRaw is Pointer[_Window]
-
-primitive _Context
-type ContextRaw is Pointer[_Context]
 
 primitive WindowStyle
     fun sfNone(): I32         => 0      ///< No border / title bar (this flag and all others are mutually exclusive)
@@ -302,88 +265,3 @@ class EventStruct
             //@fprintf[I32](@pony_os_stdout[Pointer[U8]](), "Event handling error\n".cstring(), "".cstring())
             None
         end
-
-// graphics object
-
-struct _Image
-type ImageRaw is NullablePointer[_Image]
-
-struct _Shader
-type _ShaderRaw is NullablePointer[_Shader]
-
-
-
-// abstraction layer
-
-class Context
-    var _raw: ContextRaw ref
-
-    new create() =>
-        _raw = @sfContext_create()
-
-    fun ref getSettings(): ContextSettings =>
-        var s: ContextSettings = ContextSettings.create(0, 0, 0, 0, 0, 0, 0)
-        @sfContext_getSettingsA(_raw, ContextSettingsRaw(s))
-        s
-
-    fun ref setActive(active: Bool): Bool =>
-        if active then
-            @sfContext_setActive(_raw, 1) > 0
-        else
-            @sfContext_setActive(_raw, 0) > 0
-        end
-
-    fun \deprecated\ destroy() => 
-        """ Because Pony has garbage collection, you don't need to call destroy() """
-        None
-
-    fun _final() =>
-        if not _raw.is_null() then @sfContext_destroy(_raw) end
-
-class Image
-    var _raw: ImageRaw ref
-
-    new create(width: U32, height: U32) => 
-        _raw = @sfImage_create(width, height)
-    
-    new createFromColor(width: U32, height: U32, color: Color) =>
-        _raw = @sfImage_createFromColor(width, height, color._u32())
-
-    fun ref _getRaw(): ImageRaw =>
-        _raw
-
-    fun \deprecated\ destroy() => 
-        """ Because Pony has garbage collection, you don't need to call destroy() """
-        None
-
-    fun _final() =>
-        if not _raw.is_none() then @sfImage_destroy(_raw) end
-
-class Shader
-    var _raw: _ShaderRaw ref
-
-    new none() => 
-        _raw = _ShaderRaw.none()
-        
-    new createFromMemory(vertexShader: String val, geometryShader: String val, fragmentShader: String val) =>
-        // create NULL pointers if the String argument is "" and cstrings otherwise
-        let vsarg = if vertexShader.size() == 0 then Pointer[U8 val].create() else vertexShader.cstring() end
-        let gsarg = if geometryShader.size() == 0 then Pointer[U8 val].create() else geometryShader.cstring() end
-        let fsarg = if fragmentShader.size() == 0 then Pointer[U8 val].create() else fragmentShader.cstring() end
-        _raw = @sfShader_createFromMemory(vsarg, gsarg, fsarg)
-
-    fun ref setTextureParameter(name: String val, texture: Texture) =>
-        @sfShader_setTextureParameter(_raw, name.cstring(), texture._getRaw())
-
-    fun ref setFloatUniform(name: String val, floatval: F32) =>
-        @sfShader_setFloatUniform(_raw, name.cstring(), floatval)
-
-    fun ref _getRaw(): _ShaderRaw =>
-        _raw
-
-    fun \deprecated\ ref destroy() => 
-        """ Because Pony has garbage collection, you don't need to call destroy() """
-        None
-
-    fun _final() =>
-        if not _raw.is_none() then @sfShader_destroy(_raw) end
