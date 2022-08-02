@@ -29,8 +29,6 @@ struct _BlendMode
         csf = that.csf ; cdf = that.cdf ; ceq = that.ceq
         asf = that.asf ; adf = that.adf ; aeq = that.aeq
 
-type _BlendModeRaw is NullablePointer[_BlendMode]
-
 
 // Pony Proxy Class
 //
