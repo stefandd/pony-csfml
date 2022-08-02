@@ -1,15 +1,22 @@
-use @sfContext_create[ContextRaw]()
-use @sfContext_destroy[None](context: ContextRaw box)
-use @sfContext_setActive[I32](context: ContextRaw, active: I32)
-use @sfContext_getSettingsA[None](context: ContextRaw, settings: ContextSettingsRaw)
+//
+// FFI declarations for CSFML functions
+//
+use @sfContext_create[_ContextRaw]()
+use @sfContext_destroy[None](context: _ContextRaw box)
+use @sfContext_setActive[I32](context: _ContextRaw, active: I32)
+use @sfContext_getSettingsA[None](context: _ContextRaw, settings: ContextSettingsRaw)
 
-
+// 
+// The SFML object as presented by CSFML
+// 
 primitive _Context
-type ContextRaw is Pointer[_Context]
+type _ContextRaw is Pointer[_Context]
 
-
+//
+// A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
+//
 class Context
-    var _raw: ContextRaw ref
+    var _raw: _ContextRaw ref
 
     new create() =>
         _raw = @sfContext_create()
