@@ -1,3 +1,4 @@
+//
 // FFI declarations for CSFML functions
 //
 use @sfTexture_create[_TextureRaw](width: U32, height: U32)
@@ -7,24 +8,15 @@ use @sfTexture_copy[_TextureRaw](from: _TextureRaw box)
 use @sfTexture_updateFromPixels[None](texture: _TextureRaw box, pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32)
 use @sfTexture_destroy[None](texture: _TextureRaw box)
 
-
-// Because CSFML provides all the functions required to create and manipulate
-// this structure (see 'use' statements, above), we don't need to define its
-// fields. We'll only be working with it as a pointer.
+// 
+// The CSFML object as seen by Pony
+// Don't need to define its fields b/c we'll only be working with it as a ptr.
 //
 struct _Texture
 type _TextureRaw is NullablePointer[_Texture]
 
-
-// Pony Proxy Class
 //
-// The goal for this class to be a Pony proxy for the corresponding SFML 
-// C++ class. As far as is possible, given the differences between Pony
-// and C++, this class should be identical to the corresponding C++ class.
-// This will make it easy for users of pony-sfml to understand existing
-// SFML docs and examples.
-//
-// This class must not publicly expose any FFI types.
+// A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class Texture
     var _raw: _TextureRaw ref

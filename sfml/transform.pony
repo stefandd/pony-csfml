@@ -1,3 +1,4 @@
+//
 // FFI declarations for CSFML functions
 //
 use @sfTransform_getMatrix[None](transform: _TransformRaw, matrix: Pointer[F32])
@@ -13,9 +14,9 @@ use @sfTransform_scaleWithCenter[None](transform: _TransformRaw, scaleX: F32, sc
 use @sfTransform_equal[I32](left: _TransformRaw, right: _TransformRaw)
 // use @sfTransform_fromMatrix <- We are not using this function.
 
-
-// CSFML FFI Struct
-//
+// 
+// The SFML object as presented by CSFML
+// 
 // Despite the fact that CSFML provides functions for creation and manipulation
 // of Transforms, we are declaring the fields of _Transform here because an 
 // EMBEDDED _Transform appears in _RenderStates.
@@ -62,16 +63,8 @@ struct _Transform
 
 type _TransformRaw is NullablePointer[_Transform]
 
-
-// Pony Proxy Class
 //
-// The goal for this class to be a Pony proxy for the corresponding SFML 
-// C++ class. As far as is possible, given the differences between Pony
-// and C++, this class should be identical to the corresponding C++ class.
-// This will make it easy for users of pony-sfml to understand existing
-// SFML docs and examples.
-//
-// This class must not publicly expose any FFI types.
+// A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class Transform
 

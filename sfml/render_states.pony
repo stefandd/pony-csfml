@@ -1,11 +1,6 @@
-
-// FFI declarations for CSFML functions
-//
-// None, because CSFML does not provide any functions for working with RenderStates.
-
-
-// CSFML FFI Struct
-//
+// 
+// The SFML object as presented by CSFML
+// 
 // Because CSFML DOES NOT provide functions to create this structure, we will 
 // be allocating them here, in pony-sfml. The only constraint on this private
 // struct is that it needs to match the memory layout of the corresponding 
@@ -26,16 +21,8 @@ struct _RenderStates
 
 type _RenderStatesRaw is NullablePointer[_RenderStates]
 
-
-// Pony Proxy Class
 //
-// The goal for this class to be a Pony proxy for the corresponding SFML 
-// C++ class. As far as is possible, given the differences between Pony
-// and C++, this class should be identical to the corresponding C++ class.
-// This will make it easy for users of pony-sfml to understand existing
-// SFML docs and examples.
-//
-// This class must not publicly expose any FFI types.
+// A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class RenderStates
     let _struct: _RenderStates
