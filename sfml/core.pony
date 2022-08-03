@@ -10,7 +10,7 @@ use "collections"
 
 // Window
 use @sfWindow_setActive[None](window: WindowRaw box, active: I32)
-use @sfWindow_getSettingsA[None](window: WindowRaw box, sfContextsettings: ContextSettingsRaw)
+use @sfWindow_getSettingsA[None](window: WindowRaw box, settings: _ContextSettingsRaw)
 // Keyboard
 use @sfKeyboard_isKeyPressed[I32](key: I32)
 // Sleep

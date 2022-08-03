@@ -1,9 +1,9 @@
 // FFI declarations for CSFML functions
 //
-use @sfRenderWindow_createA[_RenderWindowRaw](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U8 val] tag, style: I32, sfContextsettings: ContextSettingsRaw)
-use @sfRenderWindow_createUnicodeA[_RenderWindowRaw](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U32 val] tag, style: I32, sfContextsettings: ContextSettingsRaw)
+use @sfRenderWindow_createA[_RenderWindowRaw](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U8 val] tag, style: I32, settings: _ContextSettingsRaw)
+use @sfRenderWindow_createUnicodeA[_RenderWindowRaw](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U32 val] tag, style: I32, settings: _ContextSettingsRaw)
 use @sfRenderWindow_setFramerateLimit[None](window: _RenderWindowRaw box, limit: U32)
-use @sfRenderWindow_getSettingsA[None](window: _RenderWindowRaw box, sfContextsettings: ContextSettingsRaw)
+use @sfRenderWindow_getSettingsA[None](window: _RenderWindowRaw box, settings: _ContextSettingsRaw)
 use @sfRenderWindow_isOpen[I32](window: _RenderWindowRaw box)
 use @sfRenderWindow_hasFocus[I32](window: _RenderWindowRaw box)
 use @sfRenderWindow_setActive[I32](window: _RenderWindowRaw box, active: I32)
@@ -18,40 +18,32 @@ use @sfRenderWindow_pollEvent[I32](window: _RenderWindowRaw box, event: Pointer[
 use @sfRenderWindow_getSize[U64](window: _RenderWindowRaw box)
 use @sfRenderWindow_destroy[None](window: _RenderWindowRaw box)
 
-
-// Because CSFML provides all the functions required to create and manipulate
-// this structure (see 'use' statements, above), we don't need to define its
-// fields. We'll only be working with it as a pointer.
+// 
+// The CSFML object as seen by Pony
+// Don't need to define its fields b/c we'll only be working with it as a ptr.
 //
 primitive _RenderWindow
 type _RenderWindowRaw is Pointer[_RenderWindow]
 
-// Pony Proxy Class
 //
-// The goal for this class to be a Pony proxy for the corresponding SFML 
-// C++ class. As far as is possible, given the differences between Pony
-// and C++, this class should be identical to the corresponding C++ class.
-// This will make it easy for users of pony-sfml to understand existing
-// SFML docs and examples.
-//
-// This class must not publicly expose any FFI types.
+// A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class RenderWindow
     var _raw: _RenderWindowRaw ref
     let _evt: EventStruct
 
-    new create(mode: VideoMode, title: String, style: I32, ctxsettings: ContextSettingsRaw = ContextSettingsRaw.none()) =>
+    new create(mode: VideoMode, title: String, style: I32, settings: ContextSettings = ContextSettings) =>
         //let mode_arr: Array[U32] = [mode.width; mode.height; mode.bitsPerPixel] // trick to send this instead of the value struct
         //_raw = @sfRenderWindow_create(mode_arr.cpointer(), title.cstring(), style, ctxsettings)
-        _raw = @sfRenderWindow_createA(mode.width, mode.height, mode.bitsPerPixel, title.cstring(), style, ctxsettings)
+        _raw = @sfRenderWindow_createA(mode.width, mode.height, mode.bitsPerPixel, title.cstring(), style, settings._getRaw())
         _evt = EventStruct(_raw)
 
     fun ref getEventStruct(): EventStruct =>
         _evt
     
     fun ref getSettings(): ContextSettings =>
-        var s: ContextSettings = ContextSettings.create(0, 0, 0, 0, 0, 0, 0)
-        @sfRenderWindow_getSettingsA(_raw, ContextSettingsRaw(s))
+        var s: ContextSettings = ContextSettings
+        @sfRenderWindow_getSettingsA(_raw, s._getRaw())
         s
 
     fun ref setFramerateLimit(limit: U32) =>

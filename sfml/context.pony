@@ -4,27 +4,30 @@
 use @sfContext_create[_ContextRaw]()
 use @sfContext_destroy[None](context: _ContextRaw box)
 use @sfContext_setActive[I32](context: _ContextRaw, active: I32)
-use @sfContext_getSettingsA[None](context: _ContextRaw, settings: ContextSettingsRaw)
+use @sfContext_getSettingsA[None](context: _ContextRaw, settings: _ContextSettingsRaw)
 
 // 
-// The SFML object as presented by CSFML
-// 
+// The CSFML object as seen by Pony
+// Don't need to define its fields b/c we'll only be working with it as a ptr.
+//
 primitive _Context
 type _ContextRaw is Pointer[_Context]
 
 //
-// A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
+// A proxy class that abstracts away CSFML and FFI and presents a clean Pony API
 //
 class Context
-    var _raw: _ContextRaw ref
+    let _raw: _ContextRaw ref
+    var _context_settings: ContextSettings
 
     new create() =>
         _raw = @sfContext_create()
+        // A.B. assumes that context settings never change, in which case I can get them here:
+        _context_settings = ContextSettings
+        @sfContext_getSettingsA(_raw, _context_settings._getRaw())
 
     fun ref getSettings(): ContextSettings =>
-        var s: ContextSettings = ContextSettings.create(0, 0, 0, 0, 0, 0, 0)
-        @sfContext_getSettingsA(_raw, ContextSettingsRaw(s))
-        s
+        _context_settings
 
     fun ref setActive(active: Bool): Bool =>
         if active then
