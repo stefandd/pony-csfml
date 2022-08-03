@@ -1,6 +1,6 @@
 use "collections"
-use "debug"
 
+//
 // FFI declarations for CSFML functions
 //
 use @sfText_create[_TextRaw]()
@@ -20,26 +20,18 @@ use @sfText_setOriginA[None](text : _TextRaw box, origin : U64)
 use @sfText_setRotation[None](text : _TextRaw box, angle : F32)
 use @sfText_getLocalBoundsA[None](text : _TextRaw box, bounds : FloatRectRaw)
 use @sfText_getGlobalBoundsA[None](text : _TextRaw box, bounds : FloatRectRaw)
+use @sfText_getStyle[U32](text : _TextRaw box)
 use @sfText_destroy[None](text : _TextRaw box)
 
-
-// Because CSFML provides all the functions required to create and manipulate
-// this structure (see 'use' statements, above), we don't need to define its
-// fields. We'll only be working with it as a pointer.
+// 
+// The CSFML object as seen by Pony
+// Don't need to define its fields b/c we'll only be working with it as a ptr.
 //
 struct _Text
 type _TextRaw is NullablePointer[_Text]
 
-
-// Pony Proxy Class
 //
-// The goal for this class to be a Pony proxy for the corresponding SFML 
-// C++ class. As far as is possible, given the differences between Pony
-// and C++, this class should be identical to the corresponding C++ class.
-// This will make it easy for users of pony-sfml to understand existing
-// SFML docs and examples.
-//
-// This class must not publicly expose any FFI types.
+// A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class Text
     var _raw : _TextRaw
@@ -49,33 +41,36 @@ class Text
 
     fun setString(txt : String) =>
         @sfText_setString(_raw, txt.cstring())
-    
+
     fun setFont(font : Font) =>
         @sfText_setFont(_raw, font._getRaw())
-        
+
     fun setCharacterSize(size : U32) =>
         @sfText_setCharacterSize(_raw, size)
 
     fun setLineSpacing(spacing : F32) =>
         @sfText_setLineSpacing(_raw, spacing)
-    
+
     fun setLetterSpacing(spacing : F32) =>
         @sfText_setLetterSpacing(_raw, spacing)
 
-    fun setStyle(style: (TextStyle | Array[TextStyle])) =>
+    fun setStyle(style: TextStyle) =>
         """
-        In SFML's C++ documentation, you'll see styles combined by OR'ing them
-        together. In pony-sfml, styles are combined by grouping them in an array.
+        This differs from SFML's documented API in that it sets a SINGLE style.
+        Together with with addStyle() and removeStyle(), Pony-SFML provides 
+        type-safe manipulation of text styles.
         """
-        let styleU32 = match style
-            | let s: TextStyle => 
-                s._u32()
-            | let a: Array[TextStyle] =>
-                let styleList = List[TextStyle].from(a)
-                let folder = { (total:U32, s:TextStyle): U32 => total + s._u32() }
-                styleList.fold[U32](folder, 0)
-            end
-        @sfText_setStyle(_raw, styleU32)
+        @sfText_setStyle(_raw, style())
+
+    fun addStyle(style: TextStyle) =>
+        "This is not part of standard SFML. See setStyle for details."
+        var styleFlags = @sfText_getStyle(_raw)
+        @sfText_setStyle(_raw, styleFlags or style())
+
+    fun removeStyle(style: TextStyle) =>
+        "This is not part of standard SFML. See setStyle for details."
+        var styleFlags = @sfText_getStyle(_raw)
+        @sfText_setStyle(_raw, styleFlags and not(style()))
 
     fun setColor(color : Color) =>
         @sfText_setColor(_raw, color._u32())
@@ -97,7 +92,7 @@ class Text
 
     fun ref setOrigin(origin : Vector2f) =>
         @sfText_setOriginA(_raw, origin._u64())
-    
+
     fun ref setRotation(angle : F32) =>
         @sfText_setRotation(_raw, angle)
 
@@ -122,7 +117,7 @@ class Text
     fun ref _getRaw(): _TextRaw =>
         _raw
 
-    fun \deprecated\ destroy() => 
+    fun \deprecated\ destroy() =>
         """ Because Pony has garbage collection, you don't need to call destroy() """
         None
 
@@ -130,16 +125,15 @@ class Text
         if not _raw.is_none() then @sfText_destroy(_raw) end
 
 
-trait val TextStyle
-    fun _u32(): U32 // For CSFML FFI
+primitive TextRegular       fun apply(): U32 => 0
+primitive TextBold          fun apply(): U32 => 1 << 0
+primitive TextItalic        fun apply(): U32 => 1 << 1
+primitive TextUnderlined    fun apply(): U32 => 1 << 2
+primitive TextStrikeThrough fun apply(): U32 => 1 << 3
 
-// These primitives improve type-safety vs SFML's U32 approach.
-primitive TextRegular is TextStyle       fun _u32(): U32 => 0      
-primitive TextBold is TextStyle          fun _u32(): U32 => 1 << 0 
-primitive TextItalic is TextStyle        fun _u32(): U32 => 1 << 1 
-primitive TextUnderlined is TextStyle    fun _u32(): U32 => 1 << 2 
-primitive TextStrikeThrough is TextStyle fun _u32(): U32 => 1 << 3 
-
-// Example of C++/Pony correlation for combined text styles:
-// C++:  text.setStyle(sf::Text::Bold | sf::Text::Underlined);
-// Pony: text.setStyle([sf.TextBold ; sf.TextUnderlined])
+type TextStyle is
+    ( TextRegular
+    | TextBold
+    | TextItalic
+    | TextUnderlined
+    | TextStrikeThrough )
