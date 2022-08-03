@@ -1,3 +1,4 @@
+//
 // FFI declarations for CSFML functions
 //
 use @sfVertexArray_create[_VertexArrayRaw]()
@@ -12,24 +13,15 @@ use @sfVertexArray_setPrimitiveType[None](vtxArr: _VertexArrayRaw box, primitive
 use @sfVertexArray_getPrimitiveType[I32](vtxArr: _VertexArrayRaw box)
 use @sfVertexArray_getBoundsA[None](vtxArr: _VertexArrayRaw box, bounds: FloatRectRaw)
 
-
-// Because CSFML provides all the functions required to create and manipulate
-// this structure (see 'use' statements, above), we don't need to define its
-// fields. We'll only be working with it as a pointer.
+// 
+// The CSFML object as seen by Pony
+// Don't need to define its fields b/c we'll only be working with it as a ptr.
 //
 struct _VertexArray
 type _VertexArrayRaw is NullablePointer[_VertexArray]
 
-
-// Pony Proxy Class
 //
-// The goal for this class to be a Pony proxy for the corresponding SFML 
-// C++ class. As far as is possible, given the differences between Pony
-// and C++, this class should be identical to the corresponding C++ class.
-// This will make it easy for users of pony-sfml to understand existing
-// SFML docs and examples.
-//
-// This class must not publicly expose any FFI types.
+// A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class VertexArray
 
@@ -56,8 +48,8 @@ class VertexArray
   fun ref append(v: Vertex) =>
     @sfVertexArray_appendA(_raw, v.position._u64(), v.color._u32(), v.texCoords._u64())
 
-  fun ref setPrimitiveType(primitiveType: PrimitiveType) =>
-    @sfVertexArray_setPrimitiveType(_raw, primitiveType._i32())
+  fun ref setPrimitiveType(pt: PrimitiveType) =>
+    @sfVertexArray_setPrimitiveType(_raw, pt())
 
   fun ref getPrimitiveType(): I32 =>
     @sfVertexArray_getPrimitiveType(_raw)
