@@ -1,26 +1,18 @@
+//
 // FFI declarations for CSFML functions
 //
 use @sfFont_createFromFile[_FontRaw](filename : Pointer[U8 val] tag)
 use @sfFont_destroy[None](font : _FontRaw box)
 
-
-// Because CSFML provides all the functions required to create and manipulate
-// this structure (see 'use' statements, above), we don't need to define its
-// fields. We'll only be working with it as a pointer.
+// 
+// The SFML object as presented by CSFML
+// Don't need to define its fields b/c we'll only be working with it as a ptr.
 //
 struct _Font
-type _FontRaw is NullablePointer[_Font]
+type _FontRaw is Pointer[_Font]
 
-
-// Pony Proxy Class
 //
-// The goal for this class to be a Pony proxy for the corresponding SFML 
-// C++ class. As far as is possible, given the differences between Pony
-// and C++, this class should be identical to the corresponding C++ class.
-// This will make it easy for users of pony-sfml to understand existing
-// SFML docs and examples.
-//
-// This class must not publicly expose any FFI types.
+// A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class Font
     var _raw : _FontRaw
@@ -36,4 +28,4 @@ class Font
         None
 
     fun _final() =>
-        if not _raw.is_none() then @sfFont_destroy(_raw) end
+        if not _raw.is_null() then @sfFont_destroy(_raw) end
