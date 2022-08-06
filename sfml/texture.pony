@@ -3,7 +3,7 @@
 //
 use @sfTexture_create[_TextureRaw](width: U32, height: U32)
 use @sfTexture_createFromFile[_TextureRaw](filename: Pointer[U8 val] tag, area: IntRectRaw)
-use @sfTexture_createFromImage[_TextureRaw](image: ImageRaw box, area: IntRectRaw)
+use @sfTexture_createFromImage[_TextureRaw](image: _ImageRaw box, area: IntRectRaw)
 use @sfTexture_copy[_TextureRaw](from: _TextureRaw box)
 use @sfTexture_updateFromPixels[None](texture: _TextureRaw box, pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32)
 use @sfTexture_destroy[None](texture: _TextureRaw box)
