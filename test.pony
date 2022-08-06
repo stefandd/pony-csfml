@@ -25,9 +25,9 @@ actor Main
     var pixeldata : Array[U32] = Array[U32].init(0, width * height)
     let rand : Random = Rand
     var frames : U32 = 0
-    var t_last_fps_frame : U64
-    var t_last_circle_frame: U64
-    var running: Bool
+    var t_last_fps_frame: U64 = 0
+    var t_last_circle_frame: U64 = 0
+    var running: Bool = true
     let vtx_render_states: RenderStates = RenderStates.fromBlendMode(BlendMode.multiply())
 
     fun @runtime_override_defaults(rto: RuntimeOptions) =>
@@ -75,9 +75,6 @@ actor Main
         .> setStyle(TextItalic)
         .> addStyle(TextUnderlined)
 
-      t_last_fps_frame = Time.millis()
-      t_last_circle_frame = Time.millis()
-      running = true
       run()
 
     fun ref update_pixels() =>
