@@ -30,8 +30,8 @@ class VertexArray
   new create() =>
     _raw = @sfVertexArray_create()
 
-  fun copy() =>
-    @sfVertexArray_copy(_raw)
+  new copy(va: VertexArray) =>
+    _raw = @sfVertexArray_copy(va._raw)
   
   fun getVertexCount(): USize =>
     @sfVertexArray_getVertexCount(_raw)
