@@ -25,20 +25,24 @@ class Texture
         "This is only used internally, to wrap a texture cptr"
         _raw = cptr
 
-    new none() =>
-        _raw = _TextureRaw.none()
+    new none() => // TODO: This method should probably be deleted
+        _raw = _TextureRaw.none() 
         
-    new create(width: U32, height: U32) =>
+    new create(width: U32, height: U32)? =>
         _raw = @sfTexture_create(width, height)
+        if _raw.is_none() then error end
 
-    new createFromFile(filename: String val, area: IntRectRaw = IntRectRaw.none()) =>
+    new createFromFile(filename: String val, area: IntRectRaw = IntRectRaw.none())? =>
         _raw = @sfTexture_createFromFile(filename.cstring(), area)
+        if _raw.is_none() then error end
 
-    new createFromImage(image: Image, area: IntRectRaw = IntRectRaw.none()) =>
+    new createFromImage(image: Image, area: IntRectRaw = IntRectRaw.none())? =>
         _raw = @sfTexture_createFromImage(image._getRaw(), area)
+        if _raw.is_none() then error end
 
-    new copy(from: Texture) =>
+    new copy(from: Texture)? =>
         _raw = @sfTexture_copy(from._getRaw())
+        if _raw.is_none() then error end
 
     fun ref updateFromPixels(pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32) =>
         @sfTexture_updateFromPixels(_raw, pixels, width, height, x, y)

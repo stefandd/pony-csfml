@@ -36,8 +36,9 @@ type _TextRaw is NullablePointer[_Text]
 class Text
     var _raw : _TextRaw
 
-    new create() =>
+    new create()? =>
         _raw = @sfText_create()
+        if _raw.is_none() then error end
 
     fun setString(txt : String) =>
         @sfText_setString(_raw, txt.cstring())

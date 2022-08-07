@@ -19,8 +19,9 @@ class Sprite
     var _raw: _SpriteRaw ref
     var _texture: (Texture ref | None)
 
-    new create() =>
+    new create()? =>
         _raw = @sfSprite_create()
+        if _raw.is_none() then error end
         _texture = None
 
     fun ref setTexture(texture: Texture ref, resetRect: Bool = false) =>

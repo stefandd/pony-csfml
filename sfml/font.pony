@@ -17,8 +17,9 @@ type _FontRaw is Pointer[_Font]
 class Font
     var _raw : _FontRaw
 
-    new create(file : String) =>
+    new create(file: String)? =>
         _raw = @sfFont_createFromFile(file.cstring())
+        if _raw.is_null() then error end
 
     fun ref _getRaw(): _FontRaw =>
         _raw

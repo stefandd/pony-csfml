@@ -32,8 +32,9 @@ use @sfCircleShape_setOutlineThickness[None](circle : ShapeRaw box, thickness : 
 class CircleShape
     var _raw : ShapeRaw ref
 
-    new create() => 
+    new create()? => 
         _raw = @sfCircleShape_create()
+        if _raw.is_none() then error end
     
     fun ref _getRaw(): ShapeRaw =>
         _raw

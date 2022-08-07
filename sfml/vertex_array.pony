@@ -27,12 +27,14 @@ class VertexArray
 
   var _raw: _VertexArrayRaw
 
-  new create() =>
+  new create()? =>
     _raw = @sfVertexArray_create()
+    if _raw.is_none() then error end
 
-  new copy(va: VertexArray) =>
+  new copy(va: VertexArray)? =>
     _raw = @sfVertexArray_copy(va._raw)
-  
+    if _raw.is_none() then error end
+
   fun getVertexCount(): USize =>
     @sfVertexArray_getVertexCount(_raw)
 

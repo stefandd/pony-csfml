@@ -32,10 +32,11 @@ class RenderWindow
     var _raw: _RenderWindowRaw ref
     let _evt: EventStruct
 
-    new create(mode: VideoMode, title: String, style: I32, settings: ContextSettings = ContextSettings) =>
+    new create(mode: VideoMode box, title: String, style: I32, settings: ContextSettings = ContextSettings)? =>
         //let mode_arr: Array[U32] = [mode.width; mode.height; mode.bitsPerPixel] // trick to send this instead of the value struct
         //_raw = @sfRenderWindow_create(mode_arr.cpointer(), title.cstring(), style, ctxsettings)
         _raw = @sfRenderWindow_createA(mode.width, mode.height, mode.bitsPerPixel, title.cstring(), style, settings._getRaw())
+        if _raw.is_null() then error end
         _evt = EventStruct(_raw)
 
     fun ref getEventStruct(): EventStruct =>

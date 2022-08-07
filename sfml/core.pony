@@ -20,7 +20,7 @@ use @memcpy[Pointer[None]](dest: Pointer[None], src: Pointer[None] box, n: USize
 
 
 type Optional[X] is (X | None)
-
+type Maybe[X] is (X | None)
 
 primitive System
     fun sleep(duration: I64) => @sfSleep(duration)
