@@ -2,3 +2,4 @@ shim library/csfmlshim.o
 shim library/libcsfmlshim.a
 pony-csfml
 examples/blend_mode/blend_mode
+examples/linux_multithread/linux_multithread
