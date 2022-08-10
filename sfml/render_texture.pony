@@ -1,28 +1,28 @@
 //
 // FFI declarations for CSFML functions
 //
-use @sfRenderTexture_create[RenderTextureRaw](width: U32, height: U32, depthBuffer: I32)
-use @sfRenderTexture_clear[None](rendtex: RenderTextureRaw box, color: U32)
-use @sfRenderTexture_display[None](rendtex: RenderTextureRaw box)
-use @sfRenderTexture_drawSprite[None](rendtex: RenderTextureRaw box, sprite: _SpriteRaw box, states: _RenderStatesRaw box)
-use @sfRenderTexture_getTexture[_TextureRaw](rendtex: RenderTextureRaw box)
-use @sfRenderTexture_drawShape[None](rendtex: RenderTextureRaw box, shape: _ShapeRaw box, states: _RenderStatesRaw box)
-use @sfRenderTexture_drawText[None](rendtex: RenderTextureRaw box, text: _TextRaw box, states: _RenderStatesRaw box)
-use @sfRenderTexture_drawVertexArray[None](rendtex: RenderTextureRaw box, vertexArray: _VertexArrayRaw box, states: _RenderStatesRaw box)
-use @sfRenderTexture_destroy[None](rendtex: RenderTextureRaw box)
+use @sfRenderTexture_create[_RenderTextureRaw](width: U32, height: U32, depthBuffer: I32)
+use @sfRenderTexture_clear[None](rendtex: _RenderTextureRaw box, color: U32)
+use @sfRenderTexture_display[None](rendtex: _RenderTextureRaw box)
+use @sfRenderTexture_drawSprite[None](rendtex: _RenderTextureRaw box, sprite: _SpriteRaw box, states: _RenderStatesRaw box)
+use @sfRenderTexture_getTexture[_TextureRaw](rendtex: _RenderTextureRaw box)
+use @sfRenderTexture_drawShape[None](rendtex: _RenderTextureRaw box, shape: _ShapeRaw box, states: _RenderStatesRaw box)
+use @sfRenderTexture_drawText[None](rendtex: _RenderTextureRaw box, text: _TextRaw box, states: _RenderStatesRaw box)
+use @sfRenderTexture_drawVertexArray[None](rendtex: _RenderTextureRaw box, vertexArray: _VertexArrayRaw box, states: _RenderStatesRaw box)
+use @sfRenderTexture_destroy[None](rendtex: _RenderTextureRaw box)
 
 // 
 // The CSFML object as seen by Pony
 // Don't need to define its fields b/c we'll only be working with it as a ptr.
 //
 struct _RenderTexture
-type RenderTextureRaw is NullablePointer[_RenderTexture]
+type _RenderTextureRaw is NullablePointer[_RenderTexture]
 
 //
 // A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class RenderTexture
-    var _raw: RenderTextureRaw ref
+    var _raw: _RenderTextureRaw ref
     var _texture: (Texture ref | None) = None
 
     new create(width: U32, height: U32, depthBuffer: Bool) =>
