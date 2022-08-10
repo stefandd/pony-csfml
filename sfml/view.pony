@@ -1,36 +1,36 @@
 //
 // FFI declarations for CSFML functions
 //
-use @sfView_create[ViewRaw]()
-use @sfView_createFromRectA[ViewRaw](left: F32, top: F32, width: F32, height: F32)
-use @sfView_copy[ViewRaw](view: ViewRaw box)
-use @sfView_destroy[None](view: ViewRaw box)
-use @sfView_setCenter[None](view: ViewRaw box, center: Vector2f)
-use @sfView_setSize[None](view: ViewRaw box, size: Vector2f)
-use @sfView_setRotation[None](view: ViewRaw box, angle: F32)
-use @sfView_setViewport[None](view: ViewRaw box, viewport: U128)
-use @sfView_resetA[None](view: ViewRaw box, left: F32, top: F32, width: F32, height: F32)
-use @sfView_getCenter[Vector2f](view: ViewRaw box)
-use @sfView_getSize[Vector2f](view: ViewRaw box)
-use @sfView_getRotation[F32](view: ViewRaw box)
-use @sfView_getViewport[U128](view: ViewRaw box)
-use @sfView_move[None](view: ViewRaw box, offset: Vector2f)
-use @sfView_rotate[None](view: ViewRaw box, angle: F32)
-use @sfView_zoom[None](view: ViewRaw box, factor: F32)
+use @sfView_create[_ViewRaw]()
+use @sfView_createFromRectA[_ViewRaw](left: F32, top: F32, width: F32, height: F32)
+use @sfView_copy[_ViewRaw](view: _ViewRaw box)
+use @sfView_destroy[None](view: _ViewRaw box)
+use @sfView_setCenter[None](view: _ViewRaw box, center: Vector2f)
+use @sfView_setSize[None](view: _ViewRaw box, size: Vector2f)
+use @sfView_setRotation[None](view: _ViewRaw box, angle: F32)
+use @sfView_setViewport[None](view: _ViewRaw box, viewport: U128)
+use @sfView_resetA[None](view: _ViewRaw box, left: F32, top: F32, width: F32, height: F32)
+use @sfView_getCenter[Vector2f](view: _ViewRaw box)
+use @sfView_getSize[Vector2f](view: _ViewRaw box)
+use @sfView_getRotation[F32](view: _ViewRaw box)
+use @sfView_getViewport[U128](view: _ViewRaw box)
+use @sfView_move[None](view: _ViewRaw box, offset: Vector2f)
+use @sfView_rotate[None](view: _ViewRaw box, angle: F32)
+use @sfView_zoom[None](view: _ViewRaw box, factor: F32)
 
 // 
 // The CSFML object as seen by Pony
 // Don't need to define its fields b/c we'll only be working with it as a ptr.
 //
 struct _View
-type ViewRaw is NullablePointer[_View]
+type _ViewRaw is NullablePointer[_View]
 
 //
 // A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class View
 
-  var _raw: ViewRaw
+  var _raw: _ViewRaw
 
   new create() =>
     _raw = @sfView_create()
@@ -57,15 +57,15 @@ class View
     "This is a variation on the standard reset(...), added by this Pony binding"
     @sfView_resetA(_raw, left, top, width, height)
   
-  //TODO: fun getCenter(view: ViewRaw): Vector2f =>
-  //TODO: fun getSize(view: ViewRaw): Vector2f =>
-  //TODO: fun getRotation(view: ViewRaw): F32 =>
-  //TODO: fun getViewport(view: ViewRaw): ViewRect =>
+  //TODO: fun getCenter(): Vector2f =>
+  //TODO: fun getSize(): Vector2f =>
+  //TODO: fun getRotation(): F32 =>
+  //TODO: fun getViewport(): ViewRect =>
   //TODO: fun move(offset: Vector2f) =>
   //TODO: fun rotate(angle: F32) =>
   //TODO: fun zoom(factor: F32) =>
 
-  fun ref _getRaw(): ViewRaw =>
+  fun ref _getRaw(): _ViewRaw =>
     _raw
 
   fun \deprecated\ destroy() => 
