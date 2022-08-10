@@ -1,38 +1,31 @@
+//
 // CSFML FFI Functions
 //
-use @sfRectangleShape_destroy[None](rectangle : ShapeRaw box)
-use @sfRectangleShape_create[ShapeRaw]()
-use @sfRectangleShape_setPositionA[None](rectangle : ShapeRaw box, position : U64)
-use @sfRectangleShape_setOriginA[None](rectangle : ShapeRaw box, origin : U64)
-use @sfRectangleShape_setScale[None](rectangle : ShapeRaw box, factors : U64)
-use @sfRectangleShape_setSizeA[None](rectangle : ShapeRaw box, size : U64)
-use @sfRectangleShape_setRotation[None](rectangle : ShapeRaw box, angle : F32)
-use @sfRectangleShape_rotate[None](rectangle : ShapeRaw box, angle : F32)
-use @sfRectangleShape_setFillColor[None](rectangle : ShapeRaw box, color : U32)
-use @sfRectangleShape_setOutlineColor[None](rectangle : ShapeRaw box, color : U32)
-use @sfRectangleShape_setPointCount[None](rectangle : ShapeRaw box, count : USize)
-use @sfRectangleShape_setTexture[None](rectangle : ShapeRaw box, texture : _TextureRaw box, resetRect : I32)
-use @sfRectangleShape_setTextureRect[None](rectangle : ShapeRaw box, rect : U128)
-use @sfRectangleShape_setOutlineThickness[None](rectangle : ShapeRaw box, thickness : F32)
+use @sfRectangleShape_destroy[None](rectangle: _ShapeRaw box)
+use @sfRectangleShape_create[_ShapeRaw]()
+use @sfRectangleShape_setPositionA[None](rectangle: _ShapeRaw box, position: U64)
+use @sfRectangleShape_setOriginA[None](rectangle: _ShapeRaw box, origin: U64)
+use @sfRectangleShape_setScale[None](rectangle: _ShapeRaw box, factors: U64)
+use @sfRectangleShape_setSizeA[None](rectangle: _ShapeRaw box, size: U64)
+use @sfRectangleShape_setRotation[None](rectangle: _ShapeRaw box, angle: F32)
+use @sfRectangleShape_rotate[None](rectangle: _ShapeRaw box, angle: F32)
+use @sfRectangleShape_setFillColor[None](rectangle: _ShapeRaw box, color: U32)
+use @sfRectangleShape_setOutlineColor[None](rectangle: _ShapeRaw box, color: U32)
+use @sfRectangleShape_setPointCount[None](rectangle: _ShapeRaw box, count: USize)
+use @sfRectangleShape_setTexture[None](rectangle: _ShapeRaw box, texture: _TextureRaw box, resetRect: I32)
+use @sfRectangleShape_setTextureRect[None](rectangle: _ShapeRaw box, rect: U128)
+use @sfRectangleShape_setOutlineThickness[None](rectangle: _ShapeRaw box, thickness: F32)
 
-
-// Pony Proxy Class
 //
-// The goal for this class to be a Pony proxy for the corresponding SFML 
-// C++ class. As far as is possible, given the differences between Pony
-// and C++, this class should be identical to the corresponding C++ class.
-// This will make it easy for users of pony-sfml to understand existing
-// SFML docs and examples.
-//
-// This class must not publicly expose any FFI types.
+// A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class RectangleShape
-    var _raw : ShapeRaw ref
+    var _raw : _ShapeRaw ref
 
     new create() => 
         _raw = @sfRectangleShape_create()
     
-    fun ref _getRaw(): ShapeRaw =>
+    fun ref _getRaw(): _ShapeRaw =>
         _raw
 
     fun ref setRadius(radius : F32) =>
