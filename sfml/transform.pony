@@ -3,7 +3,7 @@
 //
 use @sfTransform_getMatrix[None](transform: _TransformRaw, matrix: Pointer[F32])
 use @sfTransform_getInverse[_Transform](transform: _TransformRaw)
-use @sfTransform_transformPoint[Vector2f](transform: _TransformRaw, point: Vector2f)
+use @sfTransform_transformPoint[_Vector2f](transform: _TransformRaw, point: _Vector2f)
 use @sfTransform_transformRect[FloatRect](transform: _TransformRaw, rectangle: FloatRect)
 use @sfTransform_combine[None](transform: _TransformRaw, other: _TransformRaw)
 use @sfTransform_translate[None](transform: _TransformRaw box, x: F32, y: F32)

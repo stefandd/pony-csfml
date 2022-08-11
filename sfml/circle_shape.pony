@@ -33,8 +33,8 @@ class CircleShape
         @sfCircleShape_setRadius(_raw, radius)
 
     fun ref setSize(size : Vector2f) =>        
-        @sfCircleShape_setRadius(_raw, size.x / 2.0)
-        @sfCircleShape_setScale(_raw, Vector2f(1.0, size.y/size.x)._u64())
+        @sfCircleShape_setRadius(_raw, size.getX() / 2.0)
+        @sfCircleShape_setScale(_raw, Vector2f(1.0, size.getY()/size.getX())._u64())
 
     fun ref setFillColor(color : Color) =>
         @sfCircleShape_setFillColor(_raw, color._u32())

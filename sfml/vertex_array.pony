@@ -1,3 +1,6 @@
+use "assert"
+use "debug"
+
 //
 // FFI declarations for CSFML functions
 //
@@ -5,7 +8,7 @@ use @sfVertexArray_create[_VertexArrayRaw]()
 use @sfVertexArray_copy[_VertexArrayRaw](vtxArr: _VertexArrayRaw box)
 use @sfVertexArray_destroy[None](vtxArr: _VertexArrayRaw box)
 use @sfVertexArray_getVertexCount[USize](vtxArr: _VertexArrayRaw box)
-use @sfVertexArray_getVertex[Vertex](vtxArr: _VertexArrayRaw box, index: USize)
+use @sfVertexArray_getVertex[_Vertex](vtxArr: _VertexArrayRaw box, index: USize)
 use @sfVertexArray_clear[None](vtxArr: _VertexArrayRaw box)
 use @sfVertexArray_resize[None](vtxArr: _VertexArrayRaw box, vertexCount: USize)
 use @sfVertexArray_appendA[None](vtxArr: _VertexArrayRaw box, pos: U64, color: U32, tex: U64)
@@ -13,7 +16,7 @@ use @sfVertexArray_setPrimitiveType[None](vtxArr: _VertexArrayRaw box, primitive
 use @sfVertexArray_getPrimitiveType[I32](vtxArr: _VertexArrayRaw box)
 use @sfVertexArray_getBoundsA[None](vtxArr: _VertexArrayRaw box, bounds: FloatRectRaw)
 
-// 
+//
 // The CSFML object as seen by Pony
 // Don't need to define its fields b/c we'll only be working with it as a ptr.
 //
@@ -38,8 +41,12 @@ class VertexArray
   fun getVertexCount(): USize =>
     @sfVertexArray_getVertexCount(_raw)
 
-  fun ref getVertex(index: USize): Vertex =>
-    @sfVertexArray_getVertex(_raw, index)
+  fun ref getVertex(index: USize, reuse: Optional[Vertex] = None): Vertex =>
+    let vtxptr = @sfVertexArray_getVertex(_raw, index)
+    match reuse
+    | None => Vertex._from_csfml(vtxptr)
+    | let v: Vertex => v._set_csfml(vtxptr)
+    end
 
   fun ref clear() =>
     @sfVertexArray_clear(_raw)
@@ -48,7 +55,11 @@ class VertexArray
     @sfVertexArray_resize(_raw, vertexCount)
 
   fun ref append(v: Vertex) =>
-    @sfVertexArray_appendA(_raw, v.position._u64(), v.color._u32(), v.texCoords._u64())
+    @sfVertexArray_appendA(
+      _raw,
+      v.getPosition()._u64(),
+      v.getColor()._u32(),
+      v.getTexCoords()._u64() )
 
   fun ref setPrimitiveType(pt: PrimitiveType) =>
     @sfVertexArray_setPrimitiveType(_raw, pt())
@@ -68,7 +79,7 @@ class VertexArray
   fun ref _getRaw(): _VertexArrayRaw =>
     _raw
 
-  fun \deprecated\ destroy() => 
+  fun \deprecated\ destroy() =>
       """ Because Pony has garbage collection, you don't need to call destroy() """
       None
 
