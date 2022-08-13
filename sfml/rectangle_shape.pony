@@ -22,8 +22,9 @@ use @sfRectangleShape_setOutlineThickness[None](rectangle: _ShapeRaw box, thickn
 class RectangleShape
     var _raw : _ShapeRaw ref
 
-    new create() => 
+    new create()? => 
         _raw = @sfRectangleShape_create()
+        if _raw.is_none() then error end
     
     fun ref _getRaw(): _ShapeRaw =>
         _raw
