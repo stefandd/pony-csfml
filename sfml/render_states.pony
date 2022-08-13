@@ -38,7 +38,7 @@ class RenderStates
         _tf = Transform.identity()
         _tx = Texture.none()
         _sh = Shader.none()
-        _struct = _RenderStates(_bm._getStruct(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
+        _struct = _RenderStates(_bm._getCsfml(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
         _raw = _RenderStatesRaw(_struct)
 
     new fromBlendMode(blendMode: BlendMode) =>
@@ -46,7 +46,7 @@ class RenderStates
         _tf = Transform.identity()
         _tx = Texture.none()
         _sh = Shader.none()
-        _struct = _RenderStates(_bm._getStruct(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
+        _struct = _RenderStates(_bm._getCsfml(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
         _raw = _RenderStatesRaw(_struct)
 
     new fromTransform(transform: Transform) =>
@@ -54,7 +54,7 @@ class RenderStates
         _tf = transform
         _tx = Texture.none()
         _sh = Shader.none()
-        _struct = _RenderStates(_bm._getStruct(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
+        _struct = _RenderStates(_bm._getCsfml(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
         _raw = _RenderStatesRaw(_struct)
 
     new fromTexture(texture: Texture) =>
@@ -62,7 +62,7 @@ class RenderStates
         _tf = Transform.identity()
         _tx = texture
         _sh = Shader.none()
-        _struct = _RenderStates(_bm._getStruct(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
+        _struct = _RenderStates(_bm._getCsfml(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
         _raw = _RenderStatesRaw(_struct)
 
     new fromShader(shader: Shader) =>
@@ -70,7 +70,7 @@ class RenderStates
         _tf = Transform.identity()
         _tx = Texture.none()
         _sh = shader
-        _struct = _RenderStates(_bm._getStruct(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
+        _struct = _RenderStates(_bm._getCsfml(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
         _raw = _RenderStatesRaw(_struct)
 
     fun box getBlendMode(): BlendMode box => _bm
@@ -78,7 +78,7 @@ class RenderStates
     fun box getTexture(): Texture box     => _tx
     fun box getShader(): Shader box       => _sh
 
-    fun ref setBlendMode(x: BlendMode) => _bm = x ; _struct.bm.setFrom(x._getStruct())
+    fun ref setBlendMode(x: BlendMode) => _bm = x ; _struct.bm.setFrom(x._getCsfml())
     fun ref setTransform(x: Transform) => _tf = x ; _struct.tf.setFrom(x._getStruct())
     fun ref setTexture(x: Texture)     => _tx = x ; _struct.tx = x._getRaw()
     fun ref setShader(x: Shader)       => _sh = x ; _struct.sh = x._getRaw()
