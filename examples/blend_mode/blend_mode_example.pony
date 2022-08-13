@@ -1,47 +1,57 @@
 
-// Inspired by https://stackoverflow.com/questions/8452301
+// Based on https://stackoverflow.com/questions/8452301
 
 use "../../sfml"
 
 actor Main
-  let square: Shape
-  let circle1: Shape
-  let circle2: Shape
-  let circle3: Shape
-  let circle4: Shape
-  let event: EventStruct
-  let window: RenderWindow
-  var running: Bool = true
-
+    
   fun @runtime_override_defaults(rto: RuntimeOptions) =>
     rto.ponymaxthreads = 1
 
-  fun tag make_circle(x: F32, y: F32): CircleShape =>
-    CircleShape 
-      .> setRadius(50) 
-      .> setOrigin(Vector2f(50, 50))
-      .> setPosition(Vector2f(x, y)) 
-      .> setFillColor(Color(30, 30, 250))
-
-  new create(env: Env) =>
-
-    window = RenderWindow(VideoMode(400, 400, 32), "BlendMode Sample", WindowStyle.sfDefaultStyle())
-
-    square = RectangleShape
+  fun tag create_rectangle(): RectangleShape? =>
+    RectangleShape.create()?
       .> setFillColor(Color(250, 30, 30))
       .> setSize(Vector2f(200, 200))
       .> setPosition(Vector2f(100, 100))
 
-    circle1 = make_circle(100, 100)
-    circle2 = make_circle(300, 100)
-    circle3 = make_circle(100, 300)
-    circle4 = make_circle(300, 300)
+  fun tag create_circle(x: F32, y: F32): CircleShape? =>
+    CircleShape.create()?
+      .> setRadius(50)
+      .> setOrigin(Vector2f(50, 50))
+      .> setPosition(Vector2f(x, y))
+      .> setFillColor(Color(30, 30, 250))
 
-    event = window.getEventStruct()
-    run()
-    
-  be run() =>
-    if running then
+  fun tag create_window(): RenderWindow? =>
+    let vmode = VideoMode(400, 400, 32)
+    let title = "BlendMode Sample"
+    let style = WindowStyle.sfDefaultStyle()
+    RenderWindow.create(vmode, title, style)?
+
+  new create(env: Env) =>
+    try
+      run(
+        create_window()?,
+        create_rectangle()?,
+        create_circle(100, 100)?,
+        create_circle(300, 100)?,
+        create_circle(100, 300)?,
+        create_circle(300, 300)? )
+    else
+      env.out.print("Couldn't initialize the graphics.")
+    end
+
+  fun ref run(
+    window: RenderWindow,
+    square: RectangleShape,
+    circle1: CircleShape,
+    circle2: CircleShape,
+    circle3: CircleShape,
+    circle4: CircleShape )
+  =>
+    var running: Bool = true
+    let event = window.getEventStruct()
+    while running do
+
       while event.poll() do
         match event.translate()
         | let kevt : KeyEvent =>
@@ -61,5 +71,4 @@ actor Main
       window.display()
 
       running = running and window.isOpen()
-      run()
     end
