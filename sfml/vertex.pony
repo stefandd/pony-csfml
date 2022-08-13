@@ -27,22 +27,22 @@ class Vertex
       _csfml = v
       this
 
-    fun ref getPosition(reuse': Optional[Vector2f]=None): Vector2f =>
-      match reuse'
+    fun ref getPosition(using: Optional[Vector2f] = None): Vector2f =>
+      match using
       | None => Vector2f._from_csfml(_csfml.position)
-      | let reuse: Vector2f => reuse._set_csfml(_csfml.position)
+      | let x: Vector2f => x._set_csfml(_csfml.position)
       end
 
-    fun ref getColor(reuse': Optional[Color]=None): Color =>
-      match reuse'
+    fun ref getColor(using: Optional[Color] = None): Color =>
+      match using
       | None => Color._from_csfml(_csfml.color)
-      | let reuse: Color => reuse._set_csfml(_csfml.color)
+      | let x: Color => x._set_csfml(_csfml.color)
       end  
 
-    fun ref getTexCoords(reuse': Optional[Vector2f]=None): Vector2f =>
-      match reuse'
+    fun ref getTexCoords(using: Optional[Vector2f] = None): Vector2f =>
+      match using
       | None => Vector2f._from_csfml(_csfml.texCoords)
-      | let reuse: Vector2f => reuse._set_csfml(_csfml.texCoords)
+      | let x: Vector2f => x._set_csfml(_csfml.texCoords)
       end
 
     //fun ref _getStruct(): _Vertex => _csfml
