@@ -8,7 +8,7 @@ use @sfRenderTexture_drawSprite[None](rendtex: _RenderTextureRaw box, sprite: _S
 use @sfRenderTexture_getTexture[_TextureRaw](rendtex: _RenderTextureRaw box)
 use @sfRenderTexture_drawShape[None](rendtex: _RenderTextureRaw box, shape: _ShapeRaw box, states: _RenderStatesRaw box)
 use @sfRenderTexture_drawText[None](rendtex: _RenderTextureRaw box, text: _TextRaw box, states: _RenderStatesRaw box)
-use @sfRenderTexture_drawVertexArray[None](rendtex: _RenderTextureRaw box, vertexArray: _VertexArrayRaw box, states: _RenderStatesRaw box)
+use @sfRenderTexture_drawVertexArray[None](rendtex: _RenderTextureRaw box, vertexArray: _VertexArray box, states: _RenderStatesRaw box)
 use @sfRenderTexture_destroy[None](rendtex: _RenderTextureRaw box)
 
 // 
@@ -54,7 +54,7 @@ class RenderTexture
 
     fun ref drawVertexArray(vertexArray: VertexArray, renderStates: Optional[RenderStates] = None) =>
         let render_states_raw = _ToRenderStatesRaw(renderStates)
-        @sfRenderTexture_drawVertexArray(_raw, vertexArray._getRaw(), render_states_raw)
+        @sfRenderTexture_drawVertexArray(_raw, vertexArray._getCsfml(), render_states_raw)
 
     // In SFML, the texture returned is read-only (const). 
     // In Pony, we return a `box` reference to achieve the same.

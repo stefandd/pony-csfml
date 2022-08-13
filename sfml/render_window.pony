@@ -13,7 +13,7 @@ use @sfRenderWindow_setView[None](window: _RenderWindowRaw box, view: _ViewRaw b
 use @sfRenderWindow_drawSprite[None](window: _RenderWindowRaw box, sprite: _SpriteRaw box, states: _RenderStatesRaw box)
 use @sfRenderWindow_drawShape[None](window: _RenderWindowRaw box, shape: _ShapeRaw box, states: _RenderStatesRaw box)
 use @sfRenderWindow_drawText[None](window: _RenderWindowRaw box, text: _TextRaw box, states: _RenderStatesRaw box)
-use @sfRenderWindow_drawVertexArray[None](window: _RenderWindowRaw box, vertexArray: _VertexArrayRaw box, states: _RenderStatesRaw box)
+use @sfRenderWindow_drawVertexArray[None](window: _RenderWindowRaw box, vertexArray: _VertexArray box, states: _RenderStatesRaw box)
 use @sfRenderWindow_pollEvent[I32](window: _RenderWindowRaw box, event: Pointer[U8] tag)
 use @sfRenderWindow_getSize[U64](window: _RenderWindowRaw box)
 use @sfRenderWindow_destroy[None](window: _RenderWindowRaw box)
@@ -85,7 +85,7 @@ class RenderWindow
 
     fun ref drawVertexArray(vertexArray: VertexArray, renderStates: Optional[RenderStates] = None) =>
         let render_states_raw = _ToRenderStatesRaw(renderStates)
-        @sfRenderWindow_drawVertexArray(_raw, vertexArray._getRaw(), render_states_raw)
+        @sfRenderWindow_drawVertexArray(_raw, vertexArray._getCsfml(), render_states_raw)
 
     fun ref display() =>
         @sfRenderWindow_display(_raw)

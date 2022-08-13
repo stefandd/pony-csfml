@@ -1,45 +1,39 @@
-use "assert"
-use "debug"
-
 //
 // FFI declarations for CSFML functions
 //
-use @sfVertexArray_create[_VertexArrayRaw]()
-use @sfVertexArray_copy[_VertexArrayRaw](vtxArr: _VertexArrayRaw box)
-use @sfVertexArray_destroy[None](vtxArr: _VertexArrayRaw box)
-use @sfVertexArray_getVertexCount[USize](vtxArr: _VertexArrayRaw box)
-use @sfVertexArray_getVertex[_Vertex](vtxArr: _VertexArrayRaw box, index: USize)
-use @sfVertexArray_clear[None](vtxArr: _VertexArrayRaw box)
-use @sfVertexArray_resize[None](vtxArr: _VertexArrayRaw box, vertexCount: USize)
-use @sfVertexArray_appendA[None](vtxArr: _VertexArrayRaw box, pos: U64, color: U32, tex: U64)
-use @sfVertexArray_setPrimitiveType[None](vtxArr: _VertexArrayRaw box, primitiveType: I32)
-use @sfVertexArray_getPrimitiveType[I32](vtxArr: _VertexArrayRaw box)
-use @sfVertexArray_getBoundsA[None](vtxArr: _VertexArrayRaw box, bounds: _FloatRect)
+use @sfVertexArray_create[NullablePointer[_VertexArray]]()
+use @sfVertexArray_copy[NullablePointer[_VertexArray]](vtxArr: _VertexArray box)
+use @sfVertexArray_destroy[None](vtxArr: _VertexArray box)
+use @sfVertexArray_getVertexCount[USize](vtxArr: _VertexArray box)
+use @sfVertexArray_getVertex[_Vertex](vtxArr: _VertexArray box, index: USize)
+use @sfVertexArray_clear[None](vtxArr: _VertexArray box)
+use @sfVertexArray_resize[None](vtxArr: _VertexArray box, vertexCount: USize)
+use @sfVertexArray_appendA[None](vtxArr: _VertexArray box, pos: U64, color: U32, tex: U64)
+use @sfVertexArray_setPrimitiveType[None](vtxArr: _VertexArray box, primitiveType: I32)
+use @sfVertexArray_getPrimitiveType[I32](vtxArr: _VertexArray box)
+use @sfVertexArray_getBoundsA[None](vtxArr: _VertexArray box, bounds: _FloatRect)
 
 //
 // The CSFML object as seen by Pony
 // Don't need to define its fields b/c we'll only be working with it as a ptr.
 //
 struct _VertexArray
-type _VertexArrayRaw is NullablePointer[_VertexArray]
 
 //
 // A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class VertexArray
 
-  var _raw: _VertexArrayRaw
+  var _csfml: _VertexArray
 
   new create()? =>
-    _raw = @sfVertexArray_create()
-    if _raw.is_none() then error end
+    _csfml = @sfVertexArray_create()()?
 
   new copy(va: VertexArray)? =>
-    _raw = @sfVertexArray_copy(va._raw)
-    if _raw.is_none() then error end
+    _csfml = @sfVertexArray_copy(va._csfml)()?
 
   fun getVertexCount(): USize =>
-    @sfVertexArray_getVertexCount(_raw)
+    @sfVertexArray_getVertexCount(_csfml)
 
   fun getVertex(index: USize, using: Optional[Vertex] = None): Vertex ref =>
     """
@@ -47,30 +41,30 @@ class VertexArray
       provided. If provided, it will be "recycled" by the method to become
       the return value, avoiding the allocation of a new object.
     """
-    let vtxptr = @sfVertexArray_getVertex(_raw, index)
+    let vtxptr = @sfVertexArray_getVertex(_csfml, index)
     match using
     | None => Vertex._from_csfml(vtxptr)
     | let v: Vertex => v._set_csfml(vtxptr)
     end
 
   fun ref clear() =>
-    @sfVertexArray_clear(_raw)
+    @sfVertexArray_clear(_csfml)
 
   fun ref resize(vertexCount: USize) =>
-    @sfVertexArray_resize(_raw, vertexCount)
+    @sfVertexArray_resize(_csfml, vertexCount)
 
   fun ref append(v: Vertex) =>
     @sfVertexArray_appendA(
-      _raw,
+      _csfml,
       v.getPosition()._u64(),
       v.getColor()._u32(),
       v.getTexCoords()._u64() )
 
   fun ref setPrimitiveType(pt: PrimitiveType) =>
-    @sfVertexArray_setPrimitiveType(_raw, pt())
+    @sfVertexArray_setPrimitiveType(_csfml, pt())
 
   fun ref getPrimitiveType(): I32 =>
-    @sfVertexArray_getPrimitiveType(_raw)
+    @sfVertexArray_getPrimitiveType(_csfml)
 
   fun getBounds(using: Optional[FloatRect] = None): FloatRect =>
     """
@@ -84,16 +78,16 @@ class VertexArray
       | None => FloatRect(0, 0, 0, 0)
       | let x: FloatRect => x
       end
-    @sfVertexArray_getBoundsA(_raw, rect._getStruct())
+    @sfVertexArray_getBoundsA(_csfml, rect._getStruct())
     rect
 
-  fun ref _getRaw(): _VertexArrayRaw =>
-    _raw
+  fun ref _getCsfml(): _VertexArray =>
+    _csfml
 
   fun \deprecated\ destroy() =>
       """ Because Pony has garbage collection, you don't need to call destroy() """
       None
 
   fun _final() =>
-    if not _raw.is_none() then @sfVertexArray_destroy(_raw) end
+    @sfVertexArray_destroy(_csfml)
 
