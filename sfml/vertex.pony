@@ -28,18 +28,33 @@ class Vertex
       this
 
     fun ref getPosition(using: Optional[Vector2f] = None): Vector2f =>
+      """
+        Extends the SFML method by allowing an optional Vector2f to be
+        provided. If provided, it will be "recycled" by the method to become
+        the return value, avoiding the allocation of a new object.
+      """
       match using
       | None => Vector2f._from_csfml(_csfml.position)
       | let x: Vector2f => x._set_csfml(_csfml.position)
       end
 
     fun ref getColor(using: Optional[Color] = None): Color =>
+      """
+        Extends the SFML method by allowing an optional Color to be
+        provided. If provided, it will be "recycled" by the method to become
+        the return value, avoiding the allocation of a new object.
+      """
       match using
       | None => Color._from_csfml(_csfml.color)
       | let x: Color => x._set_csfml(_csfml.color)
       end  
 
     fun ref getTexCoords(using: Optional[Vector2f] = None): Vector2f =>
+      """
+        Extends the SFML method by allowing an optional Vector2f to be
+        provided. If provided, it will be "recycled" by the method to become
+        the return value, avoiding the allocation of a new object.
+      """
       match using
       | None => Vector2f._from_csfml(_csfml.texCoords)
       | let x: Vector2f => x._set_csfml(_csfml.texCoords)
