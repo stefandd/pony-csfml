@@ -1,10 +1,14 @@
-struct IntRect
-    let left : I32
-    let top : I32
-    let width : I32
-    let height : I32
 
-    new create(left' : I32, top' : I32, width' : I32, height' : I32) =>
+type _FloatRect is _Rect[F32]
+type _IntRect is _Rect[U32]
+
+struct _Rect[T: (Real[T] & (F32 | U32))]
+    let left: T
+    let top: T
+    let width: T
+    let height: T
+
+    new create(left': T, top': T, width': T, height': T) =>
         left = left'
         top = top'
         width = width'
@@ -13,36 +17,47 @@ struct IntRect
     // Pony structs can't be passed by value through Pony's FFI.
     // So for C funcs that expect structs by value we define a map to/from some unsigned int type.
 
-    fun ref _u128() : U128 =>
-        var tmp : U128 = 0
-        @memcpy(addressof tmp, IntRectRaw(this), USize(16))
+    fun ref u128(): U128 =>
+        var tmp: U128 = 0
+        @memcpy(addressof tmp, NullablePointer[_Rect[T]](this), USize(16))
         tmp
 
-type IntRectRaw is NullablePointer[IntRect]
+    new from_u128(chunk: U128) =>
+        let z = T.from[U8](0)
+        left = z ; top = z ; width = z ; height = z
+        var tmp: U128 = chunk
+        @memcpy(NullablePointer[_Rect[T]](this), addressof tmp, USize(16))
 
-struct FloatRect
-    let left : F32
-    let top : F32
-    let width : F32
-    let height : F32
+//type FloatRectRaw is NullablePointer[FloatRect]
 
-    new create(left' : F32, top' : F32, width' : F32, height' : F32) =>
-        left = left'
-        top = top'
-        width = width'
-        height = height'
 
-    // Pony structs can't be passed by value through Pony's FFI.
-    // So for C funcs that expect structs by value we define a map to/from some unsigned int type.
+type FloatRect is Rect[F32]
+type IntRect is Rect[U32]
 
-    fun ref _u128() : U128 =>
-        var tmp : U128 = 0
-        @memcpy(addressof tmp, FloatRectRaw(this), USize(16))
-        tmp
 
-    new _from_u128(chunk : U128) =>
-        left = 0; top = 0; width = 0; height = 0
-        var tmp : U128 = chunk
-        @memcpy(FloatRectRaw(this), addressof tmp, USize(16))
+class Rect[T: (Real[T] & (F32 | U32))]
+  let _csfml: _Rect[T]
 
-type FloatRectRaw is NullablePointer[FloatRect]
+  new create(left: T, top: T, width: T, height: T) =>
+      _csfml = _Rect[T](left, top, width, height)
+
+  fun getLeft(): T => _csfml.left
+  fun getTop(): T => _csfml.top
+  fun getWidth(): T => _csfml.width
+  fun getHeight(): T => _csfml.height
+
+  fun ref _u128(): U128 => 
+    _csfml.u128()
+
+  new _from_u128(chunk: U128) => 
+    _csfml = _Rect[T].from_u128(chunk)
+
+  fun ref _getStruct(): _Rect[T] => _csfml
+
+  fun string(): String =>
+    ", ".join([
+      _csfml.left.string()
+      _csfml.top.string()
+      _csfml.width.string()
+      _csfml.height.string()  
+    ].values())

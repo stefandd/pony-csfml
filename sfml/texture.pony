@@ -2,8 +2,8 @@
 // FFI declarations for CSFML functions
 //
 use @sfTexture_create[_TextureRaw](width: U32, height: U32)
-use @sfTexture_createFromFile[_TextureRaw](filename: Pointer[U8 val] tag, area: IntRectRaw)
-use @sfTexture_createFromImage[_TextureRaw](image: _ImageRaw box, area: IntRectRaw)
+use @sfTexture_createFromFile[_TextureRaw](filename: Pointer[U8 val] tag, area: NullablePointer[_IntRect])
+use @sfTexture_createFromImage[_TextureRaw](image: _ImageRaw box, area: NullablePointer[_IntRect])
 use @sfTexture_copy[_TextureRaw](from: _TextureRaw box)
 use @sfTexture_updateFromPixels[None](texture: _TextureRaw box, pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32)
 use @sfTexture_destroy[None](texture: _TextureRaw box)
@@ -32,12 +32,20 @@ class Texture
         _raw = @sfTexture_create(width, height)
         if _raw.is_none() then error end
 
-    new createFromFile(filename: String val, area: IntRectRaw = IntRectRaw.none())? =>
-        _raw = @sfTexture_createFromFile(filename.cstring(), area)
+    new createFromFile(filename: String val, area: Optional[IntRect] = None)? =>
+        let area' = match area
+        | None => NullablePointer[_IntRect].none()
+        | let x: IntRect => NullablePointer[_IntRect](x._getStruct())
+        end
+        _raw = @sfTexture_createFromFile(filename.cstring(), area')
         if _raw.is_none() then error end
 
-    new createFromImage(image: Image, area: IntRectRaw = IntRectRaw.none())? =>
-        _raw = @sfTexture_createFromImage(image._getRaw(), area)
+    new createFromImage(image: Image, area: Optional[IntRect] = None)? =>
+        let area' = match area
+        | None => NullablePointer[_IntRect].none()
+        | let x: IntRect => NullablePointer[_IntRect](x._getStruct())
+        end
+        _raw = @sfTexture_createFromImage(image._getRaw(), area')
         if _raw.is_none() then error end
 
     new copy(from: Texture)? =>

@@ -18,8 +18,8 @@ use @sfText_setPositionA[None](text : _TextRaw box, position : U64)
 use @sfText_setScaleA[None](text : _TextRaw box, factors : U64)
 use @sfText_setOriginA[None](text : _TextRaw box, origin : U64)
 use @sfText_setRotation[None](text : _TextRaw box, angle : F32)
-use @sfText_getLocalBoundsA[None](text : _TextRaw box, bounds : FloatRectRaw)
-use @sfText_getGlobalBoundsA[None](text : _TextRaw box, bounds : FloatRectRaw)
+use @sfText_getLocalBoundsA[None](text: _TextRaw box, bounds: _FloatRect)
+use @sfText_getGlobalBoundsA[None](text: _TextRaw box, bounds: _FloatRect)
 use @sfText_getStyle[U32](text : _TextRaw box)
 use @sfText_destroy[None](text : _TextRaw box)
 
@@ -99,21 +99,13 @@ class Text
 
     fun ref getGlobalBounds() : FloatRect =>
         let rect = FloatRect._from_u128(0)
-        if not _raw.is_none() then
-            @sfText_getGlobalBoundsA(_raw, FloatRectRaw(rect))
-            rect
-        else
-            rect
-        end
+        @sfText_getGlobalBoundsA(_raw, rect._getStruct())
+        rect
 
     fun ref getLocalBounds() : FloatRect =>
         let rect = FloatRect._from_u128(0)
-        if not _raw.is_none() then
-            @sfText_getLocalBoundsA(_raw, FloatRectRaw(rect))
-            rect
-        else
-            rect
-        end
+        @sfText_getLocalBoundsA(_raw, rect._getStruct())
+        rect
 
     fun ref _getRaw(): _TextRaw =>
         _raw

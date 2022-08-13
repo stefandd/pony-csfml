@@ -14,7 +14,7 @@ use @sfVertexArray_resize[None](vtxArr: _VertexArrayRaw box, vertexCount: USize)
 use @sfVertexArray_appendA[None](vtxArr: _VertexArrayRaw box, pos: U64, color: U32, tex: U64)
 use @sfVertexArray_setPrimitiveType[None](vtxArr: _VertexArrayRaw box, primitiveType: I32)
 use @sfVertexArray_getPrimitiveType[I32](vtxArr: _VertexArrayRaw box)
-use @sfVertexArray_getBoundsA[None](vtxArr: _VertexArrayRaw box, bounds: FloatRectRaw)
+use @sfVertexArray_getBoundsA[None](vtxArr: _VertexArrayRaw box, bounds: _FloatRect)
 
 //
 // The CSFML object as seen by Pony
@@ -41,9 +41,14 @@ class VertexArray
   fun getVertexCount(): USize =>
     @sfVertexArray_getVertexCount(_raw)
 
-  fun ref getVertex(index: USize, reuse: Optional[Vertex] = None): Vertex =>
+  fun getVertex(index: USize, using: Optional[Vertex] = None): Vertex ref =>
+    """
+      Extends the SFML method by allowing an optional Vertex to be
+      provided. If provided, it will be "recycled" by the method to become
+      the return value, avoiding the allocation of a new object.
+    """
     let vtxptr = @sfVertexArray_getVertex(_raw, index)
-    match reuse
+    match using
     | None => Vertex._from_csfml(vtxptr)
     | let v: Vertex => v._set_csfml(vtxptr)
     end
@@ -67,14 +72,20 @@ class VertexArray
   fun ref getPrimitiveType(): I32 =>
     @sfVertexArray_getPrimitiveType(_raw)
 
-  fun ref getBounds(): FloatRect =>
-    let rect = FloatRect._from_u128(0)
-    if not _raw.is_none() then
-      @sfVertexArray_getBoundsA(_raw, FloatRectRaw(rect))
-      rect
-    else
-      rect
-    end
+  fun getBounds(using: Optional[FloatRect] = None): FloatRect =>
+    """
+      An extended version of SFML's getBounds which allows an optional 
+      FloatRect to be specified. If specified, it will be recycled by this
+      function and used as the return value, avoiding the allocation of a new
+      FloatRect object.
+    """
+    let rect = 
+      match using
+      | None => FloatRect(0, 0, 0, 0)
+      | let x: FloatRect => x
+      end
+    @sfVertexArray_getBoundsA(_raw, rect._getStruct())
+    rect
 
   fun ref _getRaw(): _VertexArrayRaw =>
     _raw

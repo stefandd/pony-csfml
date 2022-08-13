@@ -36,7 +36,8 @@ class View
     _raw = @sfView_create()
 
   new createFromRect(rect: FloatRect) =>
-    _raw = @sfView_createFromRectA(rect.left, rect.top, rect.width, rect.height)
+    _raw = @sfView_createFromRectA(
+      rect.getLeft(), rect.getTop(), rect.getWidth(), rect.getHeight())
 
   new createFromOrdinates(left: F32, top: F32, width: F32, height: F32) =>
     "This is a variation on the standard createFromRect(...), added by this Pony binding"
@@ -51,7 +52,9 @@ class View
   //TODO: fun setViewport(viewport: U128) =>
   
   fun reset(rect: FloatRect) =>
-    @sfView_resetA(_raw, rect.left, rect.top, rect.width, rect.height)
+    @sfView_resetA(
+      _raw, 
+      rect.getLeft(), rect.getTop(), rect.getWidth(), rect.getHeight())
 
   fun resetFromOrdinates(left: F32, top: F32, width: F32, height: F32) =>
     "This is a variation on the standard reset(...), added by this Pony binding"
