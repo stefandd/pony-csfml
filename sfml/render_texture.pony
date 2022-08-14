@@ -7,7 +7,7 @@ use @sfRenderTexture_display[None](rendtex: _RenderTexture box)
 use @sfRenderTexture_drawSprite[None](rendtex: _RenderTexture box, sprite: _Sprite box, states: NullablePointer[_RenderStates] box)
 use @sfRenderTexture_getTexture[_Texture](rendtex: _RenderTexture box)
 use @sfRenderTexture_drawShape[None](rendtex: _RenderTexture box, shape: _Shape box, states: NullablePointer[_RenderStates] box)
-use @sfRenderTexture_drawText[None](rendtex: _RenderTexture box, text: _TextRaw box, states: NullablePointer[_RenderStates] box)
+use @sfRenderTexture_drawText[None](rendtex: _RenderTexture box, text: _Text box, states: NullablePointer[_RenderStates] box)
 use @sfRenderTexture_drawVertexArray[None](rendtex: _RenderTexture box, vertexArray: _VertexArray box, states: NullablePointer[_RenderStates] box)
 use @sfRenderTexture_destroy[None](rendtex: _RenderTexture box)
 
@@ -48,7 +48,7 @@ class RenderTexture
 
     fun ref drawText(text: Text, renderStates: Optional[RenderStates] = None) =>
         let nullable_rs = _ToNullableRenderStates(renderStates)
-        @sfRenderTexture_drawText(_csfml, text._getRaw(), nullable_rs)
+        @sfRenderTexture_drawText(_csfml, text._getCsfml(), nullable_rs)
 
     fun ref drawVertexArray(vertexArray: VertexArray, renderStates: Optional[RenderStates] = None) =>
         let nullable_rs = _ToNullableRenderStates(renderStates)

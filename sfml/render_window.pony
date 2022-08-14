@@ -12,7 +12,7 @@ use @sfRenderWindow_display[None](window: _RenderWindow box)
 use @sfRenderWindow_setView[None](window: _RenderWindow box, view: _View box)
 use @sfRenderWindow_drawSprite[None](window: _RenderWindow box, sprite: _Sprite box, states: NullablePointer[_RenderStates] box)
 use @sfRenderWindow_drawShape[None](window: _RenderWindow box, shape: _Shape box, states: NullablePointer[_RenderStates] box)
-use @sfRenderWindow_drawText[None](window: _RenderWindow box, text: _TextRaw box, states: NullablePointer[_RenderStates] box)
+use @sfRenderWindow_drawText[None](window: _RenderWindow box, text: _Text box, states: NullablePointer[_RenderStates] box)
 use @sfRenderWindow_drawVertexArray[None](window: _RenderWindow box, vertexArray: _VertexArray box, states: NullablePointer[_RenderStates] box)
 use @sfRenderWindow_pollEvent[I32](window: _RenderWindow box, event: Pointer[U8] tag)
 use @sfRenderWindow_getSize[U64](window: _RenderWindow box)
@@ -82,7 +82,7 @@ class RenderWindow
 
     fun ref drawText(text: Text, renderStates: Optional[RenderStates] = None) =>
         let nullable_rs = _ToNullableRenderStates(renderStates)
-        @sfRenderWindow_drawText(_csfml, text._getRaw(), nullable_rs)
+        @sfRenderWindow_drawText(_csfml, text._getCsfml(), nullable_rs)
 
     fun ref drawVertexArray(vertexArray: VertexArray, renderStates: Optional[RenderStates] = None) =>
         let nullable_rs = _ToNullableRenderStates(renderStates)
