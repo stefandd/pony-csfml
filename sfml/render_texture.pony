@@ -34,25 +34,25 @@ class RenderTexture
         @sfRenderTexture_clear(_csfml, color._u32())
 
     fun ref drawSprite(sprite: Sprite, renderStates: Optional[RenderStates] = None) =>
-        let render_states_csfml = _ToNullableRenderStates(renderStates)
-        @sfRenderTexture_drawSprite(_csfml, sprite._getRaw(), render_states_csfml)
+        let nullable_rs = _ToNullableRenderStates(renderStates)
+        @sfRenderTexture_drawSprite(_csfml, sprite._getRaw(), nullable_rs)
 
     fun ref drawShape(shape: Shape, renderStates: Optional[RenderStates] = None) =>
         let nullable_rs = _ToNullableRenderStates(renderStates)
         match shape
-        | let s: CircleShape =>
-            @sfRenderTexture_drawShape(_csfml, s._getRaw(), nullable_rs)
-        | let s: RectangleShape =>
-            @sfRenderTexture_drawShape(_csfml, s._getRaw(), nullable_rs)
+        | let c: CircleShape =>
+            @sfRenderTexture_drawShape(_csfml, c._getCsfml(), nullable_rs)
+        | let r: RectangleShape =>
+            @sfRenderTexture_drawShape(_csfml, r._getCsfml(), nullable_rs)
         end
 
     fun ref drawText(text: Text, renderStates: Optional[RenderStates] = None) =>
-        let render_states_csfml = _ToNullableRenderStates(renderStates)
-        @sfRenderTexture_drawText(_csfml, text._getRaw(), render_states_csfml)
+        let nullable_rs = _ToNullableRenderStates(renderStates)
+        @sfRenderTexture_drawText(_csfml, text._getRaw(), nullable_rs)
 
     fun ref drawVertexArray(vertexArray: VertexArray, renderStates: Optional[RenderStates] = None) =>
-        let render_states_csfml = _ToNullableRenderStates(renderStates)
-        @sfRenderTexture_drawVertexArray(_csfml, vertexArray._getCsfml(), render_states_csfml)
+        let nullable_rs = _ToNullableRenderStates(renderStates)
+        @sfRenderTexture_drawVertexArray(_csfml, vertexArray._getCsfml(), nullable_rs)
 
     // In SFML, the texture returned is read-only (const). 
     // In Pony, we return a `box` reference to achieve the same.

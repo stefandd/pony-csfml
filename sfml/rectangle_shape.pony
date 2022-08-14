@@ -20,57 +20,57 @@ use @sfRectangleShape_setOutlineThickness[None](rectangle: _Shape box, thickness
 // A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class RectangleShape
-    var _raw : _Shape ref
+    var _csfml : _Shape ref
 
     new create()? => 
-        _raw = @sfRectangleShape_create()()?
+        _csfml = @sfRectangleShape_create()()?
     
-    fun ref _getRaw(): _Shape =>
-        _raw
+    fun ref _getCsfml(): _Shape =>
+        _csfml
 
     fun ref setRadius(radius : F32) =>
-        @sfRectangleShape_setSizeA(_raw, (Vector2f(2.0 * radius, 2.0 * radius))._u64())
+        @sfRectangleShape_setSizeA(_csfml, (Vector2f(2.0 * radius, 2.0 * radius))._u64())
 
     fun ref setSize(size : Vector2f) =>
-        @sfRectangleShape_setSizeA(_raw, size._u64())
+        @sfRectangleShape_setSizeA(_csfml, size._u64())
 
     fun ref setFillColor(color : Color) =>
-        @sfRectangleShape_setFillColor(_raw, color._u32())
+        @sfRectangleShape_setFillColor(_csfml, color._u32())
 
     fun ref setOutlineColor(color : Color) =>
-        @sfRectangleShape_setOutlineColor(_raw, color._u32())
+        @sfRectangleShape_setOutlineColor(_csfml, color._u32())
 
     fun ref setOutlineThickness(thickness : F32) =>
-        @sfRectangleShape_setOutlineThickness(_raw, thickness)
+        @sfRectangleShape_setOutlineThickness(_csfml, thickness)
 
     fun ref setPointCount(count : USize) =>
-        None //@sfRectangleShape_setPointCount(_raw, count)
+        None //@sfRectangleShape_setPointCount(_csfml, count)
 
     fun ref setPosition(position : Vector2f) =>
-        @sfRectangleShape_setPositionA(_raw, position._u64())
+        @sfRectangleShape_setPositionA(_csfml, position._u64())
 
     fun ref setScale(factors : Vector2f) =>
-        @sfRectangleShape_setScale(_raw, factors._u64())
+        @sfRectangleShape_setScale(_csfml, factors._u64())
 
     fun ref setOrigin(origin : Vector2f) =>
-        @sfRectangleShape_setOriginA(_raw, origin._u64())
+        @sfRectangleShape_setOriginA(_csfml, origin._u64())
     
     fun ref setRotation(angle : F32) =>
-        @sfRectangleShape_setRotation(_raw, angle)
+        @sfRectangleShape_setRotation(_csfml, angle)
 
     fun ref rotate(angle: F32) =>
-        @sfRectangleShape_rotate(_raw, angle)
+        @sfRectangleShape_rotate(_csfml, angle)
 
     fun ref setTexture(texture : Texture, resetRect : Bool) =>
         let rrInt: I32 = if resetRect then 1 else 0 end
-        @sfRectangleShape_setTexture(_raw, texture._getCsfml(), rrInt)
+        @sfRectangleShape_setTexture(_csfml, texture._getCsfml(), rrInt)
  
     fun ref setTextureRect(rect : IntRect) =>
-        @sfRectangleShape_setTextureRect(_raw, rect._u128())
+        @sfRectangleShape_setTextureRect(_csfml, rect._u128())
 
     fun \deprecated\ destroy() => 
         """ Because Pony has garbage collection, you don't need to call destroy() """
         None
 
     fun _final() =>
-        @sfRectangleShape_destroy(_raw)
+        @sfRectangleShape_destroy(_csfml)

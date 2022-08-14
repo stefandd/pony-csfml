@@ -72,21 +72,21 @@ class RenderWindow
         @sfRenderWindow_drawSprite(_csfml, sprite._getRaw(), nullable_rs)
 
     fun ref drawShape(shape: Shape, renderStates: Optional[RenderStates] = None) =>
-        let render_states_csfml = _ToNullableRenderStates(renderStates)
+        let nullable_rs = _ToNullableRenderStates(renderStates)
         match shape
-        | let s: CircleShape =>
-            @sfRenderWindow_drawShape(_csfml, s._getRaw(), render_states_csfml)
-        | let s: RectangleShape =>
-            @sfRenderWindow_drawShape(_csfml, s._getRaw(), render_states_csfml)
+        | let c: CircleShape =>
+            @sfRenderWindow_drawShape(_csfml, c._getCsfml(), nullable_rs)
+        | let r: RectangleShape =>
+            @sfRenderWindow_drawShape(_csfml, r._getCsfml(), nullable_rs)
         end
 
     fun ref drawText(text: Text, renderStates: Optional[RenderStates] = None) =>
-        let render_states_csfml = _ToNullableRenderStates(renderStates)
-        @sfRenderWindow_drawText(_csfml, text._getRaw(), render_states_csfml)
+        let nullable_rs = _ToNullableRenderStates(renderStates)
+        @sfRenderWindow_drawText(_csfml, text._getRaw(), nullable_rs)
 
     fun ref drawVertexArray(vertexArray: VertexArray, renderStates: Optional[RenderStates] = None) =>
-        let render_states_csfml = _ToNullableRenderStates(renderStates)
-        @sfRenderWindow_drawVertexArray(_csfml, vertexArray._getCsfml(), render_states_csfml)
+        let nullable_rs = _ToNullableRenderStates(renderStates)
+        @sfRenderWindow_drawVertexArray(_csfml, vertexArray._getCsfml(), nullable_rs)
 
     fun ref display() =>
         @sfRenderWindow_display(_csfml)
