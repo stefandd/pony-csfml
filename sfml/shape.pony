@@ -6,7 +6,6 @@
 // in union types.
 
 struct _Shape
-type _ShapeRaw is NullablePointer[_Shape]
 
 type Shape is (CircleShape | RectangleShape)
 

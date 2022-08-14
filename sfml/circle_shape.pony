@@ -1,32 +1,31 @@
 //
 // FFI declarations for CSFML functions
 //
-use @sfCircleShape_destroy[None](circle: _ShapeRaw box)
-use @sfCircleShape_create[_ShapeRaw]()
-use @sfCircleShape_setPositionA[None](circle: _ShapeRaw box, position: U64)
-use @sfCircleShape_setOriginA[None](circle: _ShapeRaw box, origin: U64)
-use @sfCircleShape_setScale[None](circle: _ShapeRaw box, factors: U64)
-use @sfCircleShape_setRadius[None](circle: _ShapeRaw box, radius: F32)
-use @sfCircleShape_setRotation[None](circle: _ShapeRaw box, angle: F32)
-use @sfCircleShape_rotate[None](circle: _ShapeRaw box, angle: F32)
-use @sfCircleShape_setFillColor[None](circle: _ShapeRaw box, color: U32)
-use @sfCircleShape_setOutlineColor[None](circle: _ShapeRaw box, color: U32)
-use @sfCircleShape_setPointCount[None](circle: _ShapeRaw box, count: USize)
-use @sfCircleShape_setTexture[None](circle: _ShapeRaw box, texture: _Texture box, resetRect: I32)
-use @sfCircleShape_setTextureRect[None](circle: _ShapeRaw box, rect: U128)
-use @sfCircleShape_setOutlineThickness[None](circle: _ShapeRaw box, thickness: F32)
+use @sfCircleShape_destroy[None](circle: _Shape box)
+use @sfCircleShape_create[NullablePointer[_Shape]]()
+use @sfCircleShape_setPositionA[None](circle: _Shape box, position: U64)
+use @sfCircleShape_setOriginA[None](circle: _Shape box, origin: U64)
+use @sfCircleShape_setScale[None](circle: _Shape box, factors: U64)
+use @sfCircleShape_setRadius[None](circle: _Shape box, radius: F32)
+use @sfCircleShape_setRotation[None](circle: _Shape box, angle: F32)
+use @sfCircleShape_rotate[None](circle: _Shape box, angle: F32)
+use @sfCircleShape_setFillColor[None](circle: _Shape box, color: U32)
+use @sfCircleShape_setOutlineColor[None](circle: _Shape box, color: U32)
+use @sfCircleShape_setPointCount[None](circle: _Shape box, count: USize)
+use @sfCircleShape_setTexture[None](circle: _Shape box, texture: _Texture box, resetRect: I32)
+use @sfCircleShape_setTextureRect[None](circle: _Shape box, rect: U128)
+use @sfCircleShape_setOutlineThickness[None](circle: _Shape box, thickness: F32)
 
 //
 // A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class CircleShape
-    var _raw : _ShapeRaw ref
+    var _raw : _Shape ref
 
     new create()? => 
-        _raw = @sfCircleShape_create()
-        if _raw.is_none() then error end
+        _raw = @sfCircleShape_create()()?
     
-    fun ref _getRaw(): _ShapeRaw =>
+    fun ref _getRaw(): _Shape =>
         _raw
 
     fun ref setRadius(radius : F32) =>
@@ -75,4 +74,4 @@ class CircleShape
         None
 
     fun _final() =>
-        if not _raw.is_none() then @sfCircleShape_destroy(_raw) end
+        @sfCircleShape_destroy(_raw)
