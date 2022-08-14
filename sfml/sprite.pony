@@ -2,7 +2,7 @@
 // FFI declarations for CSFML functions
 //
 use @sfSprite_create[_SpriteRaw]()
-use @sfSprite_setTexture[None](sprite: _SpriteRaw box, texture: _TextureRaw box, resetRect: I32)
+use @sfSprite_setTexture[None](sprite: _SpriteRaw box, texture: _Texture box, resetRect: I32)
 use @sfSprite_destroy[None](sprite: _SpriteRaw box)
 
 // 
@@ -26,7 +26,7 @@ class Sprite
 
     fun ref setTexture(texture: Texture ref, resetRect: Bool = false) =>
         let rrInt: I32 = if resetRect then 1 else 0 end
-        @sfSprite_setTexture(_raw, texture._getRaw(), rrInt)
+        @sfSprite_setTexture(_raw, texture._getCsfml(), rrInt)
         // Below, we keep a reference to the Pony Texture instance because we
         // don't want to loose track of the fact that it is the canonical Pony 
         // abstraction of for the SFML _Texture that is now owned by the Sprite.

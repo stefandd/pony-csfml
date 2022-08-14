@@ -12,7 +12,7 @@ use @sfCircleShape_rotate[None](circle: _ShapeRaw box, angle: F32)
 use @sfCircleShape_setFillColor[None](circle: _ShapeRaw box, color: U32)
 use @sfCircleShape_setOutlineColor[None](circle: _ShapeRaw box, color: U32)
 use @sfCircleShape_setPointCount[None](circle: _ShapeRaw box, count: USize)
-use @sfCircleShape_setTexture[None](circle: _ShapeRaw box, texture: _TextureRaw box, resetRect: I32)
+use @sfCircleShape_setTexture[None](circle: _ShapeRaw box, texture: _Texture box, resetRect: I32)
 use @sfCircleShape_setTextureRect[None](circle: _ShapeRaw box, rect: U128)
 use @sfCircleShape_setOutlineThickness[None](circle: _ShapeRaw box, thickness: F32)
 
@@ -65,7 +65,7 @@ class CircleShape
 
     fun ref setTexture(texture : Texture, resetRect : Bool) =>
         let rrInt: I32 = if resetRect then 1 else 0 end
-        @sfCircleShape_setTexture(_raw, texture._getRaw(), rrInt)
+        @sfCircleShape_setTexture(_raw, texture._getCsfml(), rrInt)
 
     fun ref setTextureRect(rect : IntRect) =>
         @sfCircleShape_setTextureRect(_raw, rect._u128())

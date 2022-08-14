@@ -12,7 +12,7 @@ use @sfRectangleShape_rotate[None](rectangle: _ShapeRaw box, angle: F32)
 use @sfRectangleShape_setFillColor[None](rectangle: _ShapeRaw box, color: U32)
 use @sfRectangleShape_setOutlineColor[None](rectangle: _ShapeRaw box, color: U32)
 use @sfRectangleShape_setPointCount[None](rectangle: _ShapeRaw box, count: USize)
-use @sfRectangleShape_setTexture[None](rectangle: _ShapeRaw box, texture: _TextureRaw box, resetRect: I32)
+use @sfRectangleShape_setTexture[None](rectangle: _ShapeRaw box, texture: _Texture box, resetRect: I32)
 use @sfRectangleShape_setTextureRect[None](rectangle: _ShapeRaw box, rect: U128)
 use @sfRectangleShape_setOutlineThickness[None](rectangle: _ShapeRaw box, thickness: F32)
 
@@ -64,7 +64,7 @@ class RectangleShape
 
     fun ref setTexture(texture : Texture, resetRect : Bool) =>
         let rrInt: I32 = if resetRect then 1 else 0 end
-        @sfRectangleShape_setTexture(_raw, texture._getRaw(), rrInt)
+        @sfRectangleShape_setTexture(_raw, texture._getCsfml(), rrInt)
  
     fun ref setTextureRect(rect : IntRect) =>
         @sfRectangleShape_setTextureRect(_raw, rect._u128())

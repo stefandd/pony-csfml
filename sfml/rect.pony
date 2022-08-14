@@ -28,8 +28,6 @@ struct _Rect[T: (Real[T] & (F32 | U32))]
         var tmp: U128 = chunk
         @memcpy(NullablePointer[_Rect[T]](this), addressof tmp, USize(16))
 
-//type FloatRectRaw is NullablePointer[FloatRect]
-
 
 type FloatRect is Rect[F32]
 type IntRect is Rect[U32]

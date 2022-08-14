@@ -10,93 +10,106 @@
 struct _RenderStates
     embed bm: _BlendMode
     embed tf: _Transform
-    var tx: _TextureRaw
-    var sh: _ShaderRaw
+    var tx: NullablePointer[_Texture]
+    var sh: NullablePointer[_Shader]
 
-    new create(bm': _BlendMode box, tf': _Transform, tx': _TextureRaw, sh': _ShaderRaw) =>
+    new create(
+        bm': _BlendMode box, 
+        tf': _Transform, 
+        tx': NullablePointer[_Texture], 
+        sh': NullablePointer[_Shader] ) 
+    =>
         bm = _BlendMode.copy(bm') // Pony embed fields must be assigned using a ctor
         tf = _Transform.copy(tf') // Pony embed fields must be assigned using a ctor
         tx = tx'
         sh = sh'
 
-type _RenderStatesRaw is NullablePointer[_RenderStates]
-
 //
 // A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class RenderStates
-    let _struct: _RenderStates
-    let _raw: _RenderStatesRaw ref
-
-    var _bm: BlendMode
-    var _tf: Transform
-    var _tx: Texture
-    var _sh: Shader
+    let _csfml: _RenderStates
 
     new default() =>
-        _bm = BlendMode.alpha()
-        _tf = Transform.identity()
-        _tx = Texture.none()
-        _sh = Shader.none()
-        _struct = _RenderStates(_bm._getCsfml(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
-        _raw = _RenderStatesRaw(_struct)
+        _csfml = _RenderStates(
+            _BlendMode.alpha(),
+            _Transform.identity(), 
+            NullablePointer[_Texture].none(), 
+            NullablePointer[_Shader].none() )
 
     new fromBlendMode(blendMode: BlendMode) =>
-        _bm = blendMode
-        _tf = Transform.identity()
-        _tx = Texture.none()
-        _sh = Shader.none()
-        _struct = _RenderStates(_bm._getCsfml(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
-        _raw = _RenderStatesRaw(_struct)
+        _csfml = _RenderStates(
+            blendMode._getCsfml(),
+            _Transform.identity(),
+            NullablePointer[_Texture].none(),
+            NullablePointer[_Shader].none() )
 
     new fromTransform(transform: Transform) =>
-        _bm = BlendMode.alpha()
-        _tf = transform
-        _tx = Texture.none()
-        _sh = Shader.none()
-        _struct = _RenderStates(_bm._getCsfml(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
-        _raw = _RenderStatesRaw(_struct)
+        _csfml = _RenderStates(
+            _BlendMode.alpha(),
+            transform._getCsfml(),
+            NullablePointer[_Texture].none(),
+            NullablePointer[_Shader].none() )
 
     new fromTexture(texture: Texture) =>
-        _bm = BlendMode.alpha()
-        _tf = Transform.identity()
-        _tx = texture
-        _sh = Shader.none()
-        _struct = _RenderStates(_bm._getCsfml(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
-        _raw = _RenderStatesRaw(_struct)
+        _csfml = _RenderStates(
+            _BlendMode.alpha(),
+            _Transform.identity(),
+            NullablePointer[_Texture](texture._getCsfml()),
+            NullablePointer[_Shader].none() )
 
     new fromShader(shader: Shader) =>
-        _bm = BlendMode.alpha()
-        _tf = Transform.identity()
-        _tx = Texture.none()
-        _sh = shader
-        _struct = _RenderStates(_bm._getCsfml(), _tf._getStruct(), _tx._getRaw(), _sh._getRaw())
-        _raw = _RenderStatesRaw(_struct)
+        _csfml = _RenderStates(
+            _BlendMode.alpha(),
+            _Transform.identity(),
+            NullablePointer[_Texture].none(),
+            NullablePointer[_Shader](shader._getCsfml()) )
 
-    fun box getBlendMode(): BlendMode box => _bm
-    fun box getTransform(): Transform box => _tf
-    fun box getTexture(): Texture box     => _tx
-    fun box getShader(): Shader box       => _sh
+    fun ref getBlendMode(): 
+        BlendMode box => BlendMode._fromCsfml(_csfml.bm)
 
-    fun ref setBlendMode(x: BlendMode) => _bm = x ; _struct.bm.setFrom(x._getCsfml())
-    fun ref setTransform(x: Transform) => _tf = x ; _struct.tf.setFrom(x._getStruct())
-    fun ref setTexture(x: Texture)     => _tx = x ; _struct.tx = x._getRaw()
-    fun ref setShader(x: Shader)       => _sh = x ; _struct.sh = x._getRaw()
+    fun ref getTransform(): Transform box => 
+        Transform._fromCsfml(_csfml.tf)
 
-    fun ref _getRaw(): _RenderStatesRaw =>
-        _raw
+    fun ref getTexture(): (Texture box | None) =>
+        try Texture._fromCsfml(_csfml.tx()?) else None end
+
+    fun ref getShader(): (Shader box | None) => 
+        try Shader._fromCsfml(_csfml.sh()?) else None end
+
+    fun ref setBlendMode(x: BlendMode) => 
+        _csfml.bm.setFrom(x._getCsfml())
+
+    fun ref setTransform(x: Transform) => 
+        _csfml.tf.setFrom(x._getCsfml())
+
+    fun ref setTexture(x: Optional[Texture]) => 
+        _csfml.tx = 
+            match x
+            | None => NullablePointer[_Texture].none()
+            | let t: Texture => NullablePointer[_Texture](t._getCsfml())
+            end
+
+    fun ref setShader(x: Optional[Shader]) => 
+        _csfml.sh = 
+            match x
+            | None => NullablePointer[_Shader].none()
+            | let t: Shader => NullablePointer[_Shader](t._getCsfml())
+            end
+
+    fun ref _getCsfml(): _RenderStates => _csfml
 
 // RenderStates are often optional parameters in SFML draw functions.
-// This helper converts Optional[RenderState] to _RenderStateRaw.
+// This helper converts Optional[RenderState] to NullablePointer[_RenderState].
 //
 // Sadly, this can't be genericized to work with ANY proxy class because that
 // would require structs to be type arguments in a "trait Proxy[SomeStruct]", 
 // but Pony doesn't allow structs to be type args.
 //
-primitive _ToRenderStatesRaw
-    fun apply(opt_rs: Optional[RenderStates]): _RenderStatesRaw =>
+primitive _ToNullableRenderStates
+    fun apply(opt_rs: Optional[RenderStates]): NullablePointer[_RenderStates] =>
         match opt_rs
-            | None => _RenderStatesRaw.none() 
-            | let rs: RenderStates => rs._getRaw() 
+            | None => NullablePointer[_RenderStates].none()
+            | let rs: RenderStates => NullablePointer[_RenderStates](rs._getCsfml())
         end
 

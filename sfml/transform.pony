@@ -1,17 +1,17 @@
 //
 // FFI declarations for CSFML functions
 //
-use @sfTransform_getMatrix[None](transform: _TransformRaw, matrix: Pointer[F32])
-use @sfTransform_getInverse[_Transform](transform: _TransformRaw)
-use @sfTransform_transformPoint[_Vector2f](transform: _TransformRaw, point: _Vector2f)
-use @sfTransform_transformRect[_FloatRect](transform: _TransformRaw, rectangle: _FloatRect)
-use @sfTransform_combine[None](transform: _TransformRaw, other: _TransformRaw)
-use @sfTransform_translate[None](transform: _TransformRaw box, x: F32, y: F32)
-use @sfTransform_rotate[None](transform: _TransformRaw, angle: F32)
-use @sfTransform_rotateWithCenter[None](transform: _TransformRaw, angle: F32, centerX: F32, centerY: F32)
-use @sfTransform_scale[None](transform: _TransformRaw, scaleX: F32, scaleY: F32)
-use @sfTransform_scaleWithCenter[None](transform: _TransformRaw, scaleX: F32, scaleY: F32, centerX: F32, centerY: F32)
-use @sfTransform_equal[I32](left: _TransformRaw, right: _TransformRaw)
+use @sfTransform_getMatrix[None](transform: _Transform, matrix: Pointer[F32])
+use @sfTransform_getInverse[NullablePointer[_Transform]](transform: _Transform)
+use @sfTransform_transformPoint[_Vector2f](transform: _Transform, point: _Vector2f)
+use @sfTransform_transformRect[_FloatRect](transform: _Transform, rectangle: _FloatRect)
+use @sfTransform_combine[None](transform: _Transform, other: _Transform)
+use @sfTransform_translate[None](transform: _Transform box, x: F32, y: F32)
+use @sfTransform_rotate[None](transform: _Transform, angle: F32)
+use @sfTransform_rotateWithCenter[None](transform: _Transform, angle: F32, centerX: F32, centerY: F32)
+use @sfTransform_scale[None](transform: _Transform, scaleX: F32, scaleY: F32)
+use @sfTransform_scaleWithCenter[None](transform: _Transform, scaleX: F32, scaleY: F32, centerX: F32, centerY: F32)
+use @sfTransform_equal[I32](left: _Transform, right: _Transform)
 // use @sfTransform_fromMatrix <- We are not using this function.
 
 // 
@@ -61,38 +61,37 @@ struct _Transform
         a10 = that.a10 ; a11 = that.a11 ; a12 = that.a12
         a20 = that.a20 ; a21 = that.a21 ; a22 = that.a22
 
-type _TransformRaw is NullablePointer[_Transform]
 
 //
 // A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class Transform
 
-    let _struct: _Transform 
+    let _csfml: _Transform 
 
     new create() => 
-        _struct = _Transform.identity()
+        _csfml = _Transform.identity()
+
+    new _fromCsfml(cptr: _Transform) => 
+        _csfml = cptr
 
     new identity() => 
-        _struct = _Transform.identity()
+        _csfml = _Transform.identity()
 
     new fromMatrix(
         a00: F32 = 0, a01: F32 = 0, a02: F32 = 0, 
         a10: F32 = 0, a11: F32 = 0, a12: F32 = 0, 
         a20: F32 = 0, a21: F32 = 0, a22: F32 = 0) 
     =>
-        _struct = _Transform(a00, a01, a02, a10, a11, a12, a20, a21, a22)
+        _csfml = _Transform(a00, a01, a02, a10, a11, a12, a20, a21, a22)
 
     fun ref translate(x: F32, y: F32): Transform =>
-        @sfTransform_translate(this._getRaw(), x, y)
+        @sfTransform_translate(_csfml, x, y)
         this
 
     new ref copy(that: Transform) =>
-        _struct = _Transform.copy(that._struct)
+        _csfml = _Transform.copy(that._csfml)
 
-    fun ref _getRaw(): _TransformRaw =>
-        _TransformRaw(_struct)
-
-    fun ref _getStruct(): _Transform =>
-        _struct
+    fun ref _getCsfml(): _Transform =>
+        _csfml
 

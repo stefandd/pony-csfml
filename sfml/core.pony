@@ -222,9 +222,9 @@ type Event is (KeyEvent | WindowEvent | QuitEvent | None)
 class EventStruct
     var array: Array[U8] val
     let reader: Reader
-    let window: _RenderWindowRaw
+    let window: _RenderWindow
 
-    new create(w: _RenderWindowRaw) =>
+    new create(w: _RenderWindow) =>
         let array': Array[U8] iso = recover Array[U8]() end
         for i in Range(0, 32) do
             array'.push(0)
