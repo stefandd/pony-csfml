@@ -1,9 +1,9 @@
 // FFI declarations for CSFML functions
 //
-use @sfRenderWindow_createA[NullablePointer[_RenderWindow]](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U8 val] tag, style: I32, settings: _ContextSettingsRaw)
-use @sfRenderWindow_createUnicodeA[NullablePointer[_RenderWindow]](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U32 val] tag, style: I32, settings: _ContextSettingsRaw)
+use @sfRenderWindow_createA[NullablePointer[_RenderWindow]](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U8 val] tag, style: I32, settings: _ContextSettings)
+use @sfRenderWindow_createUnicodeA[NullablePointer[_RenderWindow]](width: U32, height: U32, bitsPerPixel: U32, name: Pointer[U32 val] tag, style: I32, settings: _ContextSettings)
 use @sfRenderWindow_setFramerateLimit[None](window: _RenderWindow box, limit: U32)
-use @sfRenderWindow_getSettingsA[None](window: _RenderWindow box, settings: _ContextSettingsRaw)
+use @sfRenderWindow_getSettingsA[None](window: _RenderWindow box, settings: _ContextSettings)
 use @sfRenderWindow_isOpen[I32](window: _RenderWindow box)
 use @sfRenderWindow_hasFocus[I32](window: _RenderWindow box)
 use @sfRenderWindow_setActive[I32](window: _RenderWindow box, active: I32)
@@ -37,7 +37,7 @@ class RenderWindow
         _csfml = 
             @sfRenderWindow_createA(
                 mode.width, mode.height, mode.bitsPerPixel, 
-                title.cstring(), style, settings._getRaw())()?
+                title.cstring(), style, settings._getCsfml())()?
         _evt = EventStruct(_csfml)
 
     fun ref getEventStruct(): EventStruct =>
@@ -45,7 +45,7 @@ class RenderWindow
     
     fun ref getSettings(): ContextSettings =>
         var s: ContextSettings = ContextSettings
-        @sfRenderWindow_getSettingsA(_csfml, s._getRaw())
+        @sfRenderWindow_getSettingsA(_csfml, s._getCsfml())
         s
 
     fun ref setFramerateLimit(limit: U32) =>

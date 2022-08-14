@@ -4,7 +4,7 @@
 use @sfContext_create[_Context]()
 use @sfContext_destroy[None](context: _Context box)
 use @sfContext_setActive[I32](context: _Context, active: I32)
-use @sfContext_getSettingsA[None](context: _Context, settings: _ContextSettingsRaw)
+use @sfContext_getSettingsA[None](context: _Context, settings: _ContextSettings)
 
 // 
 // The CSFML object as seen by Pony
@@ -23,7 +23,7 @@ class Context
         _csfml = @sfContext_create()
         // A.B. assumes that context settings never change, in which case I can get them here:
         _context_settings = ContextSettings
-        @sfContext_getSettingsA(_csfml, _context_settings._getRaw())
+        @sfContext_getSettingsA(_csfml, _context_settings._getCsfml())
 
     fun ref getSettings(): ContextSettings =>
         _context_settings

@@ -19,14 +19,11 @@ struct _ContextSettings
         attributeFlags = attr
         sRgbCapable = isRGB
 
-type _ContextSettingsRaw is NullablePointer[_ContextSettings]
-
 //
 // A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class ContextSettings
-    let _struct: _ContextSettings
-    let _raw: _ContextSettingsRaw
+    let _csfml: _ContextSettings
 
     // Default args per https://www.sfml-dev.org/documentation/2.5.1/structsf_1_1ContextSettings.php
     new create(
@@ -42,16 +39,15 @@ class ContextSettings
         var attrsNum: U32 = 0
         var n = attrs.size()
         try while n > 0 do n = n - 1 ; attrsNum = attrsNum or attrs(n)?() end end
-        _struct = _ContextSettings(depth, sbits, aalev, majver, minver, attrsNum, isRGBint)
-        _raw = _ContextSettingsRaw(_struct)
+        _csfml = _ContextSettings(depth, sbits, aalev, majver, minver, attrsNum, isRGBint)
 
-    fun getDepthBits(): U32 => _struct.depthBits
-    fun getStencilBits(): U32 => _struct.stencilBits
-    fun getAntialiasingLevel(): U32 => _struct.antialiasingLevel
-    fun getMajorVersion(): U32 => _struct.majorVersion
-    fun getMinorVersion(): U32 => _struct.minorVersion
-    fun getAttributeFlags(): U32 => _struct.attributeFlags
-    fun getSRgbCapable(): Bool => if _struct.sRgbCapable == 1 then true else false end
+    fun getDepthBits(): U32 => _csfml.depthBits
+    fun getStencilBits(): U32 => _csfml.stencilBits
+    fun getAntialiasingLevel(): U32 => _csfml.antialiasingLevel
+    fun getMajorVersion(): U32 => _csfml.majorVersion
+    fun getMinorVersion(): U32 => _csfml.minorVersion
+    fun getAttributeFlags(): U32 => _csfml.attributeFlags
+    fun getSRgbCapable(): Bool => if _csfml.sRgbCapable == 1 then true else false end
 
     fun box string(): String iso^ => 
         "\nDepth Bits: " + getDepthBits().string() +
@@ -62,7 +58,7 @@ class ContextSettings
         "\nAttribute Flags: " + getAttributeFlags().string() +
         "\nsRgb Capable: " + getSRgbCapable().string() + "\n"
 
-    fun ref _getRaw(): _ContextSettingsRaw => _raw
+    fun ref _getCsfml(): _ContextSettings => _csfml
 
 
 primitive ContextSettingsDefault fun apply(): U32 => 0
