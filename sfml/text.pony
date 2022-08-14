@@ -5,7 +5,7 @@ use "collections"
 //
 use @sfText_create[NullablePointer[_Text]]()
 use @sfText_setString[None](text: _Text box, str: Pointer[U8 val] tag)
-use @sfText_setFont[None](text: _Text box, font: _FontRaw box)
+use @sfText_setFont[None](text: _Text box, font: _Font box)
 use @sfText_setCharacterSize[None](text: _Text box, size: U32)
 use @sfText_setLineSpacing[None](text: _Text box, spacingFactor: F32)
 use @sfText_setLetterSpacing[None](text: _Text box, spacingFactor: F32)
@@ -42,7 +42,7 @@ class Text
         @sfText_setString(_csfml, txt.cstring())
 
     fun setFont(font : Font) =>
-        @sfText_setFont(_csfml, font._getRaw())
+        @sfText_setFont(_csfml, font._getCsfml())
 
     fun setCharacterSize(size : U32) =>
         @sfText_setCharacterSize(_csfml, size)
