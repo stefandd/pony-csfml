@@ -1,52 +1,42 @@
 //
 // FFI declarations for CSFML functions
 //
-use @sfSprite_create[_SpriteRaw]()
-use @sfSprite_setTexture[None](sprite: _SpriteRaw box, texture: _Texture box, resetRect: I32)
-use @sfSprite_destroy[None](sprite: _SpriteRaw box)
+use @sfSprite_create[NullablePointer[_Sprite]]()
+use @sfSprite_setTexture[None](sprite: _Sprite box, texture: _Texture box, resetRect: I32)
+use @sfSprite_getTexture[NullablePointer[_Texture]](sprite: _Sprite box)
+use @sfSprite_destroy[None](sprite: _Sprite box)
 
 // 
 // The CSFML object as seen by Pony
 // Don't need to define its fields b/c we'll only be working with it as a ptr.
 //
 struct _Sprite
-type _SpriteRaw is NullablePointer[_Sprite]
 
 //
 // A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class Sprite
-    var _raw: _SpriteRaw ref
-    var _texture: (Texture ref | None)
+    var _csfml: _Sprite ref
 
     new create()? =>
-        _raw = @sfSprite_create()
-        if _raw.is_none() then error end
-        _texture = None
+        _csfml = @sfSprite_create()()?
 
     fun ref setTexture(texture: Texture ref, resetRect: Bool = false) =>
         let rrInt: I32 = if resetRect then 1 else 0 end
-        @sfSprite_setTexture(_raw, texture._getCsfml(), rrInt)
-        // Below, we keep a reference to the Pony Texture instance because we
-        // don't want to loose track of the fact that it is the canonical Pony 
-        // abstraction of for the SFML _Texture that is now owned by the Sprite.
-        // This will be important in getTexture().
-        _texture = texture
+        @sfSprite_setTexture(_csfml, texture._getCsfml(), rrInt)
     
     // In (C)SFML, the texture returned is read-only (const).
     // In Pony, we use the `box` refcap to achieve the same.
     fun ref getTexture(): (Texture box | None) =>
-        match _texture
-            | let t: Texture => t
-            | None => None
-        end
+        let nullable_texture = @sfSprite_getTexture(_csfml)
+        try Texture._fromCsfml(nullable_texture()?) end
 
-    fun ref _getRaw(): _SpriteRaw =>
-        _raw
+    fun ref _getCsfml(): _Sprite =>
+        _csfml
 
     fun \deprecated\ ref destroy() => 
         """ Because Pony has garbage collection, you don't need to call destroy() """
         None
 
     fun _final() =>
-        if not _raw.is_none() then @sfSprite_destroy(_raw) end
+        @sfSprite_destroy(_csfml)

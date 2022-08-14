@@ -4,7 +4,7 @@
 use @sfRenderTexture_create[NullablePointer[_RenderTexture]](width: U32, height: U32, depthBuffer: I32)
 use @sfRenderTexture_clear[None](rendtex: _RenderTexture box, color: U32)
 use @sfRenderTexture_display[None](rendtex: _RenderTexture box)
-use @sfRenderTexture_drawSprite[None](rendtex: _RenderTexture box, sprite: _SpriteRaw box, states: NullablePointer[_RenderStates] box)
+use @sfRenderTexture_drawSprite[None](rendtex: _RenderTexture box, sprite: _Sprite box, states: NullablePointer[_RenderStates] box)
 use @sfRenderTexture_getTexture[_Texture](rendtex: _RenderTexture box)
 use @sfRenderTexture_drawShape[None](rendtex: _RenderTexture box, shape: _Shape box, states: NullablePointer[_RenderStates] box)
 use @sfRenderTexture_drawText[None](rendtex: _RenderTexture box, text: _TextRaw box, states: NullablePointer[_RenderStates] box)
@@ -35,7 +35,7 @@ class RenderTexture
 
     fun ref drawSprite(sprite: Sprite, renderStates: Optional[RenderStates] = None) =>
         let nullable_rs = _ToNullableRenderStates(renderStates)
-        @sfRenderTexture_drawSprite(_csfml, sprite._getRaw(), nullable_rs)
+        @sfRenderTexture_drawSprite(_csfml, sprite._getCsfml(), nullable_rs)
 
     fun ref drawShape(shape: Shape, renderStates: Optional[RenderStates] = None) =>
         let nullable_rs = _ToNullableRenderStates(renderStates)

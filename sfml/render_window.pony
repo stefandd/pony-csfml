@@ -10,7 +10,7 @@ use @sfRenderWindow_setActive[I32](window: _RenderWindow box, active: I32)
 use @sfRenderWindow_clear[None](window: _RenderWindow box, color: U32)
 use @sfRenderWindow_display[None](window: _RenderWindow box)
 use @sfRenderWindow_setView[None](window: _RenderWindow box, view: _View box)
-use @sfRenderWindow_drawSprite[None](window: _RenderWindow box, sprite: _SpriteRaw box, states: NullablePointer[_RenderStates] box)
+use @sfRenderWindow_drawSprite[None](window: _RenderWindow box, sprite: _Sprite box, states: NullablePointer[_RenderStates] box)
 use @sfRenderWindow_drawShape[None](window: _RenderWindow box, shape: _Shape box, states: NullablePointer[_RenderStates] box)
 use @sfRenderWindow_drawText[None](window: _RenderWindow box, text: _TextRaw box, states: NullablePointer[_RenderStates] box)
 use @sfRenderWindow_drawVertexArray[None](window: _RenderWindow box, vertexArray: _VertexArray box, states: NullablePointer[_RenderStates] box)
@@ -69,7 +69,7 @@ class RenderWindow
 
     fun ref drawSprite(sprite: Sprite, renderStates: Optional[RenderStates] = None) =>
         let nullable_rs = _ToNullableRenderStates(renderStates)
-        @sfRenderWindow_drawSprite(_csfml, sprite._getRaw(), nullable_rs)
+        @sfRenderWindow_drawSprite(_csfml, sprite._getCsfml(), nullable_rs)
 
     fun ref drawShape(shape: Shape, renderStates: Optional[RenderStates] = None) =>
         let nullable_rs = _ToNullableRenderStates(renderStates)
