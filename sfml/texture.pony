@@ -3,7 +3,7 @@
 //
 use @sfTexture_create[NullablePointer[_Texture]](width: U32, height: U32)
 use @sfTexture_createFromFile[NullablePointer[_Texture]](filename: Pointer[U8 val] tag, area: NullablePointer[_IntRect])
-use @sfTexture_createFromImage[NullablePointer[_Texture]](image: _ImageRaw box, area: NullablePointer[_IntRect])
+use @sfTexture_createFromImage[NullablePointer[_Texture]](image: _Image box, area: NullablePointer[_IntRect])
 use @sfTexture_copy[NullablePointer[_Texture]](from: _Texture box)
 use @sfTexture_updateFromPixels[None](texture: _Texture box, pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32)
 use @sfTexture_destroy[None](texture: _Texture box)
@@ -38,7 +38,7 @@ class Texture
         | None => NullablePointer[_IntRect].none()
         | let x: IntRect => NullablePointer[_IntRect](x._getStruct())
         end
-        _csfml = @sfTexture_createFromImage(image._getRaw(), area')()?
+        _csfml = @sfTexture_createFromImage(image._getCsfml(), area')()?
 
     new copy(from: Texture)? =>
         _csfml = @sfTexture_copy(from._getCsfml())()?

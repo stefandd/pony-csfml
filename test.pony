@@ -31,8 +31,8 @@ actor Main
     env = env'
     let vmode = VideoMode(width.u32(), height.u32(), 32)
     let wstyle = WindowStyle.sfDefaultStyle()
-    let img = Image(width.u32(), height.u32())
     try
+      let img = Image(width.u32(), height.u32())?
       run(
         RenderWindow(vmode, "SFML Demo", wstyle)?,
         Texture.createFromImage(consume img)?,
