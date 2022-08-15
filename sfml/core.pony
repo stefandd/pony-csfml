@@ -1,3 +1,8 @@
+use @fprintf[I32](stream: Pointer[U8] tag, fmt: Pointer[U8] tag, ...)
+use @pony_os_stdout[Pointer[U8]]()
+use @pony_os_stderr[Pointer[U8]]()
+use @exit[None](code: I32)
+
 use "path:../shim library/"
 use "lib:csfml-main" if windows
 use "lib:csfml-system"
@@ -17,3 +22,4 @@ type Maybe[X] is (X | None)
 
 primitive System
     fun sleep(duration: I64) => @sfSleep(duration)
+

@@ -1,8 +1,3 @@
-use @fprintf[I32](stream: Pointer[U8] tag, fmt: Pointer[U8] tag, ...)
-use @pony_os_stdout[Pointer[U8]]()
-use @pony_os_stderr[Pointer[U8]]()
-use @exit[None](code: I32)
-
 //
 // The SFML object as presented by CSFML
 //
@@ -142,8 +137,7 @@ primitive _I32toEquation
         | EquationSubtract()        => EquationSubtract              
         | EquationReverseSubtract() => EquationReverseSubtract
         else
-            let stderr = @pony_os_stderr()
-            @fprintf(stderr, "Bad state detected in _I32toEquation".cstring())
+            @fprintf(@pony_os_stderr(), "Bad state detected in _I32toEquation".cstring())
             @exit(1)
             EquationAdd // Never get here, but this satisfies the compiler's type checking.
         end
@@ -162,8 +156,7 @@ primitive _I32toFactor
         | FactorDstAlpha()         => FactorDstAlpha        
         | FactorOneMinusDstAlpha() => FactorOneMinusDstAlpha
         else
-            let stderr = @pony_os_stderr()
-            @fprintf(stderr, "Bad state detected in _I32toFactor".cstring())
+            @fprintf(@pony_os_stderr(), "Bad state detected in _I32toFactor".cstring())
             @exit(1)
             FactorZero // Never get here, but this satisfies the compiler's type checking.        
         end            
