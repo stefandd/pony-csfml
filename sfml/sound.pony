@@ -1,3 +1,6 @@
+//
+// FFI declarations for CSFML functions
+//
 use @sfSound_create[NullablePointer[_Sound]]()
 use @sfSound_setBuffer[None](sound: _Sound box, buffer: _SoundBuffer box)
 use @sfSound_play[None](sound: _Sound box)
@@ -9,10 +12,17 @@ use @sfSound_setLoop[None](sound: _Sound box, loop: I32)
 use @sfSound_getStatus[I32](sound: _Sound box)
 use @sfSound_destroy[None](sound: _Sound box)
 
+// Because CSFML provides all the functions required to create and manipulate
+// this structure (see 'use' statements, above), we don't need to define its
+// fields. We'll only be working with it as a pointer.
+//
 struct _Sound
 
+//
+// A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
+//
 class Sound
-    var _sound: _Sound
+    let _sound: _Sound ref
 
     new create()? =>
         _sound = @sfSound_create()()?
@@ -26,15 +36,15 @@ class Sound
 
     fun ref play() =>
         @sfSound_play(_sound)
- 
+
     fun ref stop() =>
         @sfSound_stop(_sound)
 
     fun ref pause() =>
         @sfSound_pause(_sound)
 
-    fun ref getStatus(): I32 =>
-        @sfSound_getStatus(_sound)
+    fun ref getStatus(): SoundStatus =>
+        _I32toSoundStatus(@sfSound_getStatus(_sound))
 
     fun ref setLoop(loop: Bool) =>
         if loop then
@@ -52,7 +62,7 @@ class Sound
     fun ref _getCsfml(): _Sound =>
         _sound
 
-    fun \deprecated\ destroy() => 
+    fun \deprecated\ destroy() =>
         """ Because Pony has garbage collection, you don't need to call destroy() """
         None
 
