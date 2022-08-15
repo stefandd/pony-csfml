@@ -36,7 +36,7 @@ class RenderWindow
         //_csfml = @sfRenderWindow_create(mode_arr.cpointer(), title.cstring(), style, ctxsettings)
         _csfml = 
             @sfRenderWindow_createA(
-                mode.width, mode.height, mode.bitsPerPixel, 
+                mode.getWidth(), mode.getHeight(), mode.getBitsPerPixel(), 
                 title.cstring(), style, settings._getCsfml())()?
         _evt = EventStruct(_csfml)
 
