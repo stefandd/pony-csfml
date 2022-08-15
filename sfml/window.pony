@@ -1,6 +1,5 @@
 // use @sfWindow_setActive[None](window: _Window box, active: I32)
 // use @sfWindow_getSettingsA[None](window: _Window box, settings: _ContextSettings)
-use "debug"
 
 struct _Window
 
@@ -31,14 +30,16 @@ class WindowStyle
     if (_code == _undefined) or (_code == option) then 
       _code = option
     else
-      Debug(_errmsg)
+      @fprintf(@pony_os_stderr(), _errmsg.cstring())
+      @exit(1)
     end
 
   fun ref _add(option: I32) =>
     if (_code != _none) and (_code != _fullscreen) then
       _code = option + if _code == _undefined then 0 else _code end
     else
-      Debug(_errmsg)
+      @fprintf(@pony_os_stderr(), _errmsg.cstring())
+      @exit(1)
     end
 
   fun ref none(): WindowStyle =>
