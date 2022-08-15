@@ -30,7 +30,7 @@ actor Main
   new create(env': Env) =>
     env = env'
     let vmode = VideoMode(width.u32(), height.u32(), 32)
-    let wstyle = WindowStyle.sfDefaultStyle()
+    let wstyle = WindowStyle.titlebar().close()
     try
       let img = Image(width.u32(), height.u32())?
       run(

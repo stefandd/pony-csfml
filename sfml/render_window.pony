@@ -31,13 +31,13 @@ class RenderWindow
     var _csfml: _RenderWindow ref
     let _evt: EventStruct
 
-    new create(mode: VideoMode box, title: String, style: I32, settings: ContextSettings = ContextSettings)? =>
+    new create(mode: VideoMode box, title: String, style: WindowStyle, settings: ContextSettings = ContextSettings)? =>
         //let mode_arr: Array[U32] = [mode.width; mode.height; mode.bitsPerPixel] // trick to send this instead of the value struct
         //_csfml = @sfRenderWindow_create(mode_arr.cpointer(), title.cstring(), style, ctxsettings)
         _csfml = 
             @sfRenderWindow_createA(
                 mode.getWidth(), mode.getHeight(), mode.getBitsPerPixel(), 
-                title.cstring(), style, settings._getCsfml())()?
+                title.cstring(), style._i32(), settings._getCsfml())()?
         _evt = EventStruct(_csfml)
 
     fun ref getEventStruct(): EventStruct =>
