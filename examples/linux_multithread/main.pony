@@ -17,7 +17,6 @@ actor Main
     else
       for n in Range(0,9) do
         let vmode = recover val VideoMode(width.u32(), height.u32(), 32) end
-        let wstyle = WindowStyle.sfTitlebar()
         let title = "SFML Demo"
 
         try
@@ -26,11 +25,11 @@ actor Main
 
           DemoActor(
             env, width, height, wobl,
-            recover RenderWindow.create(vmode, title, wstyle)? end,
-            recover VertexArray.create()?                      end,
-            recover CircleShape.create()?                      end,
-            recover Font.create("../../Square.ttf")?           end,
-            recover Text.create()?                             end )
+            recover RenderWindow.create(vmode, title)? end,
+            recover VertexArray.create()?              end,
+            recover CircleShape.create()?              end,
+            recover Font.create("../../Square.ttf")?   end,
+            recover Text.create()?                     end )
         else
           env.out.print("Couldn't initialize GUI.")
         end
