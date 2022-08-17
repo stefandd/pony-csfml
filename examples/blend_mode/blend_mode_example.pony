@@ -24,8 +24,7 @@ actor Main
   fun tag create_window(): RenderWindow? =>
     let vmode = VideoMode(400, 400, 32)
     let title = "BlendMode Sample"
-    let style = WindowStyle.sfDefaultStyle()
-    RenderWindow.create(vmode, title, style)?
+    RenderWindow.create(vmode, title)?
 
   new create(env: Env) =>
     try
