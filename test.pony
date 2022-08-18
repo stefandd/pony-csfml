@@ -16,7 +16,7 @@ actor Main
   let height: USize = 240
   let rand: Rand = Rand
   let pixeldata: Array[U32] = Array[U32].init(0, width * height)
-  let vtx_rstates: RenderStates = RenderStates.fromBlendMode(BlendMode.multiply())
+  let vtx_rstates: RenderStates = RenderStates.from(BlendMode.multiply())
   let stdout: Pointer[U8] = @pony_os_stdout()
   // APP STATE
   var fps_count: U32 = 0

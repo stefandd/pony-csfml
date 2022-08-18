@@ -24,7 +24,7 @@ actor DemoActor
   var t_last_fps_frame: U64 = 0
   var t_last_circle_frame: U64 = 0
   var running: Bool = true
-  let vtx_render_states: RenderStates = RenderStates.fromBlendMode(BlendMode.multiply())
+  let vtx_render_states: RenderStates = RenderStates.from(BlendMode.multiply())
   let timers: Timers = Timers
   let color_gray: Color = Color(127,127,127)
   let color_red: Color = Color.red()

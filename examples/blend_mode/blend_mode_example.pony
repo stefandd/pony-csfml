@@ -63,10 +63,10 @@ actor Main
 
       window.clear()
       window.drawShape(square)
-      window.drawShape(circle1, RenderStates.fromBlendMode(BlendMode.alpha()))
-      window.drawShape(circle2, RenderStates.fromBlendMode(BlendMode.add()))
-      window.drawShape(circle3, RenderStates.fromBlendMode(BlendMode.multiply()))
-      window.drawShape(circle4, RenderStates.fromBlendMode(BlendMode.none()))
+      window.drawShape(circle1, RenderStates.from(BlendMode.alpha()))
+      window.drawShape(circle2, RenderStates.from(BlendMode.add()))
+      window.drawShape(circle3, RenderStates.from(BlendMode.multiply()))
+      window.drawShape(circle4, RenderStates.from(BlendMode.none()))
       window.display()
 
       running = running and window.isOpen()
