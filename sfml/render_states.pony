@@ -37,33 +37,39 @@ class RenderStates
             NullablePointer[_Texture].none(), 
             NullablePointer[_Shader].none() )
 
-    new fromBlendMode(blendMode: BlendMode) =>
-        _csfml = _RenderStates(
-            blendMode._getCsfml(),
-            _Transform.identity(),
-            NullablePointer[_Texture].none(),
-            NullablePointer[_Shader].none() )
+    new from(x: (BlendMode | Transform | Texture | Shader)) =>
+    
+        _csfml = match x
 
-    new fromTransform(transform: Transform) =>
-        _csfml = _RenderStates(
-            _BlendMode.alpha(),
-            transform._getCsfml(),
-            NullablePointer[_Texture].none(),
-            NullablePointer[_Shader].none() )
+        | let bm: BlendMode => 
+            _RenderStates(
+                bm._getCsfml(),
+                _Transform.identity(),
+                NullablePointer[_Texture].none(),
+                NullablePointer[_Shader].none() )
 
-    new fromTexture(texture: Texture) =>
-        _csfml = _RenderStates(
-            _BlendMode.alpha(),
-            _Transform.identity(),
-            NullablePointer[_Texture](texture._getCsfml()),
-            NullablePointer[_Shader].none() )
+        | let tf: Transform =>
+            _RenderStates(
+                _BlendMode.alpha(),
+                tf._getCsfml(),
+                NullablePointer[_Texture].none(),
+                NullablePointer[_Shader].none() )
 
-    new fromShader(shader: Shader) =>
-        _csfml = _RenderStates(
-            _BlendMode.alpha(),
-            _Transform.identity(),
-            NullablePointer[_Texture].none(),
-            NullablePointer[_Shader](shader._getCsfml()) )
+        | let tx: Texture =>
+            _RenderStates(
+                _BlendMode.alpha(),
+                _Transform.identity(),
+                NullablePointer[_Texture](tx._getCsfml()),
+                NullablePointer[_Shader].none() )
+
+        | let sh: Shader =>
+            _RenderStates(
+                _BlendMode.alpha(),
+                _Transform.identity(),
+                NullablePointer[_Texture].none(),
+                NullablePointer[_Shader](sh._getCsfml()) )
+
+        end
 
     fun ref getBlendMode(): 
         BlendMode box => BlendMode._fromCsfml(_csfml.bm)
@@ -94,22 +100,7 @@ class RenderStates
         _csfml.sh = 
             match x
             | None => NullablePointer[_Shader].none()
-            | let t: Shader => NullablePointer[_Shader](t._getCsfml())
+            | let s: Shader => NullablePointer[_Shader](s._getCsfml())
             end
 
     fun ref _getCsfml(): _RenderStates => _csfml
-
-// RenderStates are often optional parameters in SFML draw functions.
-// This helper converts Optional[RenderState] to NullablePointer[_RenderState].
-//
-// Sadly, this can't be genericized to work with ANY proxy class because that
-// would require structs to be type arguments in a "trait Proxy[SomeStruct]", 
-// but Pony doesn't allow structs to be type args.
-//
-primitive _ToNullableRenderStates
-    fun apply(opt_rs: Optional[RenderStates]): NullablePointer[_RenderStates] =>
-        match opt_rs
-            | None => NullablePointer[_RenderStates].none()
-            | let rs: RenderStates => NullablePointer[_RenderStates](rs._getCsfml())
-        end
-
