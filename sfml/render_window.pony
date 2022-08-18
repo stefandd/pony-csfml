@@ -10,10 +10,10 @@ use @sfRenderWindow_setActive[I32](window: _RenderWindow box, active: I32)
 use @sfRenderWindow_clear[None](window: _RenderWindow box, color: U32)
 use @sfRenderWindow_display[None](window: _RenderWindow box)
 use @sfRenderWindow_setView[None](window: _RenderWindow box, view: _View box)
-use @sfRenderWindow_drawSprite[None](window: _RenderWindow box, sprite: _Sprite box, states: NullablePointer[_RenderStates] box)
-use @sfRenderWindow_drawShape[None](window: _RenderWindow box, shape: _Shape box, states: NullablePointer[_RenderStates] box)
-use @sfRenderWindow_drawText[None](window: _RenderWindow box, text: _Text box, states: NullablePointer[_RenderStates] box)
-use @sfRenderWindow_drawVertexArray[None](window: _RenderWindow box, vertexArray: _VertexArray box, states: NullablePointer[_RenderStates] box)
+use @sfRenderWindow_drawSprite[None](window: _RenderWindow box, sprite: _Sprite box, states: _RenderStates box)
+use @sfRenderWindow_drawShape[None](window: _RenderWindow box, shape: _Shape box, states: _RenderStates box)
+use @sfRenderWindow_drawText[None](window: _RenderWindow box, text: _Text box, states: _RenderStates box)
+use @sfRenderWindow_drawVertexArray[None](window: _RenderWindow box, vertexArray: _VertexArray box, states: _RenderStates box)
 use @sfRenderWindow_pollEvent[I32](window: _RenderWindow box, event: Pointer[U8] tag)
 use @sfRenderWindow_getSize[U64](window: _RenderWindow box)
 use @sfRenderWindow_destroy[None](window: _RenderWindow box)
@@ -67,26 +67,22 @@ class RenderWindow
     fun ref clear(color: Color = Color(0, 0, 0, 255)) =>
         @sfRenderWindow_clear(_csfml, color._u32())
 
-    fun ref drawSprite(sprite: Sprite, renderStates: Optional[RenderStates] = None) =>
-        let nullable_rs = _ToNullableRenderStates(renderStates)
-        @sfRenderWindow_drawSprite(_csfml, sprite._getCsfml(), nullable_rs)
+    fun ref drawSprite(sprite: Sprite, states: RenderStates = RenderStates.default()) =>
+        @sfRenderWindow_drawSprite(_csfml, sprite._getCsfml(), states._getCsfml())
 
-    fun ref drawShape(shape: Shape, renderStates: Optional[RenderStates] = None) =>
-        let nullable_rs = _ToNullableRenderStates(renderStates)
+    fun ref drawShape(shape: Shape, states: RenderStates = RenderStates.default()) =>
         match shape
         | let c: CircleShape =>
-            @sfRenderWindow_drawShape(_csfml, c._getCsfml(), nullable_rs)
+            @sfRenderWindow_drawShape(_csfml, c._getCsfml(), states._getCsfml())
         | let r: RectangleShape =>
-            @sfRenderWindow_drawShape(_csfml, r._getCsfml(), nullable_rs)
+            @sfRenderWindow_drawShape(_csfml, r._getCsfml(), states._getCsfml())
         end
 
-    fun ref drawText(text: Text, renderStates: Optional[RenderStates] = None) =>
-        let nullable_rs = _ToNullableRenderStates(renderStates)
-        @sfRenderWindow_drawText(_csfml, text._getCsfml(), nullable_rs)
+    fun ref drawText(text: Text, states: RenderStates = RenderStates.default()) =>
+        @sfRenderWindow_drawText(_csfml, text._getCsfml(), states._getCsfml())
 
-    fun ref drawVertexArray(vertexArray: VertexArray, renderStates: Optional[RenderStates] = None) =>
-        let nullable_rs = _ToNullableRenderStates(renderStates)
-        @sfRenderWindow_drawVertexArray(_csfml, vertexArray._getCsfml(), nullable_rs)
+    fun ref drawVertexArray(vertexArray: VertexArray, states: RenderStates = RenderStates.default()) =>
+        @sfRenderWindow_drawVertexArray(_csfml, vertexArray._getCsfml(), states._getCsfml())
 
     fun ref display() =>
         @sfRenderWindow_display(_csfml)
