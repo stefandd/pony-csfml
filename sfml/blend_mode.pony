@@ -22,10 +22,6 @@ struct _BlendMode
         csf = that.csf ; cdf = that.cdf ; ceq = that.ceq
         asf = that.asf ; adf = that.adf ; aeq = that.aeq
 
-    new none() =>
-        csf = _BMFact.one() ; cdf = _BMFact.zero() ; ceq = _BMEqtn.add()
-        asf = _BMFact.one() ; adf = _BMFact.zero() ; aeq = _BMEqtn.add()
-
     new alpha() =>
         csf = _BMFact.sa()  ; cdf = _BMFact.omsa() ; ceq = _BMEqtn.add()
         asf = _BMFact.one() ; adf = _BMFact.omsa() ; aeq = _BMEqtn.add()
@@ -36,7 +32,11 @@ struct _BlendMode
 
     new multiply() =>
         csf = _BMFact.dc()  ; cdf = _BMFact.zero() ; ceq = _BMEqtn.add()
-        asf = _BMFact.dc()  ; adf = _BMFact.zero() ; aeq = _BMEqtn.add()
+        asf = csf           ; adf = cdf            ; aeq = ceq
+
+    new none() =>
+        csf = _BMFact.one() ; cdf = _BMFact.zero() ; ceq = _BMEqtn.add()
+        asf = csf           ; adf = cdf            ; aeq = ceq
 
     fun ref setFrom(that: _BlendMode) =>
         csf = that.csf ; cdf = that.cdf ; ceq = that.ceq
@@ -60,10 +60,11 @@ class BlendMode
             colorSrcFactor._i32(), colorDstFactor._i32(), colorEquation._i32(),
             alphaSrcFactor._i32(), alphaDstFactor._i32(), alphaEquation._i32() )
 
-    new none()     => _csfml = _BlendMode.none()
+    new default()  => _csfml = _BlendMode.alpha() // alpha is the default
     new alpha()    => _csfml = _BlendMode.alpha()
     new add()      => _csfml = _BlendMode.add()
     new multiply() => _csfml = _BlendMode.multiply()
+    new none()     => _csfml = _BlendMode.none()
 
     new _fromCsfml(bm: _BlendMode) => _csfml = bm
 
