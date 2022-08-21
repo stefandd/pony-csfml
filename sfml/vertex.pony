@@ -7,9 +7,9 @@ struct _Vertex
     embed texCoords: _Vector2f
 
     new create(position': Vector2f, color': Color, texCoords': Vector2f = Vector2f(0,0)) =>
-      position  = _Vector2f.copy(position'._getStruct())
-      color     = _Color.copy(color'._getStruct())
-      texCoords = _Vector2f.copy(texCoords'._getStruct())
+      position  = _Vector2f.copy(position'._getCsfml())
+      color     = _Color.copy(color'._getCsfml())
+      texCoords = _Vector2f.copy(texCoords'._getCsfml())
 
 //
 // A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
@@ -20,44 +20,63 @@ class Vertex
     new create(position: Vector2f, color: Color, texCoords: Vector2f = Vector2f(0,0)) =>
       _csfml = _Vertex(position, color, texCoords)
 
-    new _from_csfml(v: _Vertex) =>
+    new _fromCsfml(v: _Vertex) =>
       _csfml = v
 
-    fun ref _set_csfml(v: _Vertex): Vertex =>
+    fun ref _setCsfml(v: _Vertex): Vertex =>
       _csfml = v
       this
 
-    fun ref getPosition(using: Optional[Vector2f] = None): Vector2f =>
+    fun ref getPosition(): Vector2f =>
       """
-        Extends the SFML method by allowing an optional Vector2f to be
-        provided. If provided, it will be "recycled" by the method to become
-        the return value, avoiding the allocation of a new object.
+      Warning: This allocates an object every time it is called.
+      Consider getPositionX & getPositionY instead, in performance sensitive cases.
       """
-      match using
-      | None => Vector2f._from_csfml(_csfml.position)
-      | let x: Vector2f => x._set_csfml(_csfml.position)
-      end
+      Vector2f._fromCsfml(_csfml.position)
 
-    fun ref getColor(using: Optional[Color] = None): Color =>
+    fun ref getColor(): Color =>
       """
-        Extends the SFML method by allowing an optional Color to be
-        provided. If provided, it will be "recycled" by the method to become
-        the return value, avoiding the allocation of a new object.
+      Warning: This allocates an object every time it is called.
+      Consider getColorAsInteger instead, in performance sensitive cases.
       """
-      match using
-      | None => Color._from_csfml(_csfml.color)
-      | let x: Color => x._set_csfml(_csfml.color)
-      end  
+      Color._fromCsfml(_csfml.color)
 
-    fun ref getTexCoords(using: Optional[Vector2f] = None): Vector2f =>
+    fun ref getTexCoords(): Vector2f =>
       """
-        Extends the SFML method by allowing an optional Vector2f to be
-        provided. If provided, it will be "recycled" by the method to become
-        the return value, avoiding the allocation of a new object.
+      Warning: This allocates an object every time it is called.
+      Consider getTexOrdX & getTexOrdY instead, in performance sensitive cases.      
       """
-      match using
-      | None => Vector2f._from_csfml(_csfml.texCoords)
-      | let x: Vector2f => x._set_csfml(_csfml.texCoords)
-      end
+      Vector2f._fromCsfml(_csfml.texCoords)
+
+    fun ref setPosition(position: Vector2f) =>
+      """
+      See setPositionX & setPositionY if you don't want to allocate a Vector2f for this method.
+      """    
+      _csfml.position.setFrom(position._getCsfml())
+
+    fun ref setColor(color: Color) =>
+      """
+      See setColorFromInteger if you don't want to allocate a Color for this method.
+      """
+      _csfml.color.setFrom(color._getCsfml())
+
+    fun ref setTexCoords(coords: Vector2f) =>
+      """
+      See setTexOrdX & setTexOrdY if you don't want to allocate a Vector2f for this method.
+      """
+      _csfml.texCoords.setFrom(coords._getCsfml())
+
+    // These are not part of standard SFML.
+    // They are added for those who want to manipulate vertices without allocating Vector2f or Color instance.
+    fun getPositionX(): F32 => _csfml.position.x
+    fun getPositionY(): F32 => _csfml.position.y
+    fun getTexOrdX(): F32 => _csfml.texCoords.x
+    fun getTexOrdY(): F32 => _csfml.texCoords.y
+    fun getColorAsInteger(): U32 => _csfml.color.toInteger()
+    fun ref setPositionX(x: F32) => _csfml.position.x = x
+    fun ref setPositionY(y: F32) => _csfml.position.y = y
+    fun ref setTexOrdX(x: F32) => _csfml.texCoords.x = x
+    fun ref setTexOrdY(y: F32) => _csfml.texCoords.y = y
+    fun ref setColorFromInteger(int: U32) => _csfml.color.setFromInteger(int)
 
     //fun ref _getStruct(): _Vertex => _csfml
