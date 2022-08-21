@@ -126,3 +126,8 @@ void sfView_resetA(sfView* view, float left, float top, float width, float heigh
     sfFloatRect rect = {left, top, width, height};
     sfView_reset(view, rect);
 }
+
+void sfView_setSizeA(sfView* view, sfUint64 size)
+{
+    sfView_setSize(view, VEC2F(size));
+}
