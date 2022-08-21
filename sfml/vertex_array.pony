@@ -68,7 +68,7 @@ class VertexArray
 
   fun getBounds(): FloatRect =>
     let rect = FloatRect(0, 0, 0, 0)
-    @sfVertexArray_getBoundsA(_csfml, rect._getStruct())
+    @sfVertexArray_getBoundsA(_csfml, rect._getCsfml())
     rect
 
   fun ref _getCsfml(): _VertexArray =>

@@ -50,7 +50,7 @@ class Rect[T: (Real[T] & (F32 | U32))]
   new _from_u128(chunk: U128) => 
     _csfml = _Rect[T].from_u128(chunk)
 
-  fun ref _getStruct(): _Rect[T] => _csfml
+  fun ref _getCsfml(): _Rect[T] => _csfml
 
   fun string(): String =>
     ", ".join([

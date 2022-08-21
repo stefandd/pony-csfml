@@ -38,19 +38,19 @@ class Text
     new create()? =>
         _csfml = @sfText_create()()?
 
-    fun setString(txt : String) =>
+    fun setString(txt: String) =>
         @sfText_setString(_csfml, txt.cstring())
 
-    fun setFont(font : Font) =>
+    fun setFont(font: Font) =>
         @sfText_setFont(_csfml, font._getCsfml())
 
-    fun setCharacterSize(size : U32) =>
+    fun setCharacterSize(size: U32) =>
         @sfText_setCharacterSize(_csfml, size)
 
-    fun setLineSpacing(spacing : F32) =>
+    fun setLineSpacing(spacing: F32) =>
         @sfText_setLineSpacing(_csfml, spacing)
 
-    fun setLetterSpacing(spacing : F32) =>
+    fun setLetterSpacing(spacing: F32) =>
         @sfText_setLetterSpacing(_csfml, spacing)
 
     fun setStyle(style: TextStyle) =>
@@ -71,38 +71,38 @@ class Text
         var styleFlags = @sfText_getStyle(_csfml)
         @sfText_setStyle(_csfml, styleFlags and not(style()))
 
-    fun setColor(color : Color) =>
+    fun setColor(color: Color) =>
         @sfText_setColor(_csfml, color._u32())
 
-    fun setFillColor(color : Color) =>
+    fun setFillColor(color: Color) =>
         @sfText_setFillColor(_csfml, color._u32())
 
-    fun setOutlineColor(color : Color) =>
+    fun setOutlineColor(color: Color) =>
         @sfText_setOutlineColor(_csfml, color._u32())
 
-    fun setOutlineThickness(thickness : F32) =>
+    fun setOutlineThickness(thickness: F32) =>
         @sfText_setOutlineThickness(_csfml, thickness)
 
-    fun ref setPosition(position : Vector2f) =>
+    fun ref setPosition(position: Vector2f) =>
         @sfText_setPositionA(_csfml, position._u64())
 
-    fun ref setScale(factors : Vector2f) =>
+    fun ref setScale(factors: Vector2f) =>
         @sfText_setScaleA(_csfml, factors._u64())
 
-    fun ref setOrigin(origin : Vector2f) =>
+    fun ref setOrigin(origin: Vector2f) =>
         @sfText_setOriginA(_csfml, origin._u64())
 
-    fun ref setRotation(angle : F32) =>
+    fun ref setRotation(angle: F32) =>
         @sfText_setRotation(_csfml, angle)
 
-    fun ref getGlobalBounds() : FloatRect =>
+    fun ref getGlobalBounds(): FloatRect =>
         let rect = FloatRect._from_u128(0)
-        @sfText_getGlobalBoundsA(_csfml, rect._getStruct())
+        @sfText_getGlobalBoundsA(_csfml, rect._getCsfml())
         rect
 
-    fun ref getLocalBounds() : FloatRect =>
+    fun ref getLocalBounds(): FloatRect =>
         let rect = FloatRect._from_u128(0)
-        @sfText_getLocalBoundsA(_csfml, rect._getStruct())
+        @sfText_getLocalBoundsA(_csfml, rect._getCsfml())
         rect
 
     fun ref _getCsfml(): _Text =>

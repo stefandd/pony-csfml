@@ -29,14 +29,14 @@ class Texture
     new createFromFile(filename: String val, area: Optional[IntRect] = None)? =>
         let area' = match area
         | None => NullablePointer[_IntRect].none()
-        | let x: IntRect => NullablePointer[_IntRect](x._getStruct())
+        | let x: IntRect => NullablePointer[_IntRect](x._getCsfml())
         end
         _csfml = @sfTexture_createFromFile(filename.cstring(), area')()?
 
     new createFromImage(image: Image, area: Optional[IntRect] = None)? =>
         let area' = match area
         | None => NullablePointer[_IntRect].none()
-        | let x: IntRect => NullablePointer[_IntRect](x._getStruct())
+        | let x: IntRect => NullablePointer[_IntRect](x._getCsfml())
         end
         _csfml = @sfTexture_createFromImage(image._getCsfml(), area')()?
 
