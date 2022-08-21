@@ -43,8 +43,8 @@ class VertexArray
     """
     let vtxptr = @sfVertexArray_getVertex(_csfml, index)
     match using
-    | None => Vertex._from_csfml(vtxptr)
-    | let v: Vertex => v._set_csfml(vtxptr)
+    | None => Vertex._fromCsfml(vtxptr)
+    | let v: Vertex => v._setCsfml(vtxptr)
     end
 
   fun ref clear() =>
@@ -66,18 +66,8 @@ class VertexArray
   fun ref getPrimitiveType(): I32 =>
     @sfVertexArray_getPrimitiveType(_csfml)
 
-  fun getBounds(using: Optional[FloatRect] = None): FloatRect =>
-    """
-      An extended version of SFML's getBounds which allows an optional 
-      FloatRect to be specified. If specified, it will be recycled by this
-      function and used as the return value, avoiding the allocation of a new
-      FloatRect object.
-    """
-    let rect = 
-      match using
-      | None => FloatRect(0, 0, 0, 0)
-      | let x: FloatRect => x
-      end
+  fun getBounds(): FloatRect =>
+    let rect = FloatRect(0, 0, 0, 0)
     @sfVertexArray_getBoundsA(_csfml, rect._getStruct())
     rect
 
