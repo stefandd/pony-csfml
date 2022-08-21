@@ -23,3 +23,6 @@ type Maybe[X] is (X | None)
 primitive System
     fun sleep(duration: I64) => @sfSleep(duration)
 
+// This doesn't really help the type system, but it can help make FFI declarations more readable.
+// Note that U128 is left out of the union type because it doesn't work on Linux.
+type _Packed[T, U: (U8 | U16 | U32 | U64)] is U
