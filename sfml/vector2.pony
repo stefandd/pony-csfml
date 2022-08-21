@@ -16,6 +16,10 @@ struct _Vector2[T: (F32 | U32)]
         x = that.x
         y = that.y
 
+    new setFrom(that: _Vector2[T]) =>
+        x = that.x
+        y = that.y
+
     // Pony structs can't be passed by value through Pony's FFI.
     // So for C funcs that expect structs by value we define a map to/from some unsigned int type.
 
@@ -36,17 +40,16 @@ class Vector2[T: (F32 | U32)]
 
     new create(x: T, y: T) => _csfml = _Vector2[T](x, y)
 
-    new _from_csfml(csfml: _Vector2[T]) =>
+    new _fromCsfml(csfml: _Vector2[T]) =>
       _csfml = csfml
 
-    fun ref _set_csfml(csfml: _Vector2[T]): Vector2[T] =>
+    fun ref _setCsfml(csfml: _Vector2[T]) =>
       _csfml = csfml
-      this
 
     fun getX(): T => _csfml.x
     fun getY(): T => _csfml.y
 
     fun ref _u64(): U64 => _csfml.u64()
 
-    fun ref _getStruct(): _Vector2[T] => _csfml
+    fun ref _getCsfml(): _Vector2[T] => _csfml
 
