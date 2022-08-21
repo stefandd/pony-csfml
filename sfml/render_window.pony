@@ -10,6 +10,7 @@ use @sfRenderWindow_setActive[I32](window: _RenderWindow box, active: I32)
 use @sfRenderWindow_clear[None](window: _RenderWindow box, color: U32)
 use @sfRenderWindow_display[None](window: _RenderWindow box)
 use @sfRenderWindow_setView[None](window: _RenderWindow box, view: _View box)
+use @sfRenderWindow_getView[_View](window: _RenderWindow box)
 use @sfRenderWindow_drawSprite[None](window: _RenderWindow box, sprite: _Sprite box, states: _RenderStates box)
 use @sfRenderWindow_drawShape[None](window: _RenderWindow box, shape: _Shape box, states: _RenderStates box)
 use @sfRenderWindow_drawText[None](window: _RenderWindow box, text: _Text box, states: _RenderStates box)
@@ -89,6 +90,9 @@ class RenderWindow
 
     fun ref setView(view: View) =>
         @sfRenderWindow_setView(_csfml, view._getCsfml())
+
+    fun ref getView(): View =>
+        View._fromCsfml(@sfRenderWindow_getView(_csfml))
 
     fun \deprecated\ destroy() => 
         """ Because Pony has garbage collection, you don't need to call destroy() """
