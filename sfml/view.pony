@@ -5,16 +5,16 @@ use @sfView_create[NullablePointer[_View]]()
 use @sfView_createFromRectA[NullablePointer[_View]](left: F32, top: F32, width: F32, height: F32)
 use @sfView_copy[NullablePointer[_View]](view: _View box)
 use @sfView_destroy[None](view: _View box)
-use @sfView_setCenter[None](view: _View box, center: _Vector2f)
-use @sfView_setSize[None](view: _View box, size: _Vector2f)
+use @sfView_setCenterA[None](view: _View box, center: _Packed[_Vector2f, U64])
+use @sfView_setSizeA[None](view: _View box, size: _Packed[_Vector2f, U64])
 use @sfView_setRotation[None](view: _View box, angle: F32)
 use @sfView_setViewport[None](view: _View box, viewport: U128)
 use @sfView_resetA[None](view: _View box, left: F32, top: F32, width: F32, height: F32)
-use @sfView_getCenter[_Vector2f](view: _View box)
-use @sfView_getSize[_Vector2f](view: _View box)
+use @sfView_getCenterA[_Packed[_Vector2f, U64]](view: _View box)
+use @sfView_getSizeA[_Packed[_Vector2f, U64]](view: _View box)
 use @sfView_getRotation[F32](view: _View box)
 use @sfView_getViewport[U128](view: _View box)
-use @sfView_move[None](view: _View box, offset: _Vector2f)
+use @sfView_moveA[None](view: _View box, offset: _Packed[_Vector2f,U64])
 use @sfView_rotate[None](view: _View box, angle: F32)
 use @sfView_zoom[None](view: _View box, factor: F32)
 
@@ -29,6 +29,7 @@ struct _View
 //
 class View
 
+  embed _temp_vec2f: _Vector2f = _Vector2f(0,0)
   var _csfml: _View
 
   new create()? =>
@@ -46,7 +47,6 @@ class View
     _csfml = @sfView_copy(view._getCsfml())()?
   
   //TODO: fun setCenter(center: Vector2f) =>
-  //TODO: fun setSize(size: Vector2f) =>
   //TODO: fun setRotation(angle: F32) =>
   //TODO: fun setViewport(viewport: U128) =>
   
@@ -59,6 +59,15 @@ class View
     "This is a variation on the standard reset(...), added by this Pony binding"
     @sfView_resetA(_csfml, left, top, width, height)
   
+  fun setSize(size: Vector2f) =>
+    @sfView_setSizeA(_csfml, size._u64())
+
+  fun ref setSizeFromFloats(width: F32, height: F32) =>
+    _temp_vec2f.x = width
+    _temp_vec2f.y = height
+    @sfView_setSizeA(_csfml, _temp_vec2f.u64())
+
+
   //TODO: fun getCenter(): Vector2f =>
   //TODO: fun getSize(): Vector2f =>
   //TODO: fun getRotation(): F32 =>
@@ -66,6 +75,9 @@ class View
   //TODO: fun move(offset: Vector2f) =>
   //TODO: fun rotate(angle: F32) =>
   //TODO: fun zoom(factor: F32) =>
+
+  new _fromCsfml(csfml: _View) =>
+    _csfml = csfml
 
   fun ref _getCsfml(): _View =>
     _csfml
