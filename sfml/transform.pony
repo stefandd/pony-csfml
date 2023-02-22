@@ -61,6 +61,10 @@ struct _Transform
         a10 = that.a10 ; a11 = that.a11 ; a12 = that.a12
         a20 = that.a20 ; a21 = that.a21 ; a22 = that.a22
 
+    fun ref resetToIdentity() =>
+        a00 = 1 ; a01 = 0 ; a02 = 0
+        a10 = 0 ; a11 = 1 ; a12 = 0
+        a20 = 0 ; a21 = 0 ; a22 = 1
 
 //
 // A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
@@ -85,8 +89,16 @@ class Transform
     =>
         _csfml = _Transform(a00, a01, a02, a10, a11, a12, a20, a21, a22)
 
+    fun ref resetToIdentity(): Transform => 
+        _csfml.resetToIdentity()
+        this
+    
     fun ref translate(x: F32, y: F32): Transform =>
         @sfTransform_translate(_csfml, x, y)
+        this
+
+    fun ref scale(x: F32, y: F32): Transform =>
+        @sfTransform_scale(_csfml, x, y)
         this
 
     new ref copy(that: Transform) =>
