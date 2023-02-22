@@ -42,6 +42,13 @@ void sfWindow_getSettingsA(const sfWindow* window, sfContextSettings* settings)
 
 // TEXT
 
+void sfText_setStringFromF32(const sfText* text, float num)
+{
+    char strbuf[20];
+    sprintf(strbuf, "%+f", num);
+    sfText_setString(text, strbuf);
+}
+
 void sfText_getLocalBoundsA(const sfText* text, sfFloatRect* rect)
 {
     *rect = sfText_getLocalBounds(text);
@@ -87,9 +94,21 @@ void sfCircleShape_setPositionA(sfCircleShape* circle, sfUint64 pos)
     sfCircleShape_setPosition(circle, VEC2F(pos));
 }
 
+void sfCircleShape_setPositionXY(sfCircleShape* circle, float x, float y)
+{
+    sfVector2f pt = {x, y};
+    sfCircleShape_setPosition(circle, pt);
+}
+
 void sfCircleShape_setOriginA(sfCircleShape* circle, sfUint64 origin)
 {
     sfCircleShape_setOrigin(circle, VEC2F(origin));
+}
+
+void sfCircleShape_setOriginXY(sfCircleShape* circle, float x, float y)
+{
+    sfVector2f pt = {x, y};
+    sfCircleShape_setOrigin(circle, pt);
 }
 
 // RECTANGLE SHAPE
