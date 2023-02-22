@@ -4,7 +4,9 @@
 use @sfCircleShape_destroy[None](circle: _Shape box)
 use @sfCircleShape_create[NullablePointer[_Shape]]()
 use @sfCircleShape_setPositionA[None](circle: _Shape box, position: U64)
+use @sfCircleShape_setPositionXY[None](circle: _Shape box, x: F32, y: F32)
 use @sfCircleShape_setOriginA[None](circle: _Shape box, origin: U64)
+use @sfCircleShape_setOriginXY[None](circle: _Shape box, x: F32, y: F32)
 use @sfCircleShape_setScale[None](circle: _Shape box, factors: U64)
 use @sfCircleShape_setRadius[None](circle: _Shape box, radius: F32)
 use @sfCircleShape_setRotation[None](circle: _Shape box, angle: F32)
@@ -50,12 +52,18 @@ class CircleShape
     fun ref setPosition(position : Vector2f) =>
         @sfCircleShape_setPositionA(_csfml, position._u64())
 
+    fun ref setPositionXY(x: F32, y: F32) =>
+        @sfCircleShape_setPositionXY(_csfml, x, y)
+
     fun ref setScale(factors : Vector2f) =>
         @sfCircleShape_setScale(_csfml, factors._u64())
 
     fun ref setOrigin(origin : Vector2f) =>
         @sfCircleShape_setOriginA(_csfml, origin._u64())
     
+    fun ref setOriginXY(x: F32, y: F32) =>
+        @sfCircleShape_setOriginXY(_csfml, x, y)
+
     fun ref setRotation(angle : F32) =>
         @sfCircleShape_setRotation(_csfml, angle)
 
