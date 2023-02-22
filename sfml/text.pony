@@ -5,6 +5,7 @@ use "collections"
 //
 use @sfText_create[NullablePointer[_Text]]()
 use @sfText_setString[None](text: _Text box, str: Pointer[U8 val] tag)
+use @sfText_setStringFromF32[None](text: _Text box, num: F32)
 use @sfText_setFont[None](text: _Text box, font: _Font box)
 use @sfText_setCharacterSize[None](text: _Text box, size: U32)
 use @sfText_setLineSpacing[None](text: _Text box, spacingFactor: F32)
@@ -40,6 +41,13 @@ class Text
 
     fun setString(txt: String) =>
         @sfText_setString(_csfml, txt.cstring())
+
+    fun setStringFromF32(num: F32) =>
+        """
+        This is not part of standard SFML. It allows SFML text to be set to a
+        float value without requiring the instantiation of a Pony String object.
+        """
+        @sfText_setStringFromF32(_csfml, num)
 
     fun setFont(font: Font) =>
         @sfText_setFont(_csfml, font._getCsfml())
