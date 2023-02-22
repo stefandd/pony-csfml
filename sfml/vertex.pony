@@ -17,15 +17,12 @@ struct _Vertex
 class Vertex
     var _csfml: _Vertex
 
+    // 
+    // Public
+    //
+
     new create(position: Vector2f, color: Color, texCoords: Vector2f = Vector2f(0,0)) =>
       _csfml = _Vertex(position, color, texCoords)
-
-    new _fromCsfml(v: _Vertex) =>
-      _csfml = v
-
-    fun ref _setCsfml(v: _Vertex): Vertex =>
-      _csfml = v
-      this
 
     fun ref getPosition(): Vector2f =>
       """
@@ -78,5 +75,17 @@ class Vertex
     fun ref setTexOrdX(x: F32) => _csfml.texCoords.x = x
     fun ref setTexOrdY(y: F32) => _csfml.texCoords.y = y
     fun ref setColorFromInteger(int: U32) => _csfml.color.setFromInteger(int)
+
+
+    //
+    // Private 
+    //
+  
+    new _fromCsfml(v: _Vertex) =>
+      _csfml = v
+
+    fun ref _setCsfml(v: _Vertex): Vertex =>
+      _csfml = v
+      this
 
     //fun ref _getStruct(): _Vertex => _csfml

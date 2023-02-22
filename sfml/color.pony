@@ -75,22 +75,26 @@ class Color
         """
         _csfml.setFrom(that._getCsfml())
 
+    fun ref setAlpha(a: U8): Color =>
+        """
+        Mutates the color to the given alpha.
+        """
+        _csfml.a = a
+        this
+
+    fun ref getR(): U8 => _csfml.r
+    fun ref getG(): U8 => _csfml.g
+    fun ref getB(): U8 => _csfml.b
+    fun ref getA(): U8 => _csfml.a
+
     fun ref setFromInteger(int: U32) =>
         """
         Mutates the color to match the provided integer
         """
         _csfml.setFromInteger(int)
 
-    new _fromCsfml(csfml: _Color) =>
-      _csfml = csfml
-
-    fun ref _setCsfml(csfml: _Color) =>
-      _csfml = csfml
-
-    fun ref _getCsfml(): _Color =>
-      _csfml
-
     // These are SFML's predefined colors:
+    
     new black() =>
         """
         Note: This is a static constant in SFML, but a constructor Pony-SFML.
@@ -121,6 +125,18 @@ class Color
         """
         _csfml = _Color(  0,   0, 255, 255)
 
+    new yellow() => 
+        """
+        Note: This is a static constant in SFML, but a constructor Pony-SFML.
+        """
+        _csfml = _Color(255, 255,   0, 255)
+
+    new magenta() => 
+        """
+        Note: This is a static constant in SFML, but a constructor Pony-SFML.
+        """
+        _csfml = _Color(255,   0, 255, 255)
+
     new cyan() =>
         """
         Note: This is a static constant in SFML, but a constructor Pony-SFML.
@@ -133,9 +149,19 @@ class Color
         """
         _csfml = _Color(  0,   0,   0,   0)
 
+
+    //
+    // Private methods
+    //
+
+    new _fromCsfml(csfml: _Color) => _csfml = csfml
+
+    fun ref _setCsfml(csfml: _Color) => _csfml = csfml
+
+    fun ref _getCsfml(): _Color => _csfml
+
     // Note that _from_u32 and _u32 are NOT the same as fromInteger and
     // toInteger! They probably produce DIFFERENT byte order, depending
     // on the endianess of your system. This is intentional.
-    //
     new _from_u32(coded: U32) => _csfml = _Color.from_u32(coded)
     fun ref _u32(): U32 => _csfml.u32()
