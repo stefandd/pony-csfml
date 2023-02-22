@@ -8,6 +8,11 @@ struct _Shader
 
 class Shader
     var _csfml: _Shader ref
+    var _this_created_csfml: Bool
+
+    //
+    // Public
+    //
 
     new createFromMemory(vertexShader: String val, geometryShader: String val, fragmentShader: String val)? =>
         // create NULL pointers if the String argument is "" and cstrings otherwise
@@ -16,9 +21,7 @@ class Shader
         let gsarg = if geometryShader.size() == 0 then nullptr else geometryShader.cstring() end
         let fsarg = if fragmentShader.size() == 0 then nullptr else fragmentShader.cstring() end
         _csfml = @sfShader_createFromMemory(vsarg, gsarg, fsarg)()?
-
-    new _fromCsfml(cptr: _Shader) => 
-        _csfml = cptr
+        _this_created_csfml = true
 
     fun ref setTextureParameter(name: String val, texture: Texture) =>
         @sfShader_setTextureParameter(_csfml, name.cstring(), texture._getCsfml())
@@ -26,12 +29,20 @@ class Shader
     fun ref setFloatUniform(name: String val, floatval: F32) =>
         @sfShader_setFloatUniform(_csfml, name.cstring(), floatval)
 
-    fun ref _getCsfml(): _Shader =>
-        _csfml
-
     fun \deprecated\ ref destroy() => 
         """ Because Pony has garbage collection, you don't need to call destroy() """
         None
 
+    //
+    // Private
+    //
+
+    fun ref _getCsfml(): _Shader =>
+        _csfml
+
+    new _fromCsfml(sh: _Shader) => 
+        _csfml = sh
+        _this_created_csfml = false
+
     fun _final() =>
-        @sfShader_destroy(_csfml)
+        if _this_created_csfml then @sfShader_destroy(_csfml) end
