@@ -13,6 +13,8 @@ use @sfVertexArray_setPrimitiveType[None](vtxArr: _VertexArray box, primitiveTyp
 use @sfVertexArray_getPrimitiveType[I32](vtxArr: _VertexArray box)
 use @sfVertexArray_getBoundsA[None](vtxArr: _VertexArray box, bounds: _FloatRect)
 
+use "debug"
+
 //
 // The CSFML object as seen by Pony
 // Don't need to define its fields b/c we'll only be working with it as a ptr.
@@ -35,12 +37,16 @@ class VertexArray
   fun getVertexCount(): USize =>
     @sfVertexArray_getVertexCount(_csfml)
 
-  fun getVertex(index: USize, using: Optional[Vertex] = None): Vertex ref =>
+  fun getVertex(index: USize, using: Optional[Vertex] = None): Vertex ref ? =>
     """
       Extends the SFML method by allowing an optional Vertex to be
       provided. If provided, it will be "recycled" by the method to become
       the return value, avoiding the allocation of a new object.
     """
+    if index >= getVertexCount() then
+      Debug("getVertex, index = " + index.string() + " is out of range. There are " + (getVertexCount()-1).string() + " vertices.")
+      error
+    end
     let vtxptr = @sfVertexArray_getVertex(_csfml, index)
     match using
     | None => Vertex._fromCsfml(vtxptr)
