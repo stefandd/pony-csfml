@@ -19,12 +19,15 @@ struct _Texture
 //
 class Texture
     var _csfml: _Texture
+    var _this_created_csfml: Bool
 
-    new _fromCsfml(t: _Texture ref) =>
-        _csfml = t
-        
+    //
+    // Public
+    //
+
     new create(width: U32, height: U32)? =>
         _csfml = @sfTexture_create(width, height)()?
+        _this_created_csfml = true
 
     new createFromFile(filename: String val, area: Optional[IntRect] = None)? =>
         let area' = match area
@@ -32,6 +35,7 @@ class Texture
         | let x: IntRect => NullablePointer[_IntRect](x._getCsfml())
         end
         _csfml = @sfTexture_createFromFile(filename.cstring(), area')()?
+        _this_created_csfml = true
 
     new createFromImage(image: Image, area: Optional[IntRect] = None)? =>
         let area' = match area
@@ -39,20 +43,30 @@ class Texture
         | let x: IntRect => NullablePointer[_IntRect](x._getCsfml())
         end
         _csfml = @sfTexture_createFromImage(image._getCsfml(), area')()?
+        _this_created_csfml = true
 
     new copy(from: Texture)? =>
         _csfml = @sfTexture_copy(from._getCsfml())()?
+        _this_created_csfml = true
 
     fun ref updateFromPixels(pixels: Pointer[U32] tag, width: U32, height: U32, x: U32, y: U32) =>
         @sfTexture_updateFromPixels(_csfml, pixels, width, height, x, y)
-
-    fun ref _getCsfml(): _Texture =>
-        _csfml
 
     fun \deprecated\ ref destroy() => 
         """ Because Pony has garbage collection, you don't need to call destroy() """
         None
 
+    //
+    // Private
+    //
+
+    fun ref _getCsfml(): _Texture =>
+        _csfml
+
+    new _fromCsfml(t: _Texture ref) =>
+        _csfml = t
+        _this_created_csfml = false
+        
     fun _final() =>
-        @sfTexture_destroy(_csfml)
+        if _this_created_csfml then @sfTexture_destroy(_csfml) end
 

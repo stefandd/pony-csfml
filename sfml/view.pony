@@ -28,23 +28,31 @@ struct _View
 // A proxy class that abstracts away CSFML and FFI and presents a clean Pony API.
 //
 class View
-
   embed _temp_vec2f: _Vector2f = _Vector2f(0,0)
   var _csfml: _View
+  var _this_created_csfml: Bool
+
+  //
+  // Public
+  //
 
   new create()? =>
     _csfml = @sfView_create()()?
+    _this_created_csfml = true
 
   new createFromRect(rect: FloatRect)? =>
     _csfml = @sfView_createFromRectA(
       rect.getLeft(), rect.getTop(), rect.getWidth(), rect.getHeight())()?
+    _this_created_csfml = true
 
   new createFromOrdinates(left: F32, top: F32, width: F32, height: F32)? =>
     "This is a variation on the standard createFromRect(...), added by this Pony binding"
     _csfml = @sfView_createFromRectA(left, top, width, height)()?
+    _this_created_csfml = true
 
   new copy(view: View)? =>
     _csfml = @sfView_copy(view._getCsfml())()?
+    _this_created_csfml = true
   
   //TODO: fun setCenter(center: Vector2f) =>
   //TODO: fun setRotation(angle: F32) =>
@@ -67,7 +75,6 @@ class View
     _temp_vec2f.y = height
     @sfView_setSizeA(_csfml, _temp_vec2f.u64())
 
-
   //TODO: fun getCenter(): Vector2f =>
   //TODO: fun getSize(): Vector2f =>
   //TODO: fun getRotation(): F32 =>
@@ -75,17 +82,21 @@ class View
   //TODO: fun move(offset: Vector2f) =>
   //TODO: fun rotate(angle: F32) =>
   //TODO: fun zoom(factor: F32) =>
+  
+  fun \deprecated\ destroy() => 
+    """ Because Pony has garbage collection, you don't need to call destroy() """
+    None
+
+  //
+  // Private
+  //
 
   new _fromCsfml(csfml: _View) =>
     _csfml = csfml
+    _this_created_csfml = false
 
   fun ref _getCsfml(): _View =>
     _csfml
 
-  fun \deprecated\ destroy() => 
-      """ Because Pony has garbage collection, you don't need to call destroy() """
-      None
-
   fun _final() =>
-    @sfView_destroy(_csfml)
-
+    if _this_created_csfml then @sfView_destroy(_csfml) end

@@ -22,13 +22,12 @@ struct _RenderTexture
 //
 class RenderTexture
     var _csfml: _RenderTexture ref
+    var _this_created_csfml: Bool
 
-    new create(width: U32, height: U32, depthBuffer: Bool)? =>
-        if depthBuffer then
-            _csfml = @sfRenderTexture_create(width, height, 1)()?
-        else
-            _csfml = @sfRenderTexture_create(width, height, 0)()?
-        end
+    new create(width: U32, height: U32, depthBuffer: Bool = false)? =>
+        let db: I32 = if depthBuffer then 1 else 0 end
+        _csfml = @sfRenderTexture_create(width, height, db)()?
+        _this_created_csfml = true
 
     fun ref clear(color: Color) =>
         @sfRenderTexture_clear(_csfml, color._u32())
@@ -64,4 +63,4 @@ class RenderTexture
         None
 
     fun _final() =>
-        @sfRenderTexture_destroy(_csfml)
+        if _this_created_csfml then @sfRenderTexture_destroy(_csfml) end
